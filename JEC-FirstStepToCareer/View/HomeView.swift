@@ -17,6 +17,38 @@ struct HomeView: View {
                 // Background
                 Color.appWhite.ignoresSafeArea()
                 
+                // Contents
+                GeometryReader(content: { proxy in
+                    VStack {
+                        // Header
+                        ZStack {
+                            // Background
+                            Group {
+                                Rectangle()
+                                    .fill(.appPrimary)
+                                RoundedRectangle(cornerRadius: proxy.size.width / 20)
+                                    .fill(.appPrimary)
+                                    .offset(y: proxy.size.width / 20)
+                            }
+                            .frame(width: proxy.size.width)
+                            .frame(height: proxy.size.height / 2.5 - proxy.size.width / 20)
+                            .ignoresSafeArea()
+                            
+                            // Contents
+                            VStack {
+                                
+                            }
+                        }
+                        
+                        // Body
+                        VStack {
+                            
+                        }
+                        
+                        Spacer()
+                    }
+                })
+                
                 // Splash view
                 if !homeManager.isAppReady {
                     SplashView()
