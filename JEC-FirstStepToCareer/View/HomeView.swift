@@ -110,6 +110,60 @@ struct HomeView: View {
                                 }
                                 .padding(.top, proxy.size.height / 20)
                                 
+                                // Pagenation navigator
+                                HStack {
+                                    Button(action: {
+                                        homeManager.navigatePage(page: .history)
+                                    }, label: {
+                                        Text("面接履歴")
+                                            .foregroundStyle(homeManager.currentPage == HomePage.history ?
+                                                .appPrimary : .appWhite)
+                                    })
+                                    
+                                    Spacer()
+                                    
+                                    Button(action: {
+                                        homeManager.navigatePage(page: .mockInterview)
+                                    }, label: {
+                                        Text("模擬面接")
+                                            .foregroundStyle(homeManager.currentPage == HomePage.mockInterview ?
+                                                .appPrimary : .appWhite)
+                                    })
+                                    
+                                    Spacer()
+                                    
+                                    Button(action: {
+                                        homeManager.navigatePage(page: .analyze)
+                                    }, label: {
+                                        Text("面接分析")
+                                            .foregroundStyle(homeManager.currentPage == HomePage.analyze ?
+                                                .appPrimary : .appWhite)
+                                    })
+                                }
+                                .font(.custom(Font.customMedium, size: proxy.size.width / 28))
+                                .padding(proxy.size.width / 48)
+                                .padding(.horizontal, proxy.size.width / 14)
+                                .background {
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: proxy.size.width / 32)
+                                            .stroke(.appWhite, lineWidth: 1)
+                                        HStack {
+                                            if homeManager.currentPage == HomePage.analyze {
+                                                Spacer()
+                                            }
+                                            
+                                            RoundedRectangle(cornerRadius: proxy.size.width / 32)
+                                                .frame(width: proxy.size.width / 3)
+                                                .foregroundStyle(.appWhite)
+                                            
+                                            if homeManager.currentPage == HomePage.history {
+                                                Spacer()
+                                            }
+                                        }
+                                    }
+                                }
+                                .padding(.top, proxy.size.height / 48)
+                                
                                 
                                 Spacer()
                             }
@@ -127,9 +181,9 @@ struct HomeView: View {
                 })
                 
                 // Splash view
-//                if !homeManager.isAppReady {
-//                    SplashView()
-//                }
+                if !homeManager.isAppReady {
+                    SplashView()
+                }
             }
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
