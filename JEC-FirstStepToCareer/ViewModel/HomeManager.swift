@@ -9,4 +9,9 @@ import Foundation
 
 class HomeManager: ObservableObject {
     @Published var isAppReady = false
+    @Published var currentPage: HomePage = .mockInterview
+    
+    var bgText: String {
+        return currentPage.description.padding(toLength: 5, withPad: "", startingAt: 0)
+    }
 }

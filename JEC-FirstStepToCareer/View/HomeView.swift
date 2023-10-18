@@ -39,6 +39,16 @@ struct HomeView: View {
                                 Spacer()
                             }
                             
+                            // Background text
+                            Group {
+                                Text(homeManager.bgText)
+                                    .font(.custom(Font.customBlack, size: proxy.size.width / 3))
+                                    .fixedSize()
+                                    .position(x: proxy.size.width * 0.85,
+                                              y: proxy.size.height * 0.07)
+                                    .foregroundStyle(.appBlack.opacity(0.1))
+                            }
+                            
                             // Contents
                             VStack {
                                 // Logo + title and settings button

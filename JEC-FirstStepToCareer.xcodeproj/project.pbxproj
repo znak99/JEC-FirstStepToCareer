@@ -19,6 +19,7 @@
 		BD1AFDA32AE0318E0078A177 /* NotoSansJP-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD1AFD9E2AE0318E0078A177 /* NotoSansJP-Black.ttf */; };
 		BD1AFDA82AE032460078A177 /* Font+CustomFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1AFDA72AE032460078A177 /* Font+CustomFonts.swift */; };
 		BD1AFDAB2AE032EF0078A177 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1AFDAA2AE032EF0078A177 /* HomeView.swift */; };
+		BD3981FE2AE0425D00955A72 /* HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3981FD2AE0425D00955A72 /* HomePage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		BD1AFDA42AE031A20078A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BD1AFDA72AE032460078A177 /* Font+CustomFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+CustomFonts.swift"; sourceTree = "<group>"; };
 		BD1AFDAA2AE032EF0078A177 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		BD3981FD2AE0425D00955A72 /* HomePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 			children = (
 				BD1AFDA42AE031A20078A177 /* Info.plist */,
 				BD1AFDA52AE031F10078A177 /* App */,
+				BD3981FF2AE0426400955A72 /* Model */,
 				BD1AFDA92AE032DF0078A177 /* View */,
 				BD1809012AE0365500B035AA /* ViewModel */,
 				BD1AFDA62AE031FF0078A177 /* Extensions */,
@@ -139,6 +142,14 @@
 				BD1809042AE0373700B035AA /* SplashView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		BD3981FF2AE0426400955A72 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				BD3981FD2AE0425D00955A72 /* HomePage.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -217,6 +228,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BD1809032AE0367000B035AA /* HomeManager.swift in Sources */,
+				BD3981FE2AE0425D00955A72 /* HomePage.swift in Sources */,
 				BD1AFDAB2AE032EF0078A177 /* HomeView.swift in Sources */,
 				BD1809052AE0373700B035AA /* SplashView.swift in Sources */,
 				BD1AFD8B2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift in Sources */,
