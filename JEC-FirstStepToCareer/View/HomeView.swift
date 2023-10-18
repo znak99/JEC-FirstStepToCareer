@@ -82,6 +82,35 @@ struct HomeView: View {
                                     }
                                 }
                                 
+                                // Page icon + title and description
+                                VStack(spacing: 0) {
+                                    HStack(alignment: .center) {
+                                        // Icon
+                                        Image(homeManager.currentPage.icon)
+                                            .resizable()
+                                            .frame(width: proxy.size.width / 10)
+                                            .frame(height: proxy.size.width / 10)
+                                        
+                                        // Title
+                                        Text(homeManager.currentPage.title)
+                                            .font(.custom(Font.customBold, size: proxy.size.width / 16))
+                                            .foregroundStyle(.appWhite)
+                                        
+                                        Spacer()
+                                    }
+                                    
+                                    HStack {
+                                        // Description
+                                        Text(homeManager.currentPage.description)
+                                            .font(.custom(Font.customRegular, size: proxy.size.width / 28))
+                                            .foregroundStyle(.appWhite)
+                                        
+                                        Spacer()
+                                    }
+                                }
+                                .padding(.top, proxy.size.height / 20)
+                                
+                                
                                 Spacer()
                             }
                             .padding()

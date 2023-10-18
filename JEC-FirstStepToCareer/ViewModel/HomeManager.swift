@@ -12,6 +12,6 @@ class HomeManager: ObservableObject {
     @Published var currentPage: HomePage = .mockInterview
     
     var bgText: String {
-        return currentPage.description.padding(toLength: 5, withPad: "", startingAt: 0)
+        return currentPage.title.padding(toLength: 5, withPad: "", startingAt: 0)
     }
 }
