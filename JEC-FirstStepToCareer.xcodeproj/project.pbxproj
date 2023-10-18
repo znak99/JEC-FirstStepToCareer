@@ -21,6 +21,7 @@
 		BD1AFDAB2AE032EF0078A177 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1AFDAA2AE032EF0078A177 /* HomeView.swift */; };
 		BD3981FE2AE0425D00955A72 /* HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3981FD2AE0425D00955A72 /* HomePage.swift */; };
 		BDDAEA7D2AE05E4000D24153 /* MockInterviewPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDAEA7C2AE05E4000D24153 /* MockInterviewPage.swift */; };
+		BDDAEA802AE06A1900D24153 /* InterviewType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDAEA7F2AE06A1900D24153 /* InterviewType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		BD1AFDAA2AE032EF0078A177 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		BD3981FD2AE0425D00955A72 /* HomePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePage.swift; sourceTree = "<group>"; };
 		BDDAEA7C2AE05E4000D24153 /* MockInterviewPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewPage.swift; sourceTree = "<group>"; };
+		BDDAEA7F2AE06A1900D24153 /* InterviewType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterviewType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				BD3981FD2AE0425D00955A72 /* HomePage.swift */,
+				BDDAEA7F2AE06A1900D24153 /* InterviewType.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 				BD1AFDAB2AE032EF0078A177 /* HomeView.swift in Sources */,
 				BDDAEA7D2AE05E4000D24153 /* MockInterviewPage.swift in Sources */,
 				BD1809052AE0373700B035AA /* SplashView.swift in Sources */,
+				BDDAEA802AE06A1900D24153 /* InterviewType.swift in Sources */,
 				BD1AFD8B2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift in Sources */,
 				BD1AFDA82AE032460078A177 /* Font+CustomFonts.swift in Sources */,
 			);

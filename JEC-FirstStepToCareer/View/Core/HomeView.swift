@@ -171,13 +171,16 @@ struct HomeView: View {
                         }
                         
                         // Body
-                        if homeManager.currentPage == .history {
-                            EmptyView()
-                        } else if homeManager.currentPage == .mockInterview {
-                            MockInterviewPage(proxy: proxy, homeManager: homeManager)
-                        } else if homeManager.currentPage == .analyze {
-                            EmptyView()
+                        ScrollView(.vertical, showsIndicators: false) {
+                            if homeManager.currentPage == .history {
+                                EmptyView()
+                            } else if homeManager.currentPage == .mockInterview {
+                                MockInterviewPage(proxy: proxy, homeManager: homeManager)
+                            } else if homeManager.currentPage == .analyze {
+                                EmptyView()
+                            }
                         }
+                        .padding(.top)
                         
                         Spacer()
                     }
