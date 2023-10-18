@@ -23,16 +23,21 @@ struct HomeView: View {
                         // Header
                         ZStack {
                             // Background
-                            Group {
-                                Rectangle()
-                                    .fill(.appPrimary)
-                                RoundedRectangle(cornerRadius: proxy.size.width / 20)
-                                    .fill(.appPrimary)
-                                    .offset(y: proxy.size.width / 20)
+                            VStack {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: proxy.size.width / 20)
+                                        .fill(.appPrimary)
+                                        .offset(y: proxy.size.width / 20)
+                                        .shadow(color: .appBlack.opacity(0.5), radius: 4)
+                                    Rectangle()
+                                        .fill(.appPrimary)
+                                }
+                                .frame(width: proxy.size.width)
+                                .frame(height: proxy.size.height / 2.5 - proxy.size.width / 20)
+                                .ignoresSafeArea()
+                                
+                                Spacer()
                             }
-                            .frame(width: proxy.size.width)
-                            .frame(height: proxy.size.height / 2.5 - proxy.size.width / 20)
-                            .ignoresSafeArea()
                             
                             // Contents
                             VStack {
