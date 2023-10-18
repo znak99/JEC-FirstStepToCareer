@@ -97,8 +97,8 @@
 		BD1AFD992AE0316C0078A177 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				BD1AFD8E2AE02BAB0078A177 /* Assets.xcassets */,
 				BD1AFD982AE031660078A177 /* Fonts */,
+				BD1AFD8E2AE02BAB0078A177 /* Assets.xcassets */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
