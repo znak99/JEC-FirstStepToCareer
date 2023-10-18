@@ -41,23 +41,56 @@ struct HomeView: View {
                             
                             // Contents
                             VStack {
+                                // Logo + title and settings button
+                                HStack {
+                                    // Logo
+                                    Image("AppLogo-White")
+                                        .resizable()
+                                        .frame(width: proxy.size.width / 12)
+                                        .frame(height: proxy.size.width / 12)
+                                    
+                                    // Title
+                                    Text("就活一歩")
+                                        .font(.custom(Font.customSemiBold,
+                                                      size: proxy.size.width / 20))
+                                        .foregroundStyle(.appWhite)
+                                    
+                                    Spacer()
+                                    
+                                    // Settings button
+                                    NavigationLink(destination: EmptyView()) {
+                                        Image(systemName: "gearshape")
+                                            .resizable()
+                                            .frame(width: proxy.size.width / 20)
+                                            .frame(height: proxy.size.width / 20)
+                                            .foregroundStyle(.appWhite)
+                                    }
+                                    .padding(proxy.size.width / 48)
+                                    .background {
+                                        RoundedRectangle(cornerRadius: proxy.size.width / 32)
+                                            .stroke(.appWhite, lineWidth: 1)
+                                    }
+                                }
                                 
+                                Spacer()
                             }
+                            .padding()
                         }
                         
                         // Body
                         VStack {
                             
                         }
+                        .padding(.horizontal)
                         
                         Spacer()
                     }
                 })
                 
                 // Splash view
-                if !homeManager.isAppReady {
-                    SplashView()
-                }
+//                if !homeManager.isAppReady {
+//                    SplashView()
+//                }
             }
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
