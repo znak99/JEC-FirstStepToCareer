@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BD1809032AE0367000B035AA /* HomeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1809022AE0367000B035AA /* HomeManager.swift */; };
 		BD1AFD8B2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1AFD8A2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift */; };
 		BD1AFD8F2AE02BAB0078A177 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BD1AFD8E2AE02BAB0078A177 /* Assets.xcassets */; };
 		BD1AFD922AE02BAB0078A177 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BD1AFD912AE02BAB0078A177 /* Preview Assets.xcassets */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BD1809022AE0367000B035AA /* HomeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeManager.swift; sourceTree = "<group>"; };
 		BD1AFD872AE02BAB0078A177 /* JEC-FirstStepToCareer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "JEC-FirstStepToCareer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD1AFD8A2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JEC_FirstStepToCareerApp.swift; sourceTree = "<group>"; };
 		BD1AFD8E2AE02BAB0078A177 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -45,6 +47,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BD1809012AE0365500B035AA /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				BD1809022AE0367000B035AA /* HomeManager.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		BD1AFD7E2AE02BAB0078A177 = {
 			isa = PBXGroup;
 			children = (
@@ -67,6 +77,7 @@
 				BD1AFDA42AE031A20078A177 /* Info.plist */,
 				BD1AFDA52AE031F10078A177 /* App */,
 				BD1AFDA92AE032DF0078A177 /* View */,
+				BD1809012AE0365500B035AA /* ViewModel */,
 				BD1AFDA62AE031FF0078A177 /* Extensions */,
 				BD1AFD992AE0316C0078A177 /* Resource */,
 				BD1AFD902AE02BAB0078A177 /* Preview Content */,
@@ -202,6 +213,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD1809032AE0367000B035AA /* HomeManager.swift in Sources */,
 				BD1AFDAB2AE032EF0078A177 /* HomeView.swift in Sources */,
 				BD1AFD8B2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift in Sources */,
 				BD1AFDA82AE032460078A177 /* Font+CustomFonts.swift in Sources */,
