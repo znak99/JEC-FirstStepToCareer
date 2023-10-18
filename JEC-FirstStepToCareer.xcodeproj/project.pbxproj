@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		BD1AFD8B2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1AFD8A2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift */; };
-		BD1AFD8D2AE02BAB0078A177 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1AFD8C2AE02BAB0078A177 /* ContentView.swift */; };
 		BD1AFD8F2AE02BAB0078A177 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BD1AFD8E2AE02BAB0078A177 /* Assets.xcassets */; };
 		BD1AFD922AE02BAB0078A177 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BD1AFD912AE02BAB0078A177 /* Preview Assets.xcassets */; };
 		BD1AFD9F2AE0318E0078A177 /* NotoSansJP-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD1AFD9A2AE0318E0078A177 /* NotoSansJP-SemiBold.ttf */; };
@@ -17,12 +16,12 @@
 		BD1AFDA22AE0318E0078A177 /* NotoSansJP-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD1AFD9D2AE0318E0078A177 /* NotoSansJP-Regular.ttf */; };
 		BD1AFDA32AE0318E0078A177 /* NotoSansJP-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD1AFD9E2AE0318E0078A177 /* NotoSansJP-Black.ttf */; };
 		BD1AFDA82AE032460078A177 /* Font+CustomFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1AFDA72AE032460078A177 /* Font+CustomFonts.swift */; };
+		BD1AFDAB2AE032EF0078A177 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1AFDAA2AE032EF0078A177 /* HomeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		BD1AFD872AE02BAB0078A177 /* JEC-FirstStepToCareer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "JEC-FirstStepToCareer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD1AFD8A2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JEC_FirstStepToCareerApp.swift; sourceTree = "<group>"; };
-		BD1AFD8C2AE02BAB0078A177 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		BD1AFD8E2AE02BAB0078A177 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BD1AFD912AE02BAB0078A177 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BD1AFD9A2AE0318E0078A177 /* NotoSansJP-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansJP-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -32,6 +31,7 @@
 		BD1AFD9E2AE0318E0078A177 /* NotoSansJP-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansJP-Black.ttf"; sourceTree = "<group>"; };
 		BD1AFDA42AE031A20078A177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BD1AFDA72AE032460078A177 /* Font+CustomFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+CustomFonts.swift"; sourceTree = "<group>"; };
+		BD1AFDAA2AE032EF0078A177 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +66,7 @@
 			children = (
 				BD1AFDA42AE031A20078A177 /* Info.plist */,
 				BD1AFDA52AE031F10078A177 /* App */,
-				BD1AFD8C2AE02BAB0078A177 /* ContentView.swift */,
+				BD1AFDA92AE032DF0078A177 /* View */,
 				BD1AFDA62AE031FF0078A177 /* Extensions */,
 				BD1AFD992AE0316C0078A177 /* Resource */,
 				BD1AFD902AE02BAB0078A177 /* Preview Content */,
@@ -117,6 +117,14 @@
 				BD1AFDA72AE032460078A177 /* Font+CustomFonts.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		BD1AFDA92AE032DF0078A177 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				BD1AFDAA2AE032EF0078A177 /* HomeView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -194,7 +202,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BD1AFD8D2AE02BAB0078A177 /* ContentView.swift in Sources */,
+				BD1AFDAB2AE032EF0078A177 /* HomeView.swift in Sources */,
 				BD1AFD8B2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift in Sources */,
 				BD1AFDA82AE032460078A177 /* Font+CustomFonts.swift in Sources */,
 			);
