@@ -8,8 +8,14 @@
 import SwiftUI
 
 class HomeManager: ObservableObject {
+    
+    // Home
     @Published var isAppReady = false
     @Published var currentPage: HomePage = .mockInterview
+    
+    // Mock interview
+    @Published var companyName = ""
+    @Published var isFieldFocused = false
     
     var bgText: String {
         return currentPage.title.padding(toLength: 5, withPad: "", startingAt: 0)
@@ -23,5 +29,9 @@ class HomeManager: ObservableObject {
         withAnimation(.easeIn(duration: 0.2)) {
             currentPage = page
         }
+    }
+    
+    func clearField() {
+        companyName = ""
     }
 }
