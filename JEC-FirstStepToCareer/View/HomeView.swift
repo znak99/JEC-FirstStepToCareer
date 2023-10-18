@@ -163,27 +163,30 @@ struct HomeView: View {
                                     }
                                 }
                                 .padding(.top, proxy.size.height / 48)
-                                
-                                
-                                Spacer()
                             }
                             .padding()
                         }
+                        .frame(maxHeight: proxy.size.height / 3)
                         
                         // Body
                         VStack {
-                            
+                            if homeManager.currentPage == .history {
+                                EmptyView()
+                            } else if homeManager.currentPage == .mockInterview {
+                                Text("ABC")
+                            } else if homeManager.currentPage == .analyze {
+                                EmptyView()
+                            }
                         }
-                        .padding(.horizontal)
                         
                         Spacer()
                     }
                 })
                 
                 // Splash view
-                if !homeManager.isAppReady {
-                    SplashView()
-                }
+//                if !homeManager.isAppReady {
+//                    SplashView()
+//                }
             }
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
