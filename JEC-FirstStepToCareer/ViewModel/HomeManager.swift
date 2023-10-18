@@ -7,6 +7,6 @@
 
 import Foundation
 
-class HomeManager {
+class HomeManager: ObservableObject {
     @Published var isAppReady = false
 }

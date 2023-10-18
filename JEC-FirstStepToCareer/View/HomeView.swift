@@ -8,13 +8,26 @@
 import SwiftUI
 
 struct HomeView: View {
+    
+    @StateObject var homeManager = HomeManager()
+    
     var body: some View {
-        Text("ホームビュー")
-            .font(.custom(Font.customBold, size: 24))
-        Image("AppLogo-White")
-            .resizable()
-            .frame(width: 100, height: 100)
-            .background(.black)
+        NavigationStack {
+            ZStack {
+                // Background
+                Color.appWhite.ignoresSafeArea()
+                
+                // Splash view
+                if !homeManager.isAppReady {
+                    SplashView()
+                }
+            }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    homeManager.isAppReady.toggle()
+                }
+            }
+        }
     }
 }
 

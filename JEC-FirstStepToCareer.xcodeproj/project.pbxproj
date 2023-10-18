@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BD1809032AE0367000B035AA /* HomeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1809022AE0367000B035AA /* HomeManager.swift */; };
+		BD1809052AE0373700B035AA /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1809042AE0373700B035AA /* SplashView.swift */; };
 		BD1AFD8B2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1AFD8A2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift */; };
 		BD1AFD8F2AE02BAB0078A177 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BD1AFD8E2AE02BAB0078A177 /* Assets.xcassets */; };
 		BD1AFD922AE02BAB0078A177 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BD1AFD912AE02BAB0078A177 /* Preview Assets.xcassets */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		BD1809022AE0367000B035AA /* HomeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeManager.swift; sourceTree = "<group>"; };
+		BD1809042AE0373700B035AA /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		BD1AFD872AE02BAB0078A177 /* JEC-FirstStepToCareer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "JEC-FirstStepToCareer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD1AFD8A2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JEC_FirstStepToCareerApp.swift; sourceTree = "<group>"; };
 		BD1AFD8E2AE02BAB0078A177 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				BD1AFDAA2AE032EF0078A177 /* HomeView.swift */,
+				BD1809042AE0373700B035AA /* SplashView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 			files = (
 				BD1809032AE0367000B035AA /* HomeManager.swift in Sources */,
 				BD1AFDAB2AE032EF0078A177 /* HomeView.swift in Sources */,
+				BD1809052AE0373700B035AA /* SplashView.swift in Sources */,
 				BD1AFD8B2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift in Sources */,
 				BD1AFDA82AE032460078A177 /* Font+CustomFonts.swift in Sources */,
 			);
