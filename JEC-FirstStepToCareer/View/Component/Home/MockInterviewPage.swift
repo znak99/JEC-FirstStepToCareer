@@ -13,7 +13,7 @@ struct MockInterviewPage: View {
     @ObservedObject var homeManager: HomeManager
     
     var body: some View {
-        VStack {
+        VStack(spacing: proxy.size.height / 60) {
             // Company name field
             VStack(spacing: proxy.size.height / 80) {
                 // Label
@@ -123,7 +123,72 @@ struct MockInterviewPage: View {
                         .shadow(color: .appBlack.opacity(0.25), radius: 2, y: 2)
                     }
                 }
-                .padding(.top, proxy.size.height / 60)
+                
+                // Company type
+                VStack(spacing: proxy.size.height / 80) {
+                    // Label
+                    HStack {
+                        Text("企業分野")
+                            .font(.custom(Font.customMedium, size: proxy.size.width / 24))
+                            .foregroundStyle(.appBlack)
+                        Spacer()
+                    }
+                    
+                    // Navigate to select view
+                    NavigationLink(destination: EmptyView()) {
+                        HStack {
+                            Text("分野を選択してください")
+                                .font(.custom(Font.customMedium, size: proxy.size.width / 28))
+                                .foregroundStyle(.appGray)
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .resizable()
+                                .frame(width: proxy.size.width / 48)
+                                .frame(height: proxy.size.width / 32)
+                                .foregroundStyle(.appPrimary)
+                        }
+                        .padding(proxy.size.width / 48)
+                        .background(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: proxy.size.width / 32))
+                        
+                        .shadow(color: .appBlack.opacity(0.25), radius: 2, y: 2)
+                    }
+                }
+                
+                // Career objective
+                VStack(spacing: proxy.size.height / 80) {
+                    // Label
+                    HStack {
+                        Text("希望職種")
+                            .font(.custom(Font.customMedium, size: proxy.size.width / 24))
+                            .foregroundStyle(.appBlack)
+                        Spacer()
+                    }
+                    
+                    // Navigate to select view
+                    NavigationLink(destination: EmptyView()) {
+                        HStack {
+                            Text("職種を選択してください")
+                                .font(.custom(Font.customMedium, size: proxy.size.width / 28))
+                                .foregroundStyle(.appGray)
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .resizable()
+                                .frame(width: proxy.size.width / 48)
+                                .frame(height: proxy.size.width / 32)
+                                .foregroundStyle(.appPrimary)
+                        }
+                        .padding(proxy.size.width / 48)
+                        .background(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: proxy.size.width / 32))
+                        
+                        .shadow(color: .appBlack.opacity(0.25), radius: 2, y: 2)
+                    }
+                }
             }
         }
         .padding([.top, .horizontal])
