@@ -135,11 +135,12 @@ struct MockInterviewPage: View {
                     }
                     
                     // Navigate to select view
-                    NavigationLink(destination: EmptyView()) {
+                    NavigationLink(destination: CompanyTypeSelectorView(proxy: proxy,
+                                                                        homeManager: homeManager)) {
                         HStack {
-                            Text("分野を選択してください")
+                            Text(homeManager.currentCompanyType.rawValue)
                                 .font(.custom(Font.customMedium, size: proxy.size.width / 28))
-                                .foregroundStyle(.appGray)
+                                .foregroundStyle(homeManager.currentCompanyType == .none ? .appGray : .appBlack)
                             
                             Spacer()
                             
@@ -152,7 +153,6 @@ struct MockInterviewPage: View {
                         .padding(proxy.size.width / 48)
                         .background(.white)
                         .clipShape(RoundedRectangle(cornerRadius: proxy.size.width / 32))
-                        
                         .shadow(color: .appBlack.opacity(0.25), radius: 2, y: 2)
                     }
                 }
@@ -185,13 +185,12 @@ struct MockInterviewPage: View {
                         .padding(proxy.size.width / 48)
                         .background(.white)
                         .clipShape(RoundedRectangle(cornerRadius: proxy.size.width / 32))
-                        
                         .shadow(color: .appBlack.opacity(0.25), radius: 2, y: 2)
                     }
                 }
             }
         }
-        .padding([.top, .horizontal])
+        .padding()
         .onAppear {
             // Keyboard up
             NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidShowNotification,
