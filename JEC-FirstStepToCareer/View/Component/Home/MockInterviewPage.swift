@@ -14,10 +14,6 @@ struct MockInterviewPage: View {
     
     var body: some View {
         VStack {
-            if homeManager.isFieldFocused {
-                Spacer()
-            }
-            
             // Company name field
             VStack(spacing: proxy.size.height / 80) {
                 // Label
@@ -68,6 +64,7 @@ struct MockInterviewPage: View {
                 .clipShape(RoundedRectangle(cornerRadius: proxy.size.width / 32))
                 .shadow(color: .appBlack.opacity(0.25), radius: 2, y: 2)
             }
+            .offset(y: homeManager.isFieldFocused ? proxy.size.height / 4 : 0)
             
             if !homeManager.isFieldFocused {
                 // Interview type
@@ -127,10 +124,6 @@ struct MockInterviewPage: View {
                     }
                 }
                 .padding(.top, proxy.size.height / 60)
-            }
-            
-            if homeManager.isFieldFocused {
-                Spacer()
             }
         }
         .padding([.top, .horizontal])

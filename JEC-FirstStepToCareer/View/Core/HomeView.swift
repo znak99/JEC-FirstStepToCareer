@@ -196,6 +196,9 @@ struct HomeView: View {
                     homeManager.isAppReady.toggle()
                 }
             }
+            .onTapGesture {
+                self.hideKeyboard()
+            }
         }
     }
 }
