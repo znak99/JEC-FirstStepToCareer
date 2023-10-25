@@ -13,6 +13,7 @@ enum CareerType: String, Identifiable, CaseIterable {
         return self.rawValue
     }
     
+    // TODO: 디테일추가
     case sales = "営業"
     case office = "オフィスワーク・事務"
     case shop = "販売"
