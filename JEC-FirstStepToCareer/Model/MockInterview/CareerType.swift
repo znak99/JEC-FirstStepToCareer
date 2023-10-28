@@ -13,13 +13,12 @@ enum CareerType: String, Identifiable, CaseIterable {
         return self.rawValue
     }
     
-    // TODO: 디테일추가
     case sales = "営業"
-    case office = "オフィスワーク・事務"
+    case office = "オフィスワーク"
     case shop = "販売"
-    case food = "飲食"
+    case food = "飲食・フード"
     case service = "サービス"
-    case leisure = "レジャー・娯楽"
+    case event = "レジャー・娯楽"
     case education = "教育"
     case sports = "スポーツ"
     case beauty = "美容"
@@ -28,6 +27,6 @@ enum CareerType: String, Identifiable, CaseIterable {
     case manufacturing = "製造・工場・倉庫"
     case engineer = "IT・エンジニア"
     case creator = "クリエイティブ・編集"
-    case technical = "専門職"
+    case technical = "専門職・技術"
     case construction = "建設"
 }
