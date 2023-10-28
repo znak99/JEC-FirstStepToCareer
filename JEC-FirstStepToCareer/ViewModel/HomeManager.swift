@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 class HomeManager: ObservableObject {
     
     // Home
+    let realm = try! Realm()
+    
     @Published var isAppReady = false
     @Published var currentPage: HomePage = .mockInterview
     
@@ -19,7 +22,7 @@ class HomeManager: ObservableObject {
     @Published var currentInterviewType: InterviewType = .newcomer
     @Published var currentCompanyType: CompanyType = .none
     @Published var currentCareerType: CareerType = .none
-    @Published var isSaveInterviewInfo = false
+    @Published var isSaveInterviewInfo = true
     @Published var isInitializeInterview = false
     
     // Home header background text
@@ -64,6 +67,49 @@ class HomeManager: ObservableObject {
     
     // Navigate to initialize mock interview view
     func initializeMockInterview() {
-        self.isInitializeInterview.toggle()
+        // Check Validation
+        
+        // Store interview info on db
+        if isSaveInterviewInfo {
+            saveInterviewInfo()
+        }
+        
+        // Show Indicator
+        
+        // Check connection with server
+        
+        // Navigate
+        isInitializeInterview = true
+    }
+    
+    // Store interview info on realm
+    func saveInterviewInfo() {
+        // Check have created interview info object before
+        let interviewInfoObjects = realm.objects(InterviewInfo.self)
+        
+        if interviewInfoObjects.isEmpty {
+            // Add new object
+            try! realm.write {
+                let interviewInfo = InterviewInfo()
+                interviewInfo.companyName = companyName
+                interviewInfo.interviewType = currentInterviewType.rawValue
+                interviewInfo.companyType = currentCompanyType.rawValue
+                interviewInfo.careerType = currentCareerType.rawValue
+                interviewInfo.isInterviewInfoSaved = isSaveInterviewInfo
+                
+                realm.add(interviewInfo)
+            }
+        } else {
+            // Update the properties of the existing object
+            try! realm.write {
+                if let existingInfo = interviewInfoObjects.first {
+                    existingInfo.companyName = companyName
+                    existingInfo.interviewType = currentInterviewType.rawValue
+                    existingInfo.companyType = currentCompanyType.rawValue
+                    existingInfo.careerType = currentCareerType.rawValue
+                    existingInfo.isInterviewInfoSaved = isSaveInterviewInfo
+                }
+            }
+        }
     }
 }
