@@ -193,7 +193,7 @@ struct HomeView: View {
             }
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                    homeManager.isAppReady.toggle()
+                    homeManager.isAppReady = true
                 }
             }
             .onTapGesture {

@@ -234,6 +234,11 @@ struct MockInterviewPage: View {
         }
         .padding()
         .onAppear {
+            // Fill interview info field at first time to launch app
+            if !homeManager.isAppReady {
+                homeManager.updateMockInterviewFields()
+            }
+            
             // Keyboard up
             NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidShowNotification,
                                                    object: nil,

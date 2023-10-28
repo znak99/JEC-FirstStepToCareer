@@ -80,9 +80,9 @@ class HomeManager: ObservableObject {
             saveInterviewInfo()
         }
         
-        // Show Indicator
+        // TODO: - Show Indicator
         
-        // Check connection with server
+        // TODO: - Check connection with server
         
         // Navigate
         isInitializeInterview = true
@@ -108,13 +108,31 @@ class HomeManager: ObservableObject {
         } else {
             // Update the properties of the existing object
             try! realm.write {
-                if let existingInfo = interviewInfoObjects.first {
-                    existingInfo.companyName = companyName
-                    existingInfo.interviewType = currentInterviewType.rawValue
-                    existingInfo.companyType = currentCompanyType.rawValue
-                    existingInfo.careerType = currentCareerType.rawValue
-                    existingInfo.isInterviewInfoSaved = isSaveInterviewInfo
+                if let interviewInfoObject = interviewInfoObjects.first {
+                    interviewInfoObject.companyName = companyName
+                    interviewInfoObject.interviewType = currentInterviewType.rawValue
+                    interviewInfoObject.companyType = currentCompanyType.rawValue
+                    interviewInfoObject.careerType = currentCareerType.rawValue
+                    interviewInfoObject.isInterviewInfoSaved = isSaveInterviewInfo
                 }
+            }
+        }
+        
+        // Update interview info fields
+        updateMockInterviewFields()
+    }
+    
+    // Fill mock interview info fields
+    func updateMockInterviewFields() {
+        let interviewInfoObjects = realm.objects(InterviewInfo.self)
+        
+        if !interviewInfoObjects.isEmpty {
+            if let interviewInfoObject = interviewInfoObjects.first {
+                companyName = interviewInfoObject.companyName
+                currentInterviewType = InterviewType(rawValue: interviewInfoObject.interviewType)!
+                currentCompanyType = CompanyType(rawValue: interviewInfoObject.companyType)!
+                currentCareerType = CareerType(rawValue: interviewInfoObject.careerType)!
+                isSaveInterviewInfo = interviewInfoObject.isInterviewInfoSaved
             }
         }
     }
