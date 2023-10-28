@@ -18,6 +18,7 @@ class HomeManager: ObservableObject {
     @Published var isFieldFocused = false
     @Published var currentInterviewType: InterviewType = .newcomer
     @Published var currentCompanyType: CompanyType = .none
+    @Published var currentCareerType: CareerType = .none
     
     // Home header background text
     var bgText: String {
@@ -50,5 +51,11 @@ class HomeManager: ObservableObject {
         if type == currentCompanyType { return }
         
         currentCompanyType = type
+    }
+    
+    func selectCareerType(type: CareerType) {
+        if type == currentCareerType { return }
+        
+        currentCareerType = type
     }
 }

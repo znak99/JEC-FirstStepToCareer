@@ -14,7 +14,7 @@ enum CareerType: String, Identifiable, CaseIterable {
     }
     
     case sales = "営業"
-    case office = "オフィスワーク"
+    case office = "事務"
     case shop = "販売"
     case food = "飲食・フード"
     case service = "サービス"
@@ -29,4 +29,5 @@ enum CareerType: String, Identifiable, CaseIterable {
     case creator = "クリエイティブ・編集"
     case technical = "専門職・技術"
     case construction = "建設"
+    case none = "職種を選択してください"
 }

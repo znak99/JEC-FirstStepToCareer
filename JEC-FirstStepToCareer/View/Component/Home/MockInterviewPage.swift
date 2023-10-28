@@ -168,11 +168,12 @@ struct MockInterviewPage: View {
                     }
                     
                     // Navigate to select view
-                    NavigationLink(destination: EmptyView()) {
+                    NavigationLink(destination: CareerTypeSelectorView(proxy: proxy,
+                                                                       homeManager: homeManager)) {
                         HStack {
-                            Text("職種を選択してください")
+                            Text(homeManager.currentCareerType.rawValue)
                                 .font(.custom(Font.customMedium, size: proxy.size.width / 28))
-                                .foregroundStyle(.appGray)
+                                .foregroundStyle(homeManager.currentCareerType == .none ? .appGray : .appBlack)
                             
                             Spacer()
                             
