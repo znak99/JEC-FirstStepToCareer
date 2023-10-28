@@ -24,6 +24,7 @@ class HomeManager: ObservableObject {
     @Published var currentCareerType: CareerType = .none
     @Published var isSaveInterviewInfo = true
     @Published var isInitializeInterview = false
+    @Published var isValidationFailed = false
     
     // Home header background text
     var bgText: String {
@@ -68,6 +69,11 @@ class HomeManager: ObservableObject {
     // Navigate to initialize mock interview view
     func initializeMockInterview() {
         // Check Validation
+        if companyName.isEmpty || currentCompanyType == .none || currentCareerType == .none {
+            isValidationFailed = true
+            return
+        }
+        isValidationFailed = false
         
         // Store interview info on db
         if isSaveInterviewInfo {

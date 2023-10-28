@@ -209,6 +209,13 @@ struct MockInterviewPage: View {
                     })
                 }
                 
+                if homeManager.isValidationFailed {
+                    Text("未入力、または選択していない項目があります")
+                        .font(.custom(Font.customMedium, size: proxy.size.width / 32))
+                        .foregroundStyle(.appRed)
+                        .frame(maxWidth: .infinity)
+                }
+                
                 // Start mock interview
                 Button(action: {
                     homeManager.initializeMockInterview()
@@ -222,7 +229,7 @@ struct MockInterviewPage: View {
                 .background(.appPrimary)
                 .clipShape(RoundedRectangle(cornerRadius: proxy.size.width / 32))
                 .shadow(color: .appBlack.opacity(0.25), radius: 2, y: 2)
-                .padding(.vertical)
+                .padding(homeManager.isValidationFailed ? .bottom : .vertical)
             }
         }
         .padding()
