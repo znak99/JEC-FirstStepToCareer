@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		BD12F4ED2AED4F1D00C9EFED /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = BD12F4EC2AED4F1D00C9EFED /* Realm */; };
 		BD12F4EF2AED4F1D00C9EFED /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = BD12F4EE2AED4F1D00C9EFED /* RealmSwift */; };
+		BD12F4F52AED527E00C9EFED /* InterviewInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD12F4F42AED527E00C9EFED /* InterviewInfo.swift */; };
 		BD1809032AE0367000B035AA /* HomeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1809022AE0367000B035AA /* HomeManager.swift */; };
 		BD1809052AE0373700B035AA /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1809042AE0373700B035AA /* SplashView.swift */; };
 		BD1AFD8B2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1AFD8A2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift */; };
@@ -33,6 +34,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BD12F4F42AED527E00C9EFED /* InterviewInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterviewInfo.swift; sourceTree = "<group>"; };
 		BD1809022AE0367000B035AA /* HomeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeManager.swift; sourceTree = "<group>"; };
 		BD1809042AE0373700B035AA /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		BD1AFD872AE02BAB0078A177 /* JEC-FirstStepToCareer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "JEC-FirstStepToCareer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -71,6 +73,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BD12F4F22AED524900C9EFED /* RealmObjects */ = {
+			isa = PBXGroup;
+			children = (
+				BD12F4F42AED527E00C9EFED /* InterviewInfo.swift */,
+			);
+			path = RealmObjects;
+			sourceTree = "<group>";
+		};
 		BD1809012AE0365500B035AA /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -170,6 +180,7 @@
 			children = (
 				BD69AE3F2AE981A400C7DA1E /* Home */,
 				BD69AE3E2AE9818E00C7DA1E /* MockInterview */,
+				BD12F4F22AED524900C9EFED /* RealmObjects */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -316,6 +327,7 @@
 				BD4A93F42AE0C39D0064BA95 /* View+KeyboardControl.swift in Sources */,
 				BD1AFDA82AE032460078A177 /* Font+CustomFonts.swift in Sources */,
 				BD69AE412AE981D800C7DA1E /* CareerType.swift in Sources */,
+				BD12F4F52AED527E00C9EFED /* InterviewInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
