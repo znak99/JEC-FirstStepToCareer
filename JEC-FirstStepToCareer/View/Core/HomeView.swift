@@ -199,6 +199,9 @@ struct HomeView: View {
             .onTapGesture {
                 self.hideKeyboard()
             }
+            .navigationDestination(isPresented: $homeManager.isInitializeInterview) {
+                MockInterviewInitializeView()
+            }
         }
     }
 }

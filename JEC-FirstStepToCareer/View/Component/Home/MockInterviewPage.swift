@@ -208,6 +208,21 @@ struct MockInterviewPage: View {
                         }
                     })
                 }
+                
+                // Start mock interview
+                Button(action: {
+                    homeManager.initializeMockInterview()
+                }, label: {
+                    Text("模擬面接を始める")
+                        .font(.custom(Font.customBold, size: proxy.size.width / 20))
+                        .foregroundStyle(.appWhite)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, proxy.size.height / 100)
+                })
+                .background(.appPrimary)
+                .clipShape(RoundedRectangle(cornerRadius: proxy.size.width / 32))
+                .shadow(color: .appBlack.opacity(0.25), radius: 2, y: 2)
+                .padding(.vertical)
             }
         }
         .padding()

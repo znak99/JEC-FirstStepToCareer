@@ -20,6 +20,7 @@ class HomeManager: ObservableObject {
     @Published var currentCompanyType: CompanyType = .none
     @Published var currentCareerType: CareerType = .none
     @Published var isSaveInterviewInfo = false
+    @Published var isInitializeInterview = false
     
     // Home header background text
     var bgText: String {
@@ -59,5 +60,10 @@ class HomeManager: ObservableObject {
         if type == currentCareerType { return }
         
         currentCareerType = type
+    }
+    
+    // Navigate to initialize mock interview view
+    func initializeMockInterview() {
+        self.isInitializeInterview.toggle()
     }
 }
