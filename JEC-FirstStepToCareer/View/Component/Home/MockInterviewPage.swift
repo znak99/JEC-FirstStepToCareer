@@ -189,6 +189,25 @@ struct MockInterviewPage: View {
                         .shadow(color: .appBlack.opacity(0.25), radius: 2, y: 2)
                     }
                 }
+                
+                // Save interview info
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        homeManager.isSaveInterviewInfo.toggle()
+                    }, label: {
+                        HStack(alignment: .center, spacing: proxy.size.width / 120) {
+                            Image(homeManager.isSaveInterviewInfo ? "CheckBox-On" : "CheckBox-Off")
+                                .resizable()
+                                .frame(width: proxy.size.width / 20)
+                                .frame(height: proxy.size.width / 20)
+                            Text("この情報を保存する")
+                                .font(.custom(Font.customMedium, size: proxy.size.width / 32))
+                                .foregroundStyle(.appGray)
+                                .underline()
+                        }
+                    })
+                }
             }
         }
         .padding()

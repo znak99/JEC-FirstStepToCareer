@@ -19,6 +19,7 @@ class HomeManager: ObservableObject {
     @Published var currentInterviewType: InterviewType = .newcomer
     @Published var currentCompanyType: CompanyType = .none
     @Published var currentCareerType: CareerType = .none
+    @Published var isSaveInterviewInfo = false
     
     // Home header background text
     var bgText: String {
@@ -53,6 +54,7 @@ class HomeManager: ObservableObject {
         currentCompanyType = type
     }
     
+    // Select career type
     func selectCareerType(type: CareerType) {
         if type == currentCareerType { return }
         
