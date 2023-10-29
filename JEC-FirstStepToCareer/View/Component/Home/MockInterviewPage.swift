@@ -216,6 +216,13 @@ struct MockInterviewPage: View {
                         .frame(maxWidth: .infinity)
                 }
                 
+                if !homeManager.isValidationFailed {
+                    Text("サーバーに接続できませんでした")
+                        .font(.custom(Font.customMedium, size: proxy.size.width / 32))
+                        .foregroundStyle(.appRed)
+                        .frame(maxWidth: .infinity)
+                }
+                
                 // Start mock interview
                 Button(action: {
                     homeManager.initializeMockInterview()

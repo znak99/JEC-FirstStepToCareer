@@ -25,6 +25,7 @@ class HomeManager: ObservableObject {
     @Published var isSaveInterviewInfo = true
     @Published var isInitializeInterview = false
     @Published var isValidationFailed = false
+    @Published var isConnectionFailed = false
     
     // Home header background text
     var bgText: String {
@@ -80,9 +81,8 @@ class HomeManager: ObservableObject {
             saveInterviewInfo()
         }
         
-        // TODO: - Show Indicator
+        // Check connection with server
         
-        // TODO: - Check connection with server
         
         // Navigate
         isInitializeInterview = true
@@ -135,5 +135,19 @@ class HomeManager: ObservableObject {
                 isSaveInterviewInfo = interviewInfoObject.isInterviewInfoSaved
             }
         }
+    }
+    
+    func checkConnection() {
+        guard let url = AppConstants.requestUrl() else {
+            return
+        }
+
+//        URLSession.shared.dataTaskPublisher(for: url)
+//            .map(\.data)
+//            .decode(type: MyModel.self, decoder: JSONDecoder())
+//            .replaceError(with: nil)
+//            .receive(on: DispatchQueue.main)
+//            .assign(to: \.data, on: self)
+//            .store(in: &cancellables)
     }
 }
