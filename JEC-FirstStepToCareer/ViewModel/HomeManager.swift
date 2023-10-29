@@ -74,12 +74,13 @@ class HomeManager: ObservableObject {
         isShowLoadingIndicator = true
         
         // Generate random delay time
-        var delay = Int.random(in: 100...500)
+        let delay = Int.random(in: 100...500)
         
         DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .milliseconds(delay))) {
             // Check Validation
             if self.companyName.isEmpty || self.currentCompanyType == .none || self.currentCareerType == .none {
                 self.isValidationFailed = true
+                self.isShowLoadingIndicator = false
                 return
             }
             self.isValidationFailed = false
