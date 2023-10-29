@@ -142,12 +142,12 @@ class HomeManager: ObservableObject {
             return
         }
 
-//        URLSession.shared.dataTaskPublisher(for: url)
-//            .map(\.data)
-//            .decode(type: MyModel.self, decoder: JSONDecoder())
-//            .replaceError(with: nil)
-//            .receive(on: DispatchQueue.main)
-//            .assign(to: \.data, on: self)
-//            .store(in: &cancellables)
+        URLSession.shared.dataTaskPublisher(for: url)
+            .map(\.data)
+            .decode(type: MyModel.self, decoder: JSONDecoder())
+            .replaceError(with: nil)
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.data, on: self)
+            .store(in: &cancellables)
     }
 }
