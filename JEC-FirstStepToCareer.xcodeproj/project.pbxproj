@@ -30,9 +30,9 @@
 		BD4A93F82AE0CAD40064BA95 /* CompanyTypeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4A93F72AE0CAD40064BA95 /* CompanyTypeSelectorView.swift */; };
 		BD65E4AC2AED47CB00A345FE /* MockInterviewInitializeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD65E4AB2AED47CB00A345FE /* MockInterviewInitializeView.swift */; };
 		BD6782652AEE5F1600C5B0D9 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6782642AEE5F1600C5B0D9 /* LoadingIndicator.swift */; };
-		BD6782742AEE9BC600C5B0D9 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6782732AEE9BC600C5B0D9 /* CameraManager.swift */; };
 		BD6782762AEE9F1800C5B0D9 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6782752AEE9F1800C5B0D9 /* CameraPreview.swift */; };
 		BD6782792AEEBA3600C5B0D9 /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6782782AEEBA3600C5B0D9 /* CameraService.swift */; };
+		BD67827B2AEEC9A500C5B0D9 /* MockInterviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD67827A2AEEC9A500C5B0D9 /* MockInterviewManager.swift */; };
 		BD69AE412AE981D800C7DA1E /* CareerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD69AE402AE981D800C7DA1E /* CareerType.swift */; };
 		BDAF3F362AED40B200AA32FD /* CareerTypeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAF3F352AED40B200AA32FD /* CareerTypeSelectorView.swift */; };
 		BDDAEA7D2AE05E4000D24153 /* MockInterviewPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDAEA7C2AE05E4000D24153 /* MockInterviewPage.swift */; };
@@ -63,9 +63,9 @@
 		BD4A93F72AE0CAD40064BA95 /* CompanyTypeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyTypeSelectorView.swift; sourceTree = "<group>"; };
 		BD65E4AB2AED47CB00A345FE /* MockInterviewInitializeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewInitializeView.swift; sourceTree = "<group>"; };
 		BD6782642AEE5F1600C5B0D9 /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
-		BD6782732AEE9BC600C5B0D9 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
 		BD6782752AEE9F1800C5B0D9 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		BD6782782AEEBA3600C5B0D9 /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
+		BD67827A2AEEC9A500C5B0D9 /* MockInterviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewManager.swift; sourceTree = "<group>"; };
 		BD69AE402AE981D800C7DA1E /* CareerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareerType.swift; sourceTree = "<group>"; };
 		BDAF3F352AED40B200AA32FD /* CareerTypeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareerTypeSelectorView.swift; sourceTree = "<group>"; };
 		BDDAEA7C2AE05E4000D24153 /* MockInterviewPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewPage.swift; sourceTree = "<group>"; };
@@ -97,7 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				BD1809022AE0367000B035AA /* HomeManager.swift */,
-				BD6782732AEE9BC600C5B0D9 /* CameraManager.swift */,
+				BD67827A2AEEC9A500C5B0D9 /* MockInterviewManager.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -348,9 +348,9 @@
 				BDAF3F362AED40B200AA32FD /* CareerTypeSelectorView.swift in Sources */,
 				BD1AFDAB2AE032EF0078A177 /* HomeView.swift in Sources */,
 				BD4A93F62AE0C9310064BA95 /* CompanyType.swift in Sources */,
-				BD6782742AEE9BC600C5B0D9 /* CameraManager.swift in Sources */,
 				BDDAEA7D2AE05E4000D24153 /* MockInterviewPage.swift in Sources */,
 				BD1902BD2AEE0A0500F2F892 /* RootResponse.swift in Sources */,
+				BD67827B2AEEC9A500C5B0D9 /* MockInterviewManager.swift in Sources */,
 				BD1809052AE0373700B035AA /* SplashView.swift in Sources */,
 				BDDAEA802AE06A1900D24153 /* InterviewType.swift in Sources */,
 				BD1AFD8B2AE02BAB0078A177 /* JEC_FirstStepToCareerApp.swift in Sources */,
