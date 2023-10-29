@@ -8,7 +8,7 @@
 import Foundation
 
 class AppConstants {
-    private static let url = "http://0.0.0.0:8000"
+    private static let url = "https://port-0-jec-graduationprojectapi-12fhqa2llob7q2ol.sel5.cloudtype.app"
     
     private init() {}
     

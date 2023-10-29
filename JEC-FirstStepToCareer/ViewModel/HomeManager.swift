@@ -153,7 +153,7 @@ class HomeManager: ObservableObject {
             }
             
             DispatchQueue.main.async {
-                if decodedData.message == "connection succeed" {
+                if decodedData.message == "root" {
                     self.isConnectionFailed = false
                     
                     // Navigate
