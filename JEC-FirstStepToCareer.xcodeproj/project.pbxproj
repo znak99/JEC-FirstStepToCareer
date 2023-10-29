@@ -29,6 +29,7 @@
 		BD4A93F62AE0C9310064BA95 /* CompanyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4A93F52AE0C9310064BA95 /* CompanyType.swift */; };
 		BD4A93F82AE0CAD40064BA95 /* CompanyTypeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4A93F72AE0CAD40064BA95 /* CompanyTypeSelectorView.swift */; };
 		BD65E4AC2AED47CB00A345FE /* MockInterviewInitializeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD65E4AB2AED47CB00A345FE /* MockInterviewInitializeView.swift */; };
+		BD6782652AEE5F1600C5B0D9 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6782642AEE5F1600C5B0D9 /* LoadingIndicator.swift */; };
 		BD69AE412AE981D800C7DA1E /* CareerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD69AE402AE981D800C7DA1E /* CareerType.swift */; };
 		BDAF3F362AED40B200AA32FD /* CareerTypeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAF3F352AED40B200AA32FD /* CareerTypeSelectorView.swift */; };
 		BDDAEA7D2AE05E4000D24153 /* MockInterviewPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDAEA7C2AE05E4000D24153 /* MockInterviewPage.swift */; };
@@ -58,6 +59,7 @@
 		BD4A93F52AE0C9310064BA95 /* CompanyType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyType.swift; sourceTree = "<group>"; };
 		BD4A93F72AE0CAD40064BA95 /* CompanyTypeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyTypeSelectorView.swift; sourceTree = "<group>"; };
 		BD65E4AB2AED47CB00A345FE /* MockInterviewInitializeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewInitializeView.swift; sourceTree = "<group>"; };
+		BD6782642AEE5F1600C5B0D9 /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
 		BD69AE402AE981D800C7DA1E /* CareerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareerType.swift; sourceTree = "<group>"; };
 		BDAF3F352AED40B200AA32FD /* CareerTypeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareerTypeSelectorView.swift; sourceTree = "<group>"; };
 		BDDAEA7C2AE05E4000D24153 /* MockInterviewPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewPage.swift; sourceTree = "<group>"; };
@@ -220,17 +222,10 @@
 		BDDAEA7A2AE05DAE00D24153 /* Component */ = {
 			isa = PBXGroup;
 			children = (
-				BDDAEA7B2AE05DC600D24153 /* Home */,
+				BDDAEA7C2AE05E4000D24153 /* MockInterviewPage.swift */,
+				BD6782642AEE5F1600C5B0D9 /* LoadingIndicator.swift */,
 			);
 			path = Component;
-			sourceTree = "<group>";
-		};
-		BDDAEA7B2AE05DC600D24153 /* Home */ = {
-			isa = PBXGroup;
-			children = (
-				BDDAEA7C2AE05E4000D24153 /* MockInterviewPage.swift */,
-			);
-			path = Home;
 			sourceTree = "<group>";
 		};
 		BDDAEA7E2AE05E4700D24153 /* Core */ = {
@@ -327,6 +322,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD6782652AEE5F1600C5B0D9 /* LoadingIndicator.swift in Sources */,
 				BD1809032AE0367000B035AA /* HomeManager.swift in Sources */,
 				BD4A93F82AE0CAD40064BA95 /* CompanyTypeSelectorView.swift in Sources */,
 				BD65E4AC2AED47CB00A345FE /* MockInterviewInitializeView.swift in Sources */,

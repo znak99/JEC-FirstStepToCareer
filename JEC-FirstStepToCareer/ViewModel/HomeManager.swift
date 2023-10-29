@@ -15,6 +15,7 @@ class HomeManager: ObservableObject {
     
     @Published var isAppReady = false
     @Published var currentPage: HomePage = .mockInterview
+    @Published var isShowLoadingIndicator = false
     
     // Mock interview
     @Published var companyName = ""
@@ -69,20 +70,28 @@ class HomeManager: ObservableObject {
     
     // Navigate to initialize mock interview view
     func initializeMockInterview() {
-        // Check Validation
-        if companyName.isEmpty || currentCompanyType == .none || currentCareerType == .none {
-            isValidationFailed = true
-            return
-        }
-        isValidationFailed = false
-
-        // Store interview info on db
-        if isSaveInterviewInfo {
-            saveInterviewInfo()
-        }
+        // Show loading indicator
+        isShowLoadingIndicator = true
         
-        // Check connection with server and Navigate
-        checkConnection()
+        // Generate random delay time
+        var delay = Int.random(in: 100...500)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .milliseconds(delay))) {
+            // Check Validation
+            if self.companyName.isEmpty || self.currentCompanyType == .none || self.currentCareerType == .none {
+                self.isValidationFailed = true
+                return
+            }
+            self.isValidationFailed = false
+
+            // Store interview info on db
+            if self.isSaveInterviewInfo {
+                self.saveInterviewInfo()
+            }
+            
+            // Check connection with server and navigate, hide indicator
+            self.checkConnection()
+        }
     }
     
     // Store interview info on realm
@@ -161,6 +170,9 @@ class HomeManager: ObservableObject {
                 } else {
                     self.isConnectionFailed = true
                 }
+                
+                // Hide loading indicator
+                self.isShowLoadingIndicator = false
             }
         }.resume()
     }

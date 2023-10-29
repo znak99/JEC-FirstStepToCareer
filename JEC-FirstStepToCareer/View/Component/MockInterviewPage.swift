@@ -42,6 +42,7 @@ struct MockInterviewPage: View {
                             .clipShape(RoundedRectangle(cornerRadius: proxy.size.width / 32))
                             .disableAutocorrection(true)
                             .textInputAutocapitalization(.never)
+                            .disabled(homeManager.isShowLoadingIndicator)
                         
                         if !homeManager.companyName.isEmpty {
                             HStack {
@@ -54,6 +55,7 @@ struct MockInterviewPage: View {
                                         .foregroundStyle(.appGray)
                                         .padding(.trailing, proxy.size.width / 48)
                                 })
+                                .disabled(homeManager.isShowLoadingIndicator)
                             }
                         }
                     }
@@ -98,6 +100,7 @@ struct MockInterviewPage: View {
                         .background(homeManager.currentInterviewType == .newcomer ? .appPrimary : .white)
                         .clipShape(RoundedRectangle(cornerRadius: proxy.size.width / 32))
                         .shadow(color: .appBlack.opacity(0.25), radius: 2, y: 2)
+                        .disabled(homeManager.isShowLoadingIndicator)
                         
                         Spacer()
                         
@@ -121,6 +124,7 @@ struct MockInterviewPage: View {
                         .background(homeManager.currentInterviewType == .experienced ? .appPrimary : .white)
                         .clipShape(RoundedRectangle(cornerRadius: proxy.size.width / 32))
                         .shadow(color: .appBlack.opacity(0.25), radius: 2, y: 2)
+                        .disabled(homeManager.isShowLoadingIndicator)
                     }
                 }
                 
@@ -154,7 +158,7 @@ struct MockInterviewPage: View {
                         .background(.white)
                         .clipShape(RoundedRectangle(cornerRadius: proxy.size.width / 32))
                         .shadow(color: .appBlack.opacity(0.25), radius: 2, y: 2)
-                    }
+                    }.disabled(homeManager.isShowLoadingIndicator)
                 }
                 
                 // Career objective
@@ -187,7 +191,7 @@ struct MockInterviewPage: View {
                         .background(.white)
                         .clipShape(RoundedRectangle(cornerRadius: proxy.size.width / 32))
                         .shadow(color: .appBlack.opacity(0.25), radius: 2, y: 2)
-                    }
+                    }.disabled(homeManager.isShowLoadingIndicator)
                 }
                 
                 // Save interview info
@@ -207,6 +211,7 @@ struct MockInterviewPage: View {
                                 .underline()
                         }
                     })
+                    .disabled(homeManager.isShowLoadingIndicator)
                 }
                 
                 if homeManager.isValidationFailed {
@@ -238,6 +243,7 @@ struct MockInterviewPage: View {
                 .shadow(color: .appBlack.opacity(0.25), radius: 2, y: 2)
                 .padding(homeManager.isValidationFailed || homeManager.isConnectionFailed ?
                     .bottom : .vertical)
+                .disabled(homeManager.isShowLoadingIndicator)
             }
         }
         .padding()

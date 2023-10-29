@@ -184,6 +184,11 @@ struct HomeView: View {
                         
                         Spacer()
                     }
+                    
+                    // Loading indicator
+                    if homeManager.isShowLoadingIndicator {
+                        LoadingIndicator(proxy: proxy)
+                    }
                 })
                 
                 // Splash view
