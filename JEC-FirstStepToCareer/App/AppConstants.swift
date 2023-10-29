@@ -8,7 +8,7 @@
 import Foundation
 
 class AppConstants {
-    private static let url = "http://localhost:8000"
+    private static let url = "http://0.0.0.0:8000"
     
     private init() {}
     

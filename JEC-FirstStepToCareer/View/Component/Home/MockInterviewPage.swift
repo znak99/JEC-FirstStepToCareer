@@ -216,7 +216,7 @@ struct MockInterviewPage: View {
                         .frame(maxWidth: .infinity)
                 }
                 
-                if !homeManager.isValidationFailed {
+                if homeManager.isConnectionFailed {
                     Text("サーバーに接続できませんでした")
                         .font(.custom(Font.customMedium, size: proxy.size.width / 32))
                         .foregroundStyle(.appRed)
@@ -236,7 +236,8 @@ struct MockInterviewPage: View {
                 .background(.appPrimary)
                 .clipShape(RoundedRectangle(cornerRadius: proxy.size.width / 32))
                 .shadow(color: .appBlack.opacity(0.25), radius: 2, y: 2)
-                .padding(homeManager.isValidationFailed ? .bottom : .vertical)
+                .padding(homeManager.isValidationFailed || homeManager.isConnectionFailed ?
+                    .bottom : .vertical)
             }
         }
         .padding()

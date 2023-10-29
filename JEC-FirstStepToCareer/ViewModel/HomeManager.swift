@@ -75,17 +75,14 @@ class HomeManager: ObservableObject {
             return
         }
         isValidationFailed = false
-        
+
         // Store interview info on db
         if isSaveInterviewInfo {
             saveInterviewInfo()
         }
         
-        // Check connection with server
-        
-        
-        // Navigate
-        isInitializeInterview = true
+        // Check connection with server and Navigate
+        checkConnection()
     }
     
     // Store interview info on realm
@@ -137,17 +134,34 @@ class HomeManager: ObservableObject {
         }
     }
     
+    // Check network
     func checkConnection() {
         guard let url = AppConstants.requestUrl() else {
+            isConnectionFailed = true
             return
         }
-
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map(\.data)
-            .decode(type: MyModel.self, decoder: JSONDecoder())
-            .replaceError(with: nil)
-            .receive(on: DispatchQueue.main)
-            .assign(to: \.data, on: self)
-            .store(in: &cancellables)
+        
+        URLSession.shared.dataTask(with: url) { data, _, _ in
+            guard let data else {
+                self.isConnectionFailed = true
+                return
+            }
+            
+            guard let decodedData = try? JSONDecoder().decode(RootResponse.self, from: data) else {
+                self.isConnectionFailed = true
+                return
+            }
+            
+            DispatchQueue.main.async {
+                if decodedData.message == "connection succeed" {
+                    self.isConnectionFailed = false
+                    
+                    // Navigate
+                    self.isInitializeInterview = true
+                } else {
+                    self.isConnectionFailed = true
+                }
+            }
+        }.resume()
     }
 }
