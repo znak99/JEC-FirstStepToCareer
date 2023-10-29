@@ -15,5 +15,9 @@
 		<string>NotoSansJP-Medium.ttf</string>
 		<string>NotoSansJP-Regular.ttf</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>模擬面接中の動画を録画します</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>模擬面接中の音声を録音します</string>
 </dict>
 </plist>
