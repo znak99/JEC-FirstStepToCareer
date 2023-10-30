@@ -9,6 +9,5 @@ import Foundation
 
 class MockInterviewManager: ObservableObject {
     @Published var isStartInterview = false
-    
-    
+    @Published var isShowLoadingIndicator = false
 }

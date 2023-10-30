@@ -19,85 +19,41 @@ struct MockInterviewView: View {
     var body: some View {
         GeometryReader(content: { proxy in
             ZStack {
+                // Default background
+                Color.appBlack
+                    .ignoresSafeArea()
+                
                 // Camera preview
                 CameraPreview()
                     .ignoresSafeArea()
                 
-                // Filter
-                Color.appBlack
-                    .opacity(interviewManager.isStartInterview ? 0 : 0.3)
-                    .ignoresSafeArea()
+                // 
+                if !interviewManager.isStartInterview {
+                    Color.appBlack.opacity(0.3)
+                        .ignoresSafeArea()
+                }
                 
-                // UI
                 VStack {
-                    // Notice and dismiss button
-                    HStack(alignment: .bottom) {
-                        ZStack {
-                            Circle()
-                                .fill(.appRed)
-                                .frame(width: proxy.size.width / 22)
-                            Circle()
-                                .stroke(.appRed, lineWidth: 3)
-                                .frame(width: proxy.size.width / 16)
-                        }
-                        Text("模擬面接準備中...")
-                            .font(.custom(Font.customRegular, size: proxy.size.width / 24))
-                            .foregroundStyle(.appWhite)
-                        Spacer()
-                        Button(action: { dismiss() }, label: {
-                            Image(systemName: "xmark")
-                                .resizable()
-                                .frame(width: proxy.size.width / 20)
-                                .frame(height: proxy.size.width / 20)
-                                .foregroundStyle(.appWhite)
-                        })
-                        .padding(proxy.size.width / 48)
-                        .background {
-                            RoundedRectangle(cornerRadius: proxy.size.width / 32)
-                                .stroke(.appWhite, lineWidth: 1)
-                        }
+                    MockInterviewHeader(proxy: proxy,
+                                        interviewManager: interviewManager) {
+                        dismiss()
                     }
                     
-                    // Face detection frame
-                    if !interviewManager.isStartInterview {
-                        HStack {
-                            Image("FaceDetectionFrameEdge")
-                                .resizable()
-                                .frame(width: proxy.size.width / 16)
-                                .frame(height: proxy.size.width / 16)
-                            Spacer()
-                            Image("FaceDetectionFrameEdge")
-                                .resizable()
-                                .frame(width: proxy.size.width / 16)
-                                .frame(height: proxy.size.width / 16)
-                                .rotationEffect(.degrees(90))
-                        }
-                        .padding(.top, proxy.size.height / 8)
+                    if interviewManager.isStartInterview {
                         
-                        HStack {
-                            Image("FaceDetectionFrameEdge")
-                                .resizable()
-                                .frame(width: proxy.size.width / 16)
-                                .frame(height: proxy.size.width / 16)
-                                .rotationEffect(.degrees(270))
-                            Spacer()
-                            Image("FaceDetectionFrameEdge")
-                                .resizable()
-                                .frame(width: proxy.size.width / 16)
-                                .frame(height: proxy.size.width / 16)
-                                .rotationEffect(.degrees(180))
-                        }
-                        .padding(.top, proxy.size.height / 2)
+                    } else {
+                        MockInterviewCautionView(proxy: proxy,
+                                                 interviewManager: interviewManager)
+                        .padding(.top, proxy.size.height / 16)
                     }
                     
                     Spacer()
-                    
-                    // TODO: -  버튼누르면 얼굴인식 시작
-//                    Button(action: {}, label: {
-//                        /*@START_MENU_TOKEN@*/Text("Button")/*@END_MENU_TOKEN@*/
-//                    })
                 }
                 .padding()
+                
+                if interviewManager.isShowLoadingIndicator {
+                    LoadingIndicator(proxy: proxy)
+                }
             }
             .toolbar(.hidden)
             .onAppear {

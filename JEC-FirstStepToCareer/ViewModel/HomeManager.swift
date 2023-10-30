@@ -154,11 +154,13 @@ class HomeManager: ObservableObject {
         URLSession.shared.dataTask(with: url) { data, _, _ in
             guard let data else {
                 self.isConnectionFailed = true
+                self.isShowLoadingIndicator = false
                 return
             }
             
             guard let decodedData = try? JSONDecoder().decode(RootResponse.self, from: data) else {
                 self.isConnectionFailed = true
+                self.isShowLoadingIndicator = false
                 return
             }
             
