@@ -27,20 +27,21 @@ struct MockInterviewView: View {
                 CameraPreview()
                     .ignoresSafeArea()
                 
-                // 
-                if !interviewManager.isStartInterview {
-                    Color.appBlack.opacity(0.3)
-                        .ignoresSafeArea()
-                }
+                // Filter
+                Color.appBlack.opacity(interviewManager.isStartInterview ? 0.1 : 0.5)
+                    .ignoresSafeArea()
                 
                 VStack {
+                    // Header and dismiss button
                     MockInterviewHeader(proxy: proxy,
                                         interviewManager: interviewManager) {
                         dismiss()
                     }
                     
                     if interviewManager.isStartInterview {
-                        
+                        MockInterviewInitializeView(proxy: proxy,
+                                                    interviewManager: interviewManager)
+                        .padding(.top, proxy.size.height / 16)
                     } else {
                         MockInterviewCautionView(proxy: proxy,
                                                  interviewManager: interviewManager)

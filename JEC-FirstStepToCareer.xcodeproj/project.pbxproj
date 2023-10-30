@@ -37,6 +37,7 @@
 		BD67827B2AEEC9A500C5B0D9 /* MockInterviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD67827A2AEEC9A500C5B0D9 /* MockInterviewManager.swift */; };
 		BD69AE412AE981D800C7DA1E /* CareerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD69AE402AE981D800C7DA1E /* CareerType.swift */; };
 		BDAF3F362AED40B200AA32FD /* CareerTypeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAF3F352AED40B200AA32FD /* CareerTypeSelectorView.swift */; };
+		BDD0803B2AF0123100DED77A /* MockInterviewInitializeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD0803A2AF0123100DED77A /* MockInterviewInitializeView.swift */; };
 		BDDAEA7D2AE05E4000D24153 /* MockInterviewPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDAEA7C2AE05E4000D24153 /* MockInterviewPage.swift */; };
 		BDDAEA802AE06A1900D24153 /* InterviewType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDAEA7F2AE06A1900D24153 /* InterviewType.swift */; };
 /* End PBXBuildFile section */
@@ -72,6 +73,7 @@
 		BD67827A2AEEC9A500C5B0D9 /* MockInterviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewManager.swift; sourceTree = "<group>"; };
 		BD69AE402AE981D800C7DA1E /* CareerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareerType.swift; sourceTree = "<group>"; };
 		BDAF3F352AED40B200AA32FD /* CareerTypeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareerTypeSelectorView.swift; sourceTree = "<group>"; };
+		BDD0803A2AF0123100DED77A /* MockInterviewInitializeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewInitializeView.swift; sourceTree = "<group>"; };
 		BDDAEA7C2AE05E4000D24153 /* MockInterviewPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewPage.swift; sourceTree = "<group>"; };
 		BDDAEA7F2AE06A1900D24153 /* InterviewType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterviewType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -247,6 +249,7 @@
 				BD6782752AEE9F1800C5B0D9 /* CameraPreview.swift */,
 				BD436FDB2AEFB94B00D47600 /* MockInterviewCautionView.swift */,
 				BD436FDD2AEFD43400D47600 /* MockInterviewHeader.swift */,
+				BDD0803A2AF0123100DED77A /* MockInterviewInitializeView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -353,6 +356,7 @@
 				BD3981FE2AE0425D00955A72 /* HomePage.swift in Sources */,
 				BD6782762AEE9F1800C5B0D9 /* CameraPreview.swift in Sources */,
 				BDAF3F362AED40B200AA32FD /* CareerTypeSelectorView.swift in Sources */,
+				BDD0803B2AF0123100DED77A /* MockInterviewInitializeView.swift in Sources */,
 				BD1AFDAB2AE032EF0078A177 /* HomeView.swift in Sources */,
 				BD4A93F62AE0C9310064BA95 /* CompanyType.swift in Sources */,
 				BDDAEA7D2AE05E4000D24153 /* MockInterviewPage.swift in Sources */,
