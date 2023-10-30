@@ -195,9 +195,9 @@ struct HomeView: View {
                 })
                 
                 // Splash view
-//                if !homeManager.isAppReady {
-//                    SplashView()
-//                }
+                if !homeManager.isAppReady {
+                    SplashView()
+                }
             }
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
