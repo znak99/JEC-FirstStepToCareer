@@ -59,6 +59,9 @@ struct MockInterviewView: View {
             .onAppear {
                 self.showCameraPermissionDeniedAlert = !CameraService.shared.checkPermission()
             }
+            .onDisappear(perform: {
+                CameraService.shared.session.stopRunning()
+            })
             .alert(isPresented: $showCameraPermissionDeniedAlert) {
                 Alert(title: Text("Camera permission denied"),
                       message: Text("模擬面接はカメラの権限が必要です。\n権限を確認してからもう一度試してください"),
