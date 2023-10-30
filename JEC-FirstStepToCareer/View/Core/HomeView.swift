@@ -194,6 +194,16 @@ struct HomeView: View {
                             }
                         }
                         .padding(.top)
+                        .gesture(
+                            DragGesture()
+                                .onChanged { value in
+                                    homeManager.pageSwipeOffset = value.translation
+                                }
+                                .onEnded { value in
+                                    homeManager.pageSwipeOffset = .zero
+                                    homeManager.swipePage(swipeDistance: value.translation.width)
+                                }
+                        )
                         
                         Spacer()
                     }
