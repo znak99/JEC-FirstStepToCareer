@@ -16,6 +16,7 @@ class HomeManager: ObservableObject {
     @Published var isAppReady = false
     @Published var currentPage: HomePage = .mockInterview
     @Published var isShowLoadingIndicator = false
+    @Published var pageSwipeOffset: CGSize = .zero
     
     // Mock interview
     @Published var companyName = ""
@@ -39,6 +40,30 @@ class HomeManager: ObservableObject {
         
         withAnimation(.easeIn(duration: 0.2)) {
             currentPage = page
+        }
+    }
+    
+    // Navigate page with swipe gesture
+    func swipePage(swipeDistance: Double) {
+        var isRight: Bool?
+        
+        if swipeDistance < 0 { // Left
+            isRight = false
+        } else if swipeDistance > 0 { // Right
+            isRight = true
+        }
+        
+        guard let isRight else { return }
+        
+        withAnimation(.easeIn(duration: 0.2)) {
+            switch currentPage {
+            case .history:
+                currentPage = isRight ? .history : .mockInterview
+            case .mockInterview:
+                currentPage = isRight ? .history : .analyze
+            case .analyze:
+                currentPage = isRight ? .mockInterview : .analyze
+            }
         }
     }
     

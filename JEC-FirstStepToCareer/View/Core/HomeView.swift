@@ -16,6 +16,16 @@ struct HomeView: View {
             ZStack {
                 // Background
                 Color.appWhite.ignoresSafeArea()
+                    .gesture(
+                        DragGesture()
+                            .onChanged { value in
+                                homeManager.pageSwipeOffset = value.translation
+                            }
+                            .onEnded { value in
+                                homeManager.pageSwipeOffset = .zero
+                                homeManager.swipePage(swipeDistance: value.translation.width)
+                            }
+                    )
                 
                 // Contents
                 GeometryReader(content: { proxy in
@@ -200,8 +210,10 @@ struct HomeView: View {
                 }
             }
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                    homeManager.isAppReady = true
+                if !homeManager.isAppReady {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        homeManager.isAppReady = true
+                    }
                 }
             }
             .onTapGesture {
