@@ -120,6 +120,7 @@ struct HomeView: View {
                                                 .foregroundStyle(homeManager.currentPage == HomePage.history ?
                                                     .appPrimary : .appWhite)
                                         })
+                                        .disabled(homeManager.isShowLoadingIndicator)
                                         
                                         Spacer()
                                         
@@ -130,6 +131,7 @@ struct HomeView: View {
                                                 .foregroundStyle(homeManager.currentPage == HomePage.mockInterview ?
                                                     .appPrimary : .appWhite)
                                         })
+                                        .disabled(homeManager.isShowLoadingIndicator)
                                         
                                         Spacer()
                                         
@@ -140,6 +142,7 @@ struct HomeView: View {
                                                 .foregroundStyle(homeManager.currentPage == HomePage.analyze ?
                                                     .appPrimary : .appWhite)
                                         })
+                                        .disabled(homeManager.isShowLoadingIndicator)
                                     }
                                     .font(.custom(Font.customMedium, size: proxy.size.width / 28))
                                     .padding(proxy.size.width / 48)
