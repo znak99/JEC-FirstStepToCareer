@@ -205,7 +205,7 @@ struct HomeView: View {
                 self.hideKeyboard()
             }
             .navigationDestination(isPresented: $homeManager.isInitializeInterview) {
-                MockInterviewInitializeView()
+                MockInterviewView()
             }
         }
     }

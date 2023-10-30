@@ -9,4 +9,6 @@ import Foundation
 
 class MockInterviewManager: ObservableObject {
     @Published var isStartInterview = false
+    
+    
 }

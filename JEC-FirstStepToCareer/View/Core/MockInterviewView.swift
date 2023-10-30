@@ -1,5 +1,5 @@
 //
-//  MockInterviewInitializeView.swift
+//  MockInterviewView.swift
 //  JEC-FirstStepToCareer
 //
 //  Created by SeungWoo Hong on 2023/10/28.
@@ -8,7 +8,7 @@
 import SwiftUI
 import AVFoundation
 
-struct MockInterviewInitializeView: View {
+struct MockInterviewView: View {
     
     @State var showCameraPermissionDeniedAlert = false
     
@@ -23,6 +23,7 @@ struct MockInterviewInitializeView: View {
                 CameraPreview()
                     .ignoresSafeArea()
                 
+                // Filter
                 Color.appBlack
                     .opacity(interviewManager.isStartInterview ? 0 : 0.3)
                     .ignoresSafeArea()
@@ -115,5 +116,5 @@ struct MockInterviewInitializeView: View {
 }
 
 #Preview {
-    MockInterviewInitializeView()
+    MockInterviewView()
 }
