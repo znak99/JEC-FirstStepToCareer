@@ -42,7 +42,7 @@ struct MockInterviewInitializeView: View {
             .padding(.top, proxy.size.height / 2)
             
             Text("フレームの中に顔の全体を映してください")
-                .font(.custom(Font.customBold, size: proxy.size.width / 24))
+                .font(.custom(Font.customBold, size: proxy.size.width / 22))
                 .foregroundStyle(.appWhite)
                 .padding(.top, proxy.size.height / 120)
             
