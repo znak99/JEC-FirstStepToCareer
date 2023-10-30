@@ -81,7 +81,7 @@ struct MockInterviewCautionView: View {
             .offset(y: bodyAnimationOffsetY)
             
             Button(action: {
-                interviewManager.isStartInterview = true
+                interviewManager.prepareInterview()
             }, label: {
                 Text("確認しました")
                     .font(.custom(Font.customBold, size: proxy.size.width / 20))
