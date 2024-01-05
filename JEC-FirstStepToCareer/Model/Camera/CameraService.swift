@@ -5,18 +5,20 @@
 //  Created by SeungWoo Hong on 2023/10/30.
 //
 
+import SwiftUI
 import Foundation
 import AVFoundation
 
-class CameraService {
+class CameraService: NSObject, AVCapturePhotoCaptureDelegate {
     
     static let shared = CameraService()
     
     let session = AVCaptureSession()
     let output = AVCapturePhotoOutput()
     var preview: AVCaptureVideoPreviewLayer!
+    var capturedData = Data(count: 0)
     
-    private init() {}
+    private override init() {}
     
     func checkPermission() -> Bool {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
@@ -66,5 +68,35 @@ class CameraService {
         } catch {
             print(error.localizedDescription)
         }
+    }
+    
+    func captureFrame() {
+        DispatchQueue.global(qos: .background).async {
+            self.output.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
+        }
+    }
+    
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        if error != nil {
+            return
+        }
+        
+        guard let imageData = photo.fileDataRepresentation() else {
+            return
+        }
+        
+        self.capturedData = imageData
+    }
+    
+    func photoOutput(_ output: AVCapturePhotoOutput, willCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
+        AudioServicesDisposeSystemSoundID(1107)
+    }
+    
+    func photoOutput(_ output: AVCapturePhotoOutput, didCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
+        AudioServicesDisposeSystemSoundID(1107)
+    }
+    
+    func frameToPNGData() -> Data? {
+        return UIImage(data: self.capturedData)?.pngData()
     }
 }
