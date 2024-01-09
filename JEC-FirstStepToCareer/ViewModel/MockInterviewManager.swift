@@ -28,6 +28,15 @@ class MockInterviewManager: ObservableObject {
         detectFaceForInitialize()
     }
     
+    func cancel() {
+        self.detectedCoordinate = []
+        timer?.cancel()
+        timer = nil
+        withAnimation {
+            self.initialized = true
+        }
+    }
+    
     // Send frame to server to detect face
     func detectFaceForInitialize() {
         timer = Timer.publish(every: 1, on: .main, in: .common)
@@ -52,6 +61,7 @@ class MockInterviewManager: ObservableObject {
                     
                     let task = URLSession.shared.dataTask(with: request) { data, response, error in
                         if let error = error {
+                            // TODO: - 여기로 들어왔을때에는 디스미스 해야됨
                             print("Error: \(error)")
                             return
                         }
@@ -84,6 +94,9 @@ class MockInterviewManager: ObservableObject {
                     
                     task.resume()
                 } else {
+                    DispatchQueue.global(qos: .background).async {
+                        CameraService.shared.session.stopRunning()
+                    }
                     var leftCoordinate: Double = 0
                     var topCoordinate: Double = 0
                     var rightCoordinate: Double = 0
@@ -96,16 +109,16 @@ class MockInterviewManager: ObservableObject {
                         bottomCoordinate += coordinate[3]
                     }
                     
+                    
+                    
                     self.detectedAverage = [
                         leftCoordinate / Double(self.detectedCoordinate.count),
                         topCoordinate / Double(self.detectedCoordinate.count),
                         rightCoordinate / Double(self.detectedCoordinate.count),
                         bottomCoordinate / Double(self.detectedCoordinate.count),
                     ]
-                    self.detectedCoordinate = []
-                    timer?.cancel()
-                    timer = nil
-                    self.initialized = true
+                    cancel()
+                    headerText = "模擬面接中..."
                 }
             }
     }
