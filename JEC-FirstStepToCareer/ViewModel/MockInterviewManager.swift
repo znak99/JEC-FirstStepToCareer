@@ -19,6 +19,7 @@ class MockInterviewManager: ObservableObject {
     private var detectedCoordinate: [[Double]] = []
     private var detectedAverage: [Double] = []
     
+    
     // Start face detection for mock interview
     func prepareInterview() {
         isStartInterview = true
@@ -117,6 +118,7 @@ class MockInterviewManager: ObservableObject {
                     ]
                     cancel()
                     headerText = "模擬面接中..."
+                    
                 }
             }
     }
