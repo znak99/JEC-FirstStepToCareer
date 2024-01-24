@@ -109,8 +109,6 @@ class MockInterviewManager: ObservableObject {
                         bottomCoordinate += coordinate[3]
                     }
                     
-                    
-                    
                     self.detectedAverage = [
                         leftCoordinate / Double(self.detectedCoordinate.count),
                         topCoordinate / Double(self.detectedCoordinate.count),
@@ -122,7 +120,6 @@ class MockInterviewManager: ObservableObject {
                 }
             }
     }
-    
     
     
     // Clicking animation for rec header icon
