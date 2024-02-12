@@ -1,0 +1,758 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BD2491502B6635870051EA5F /* HistoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD24914F2B6635870051EA5F /* HistoryDetailView.swift */; };
+		BD2491532B6642C00051EA5F /* InterviewFeedbackHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2491522B6642C00051EA5F /* InterviewFeedbackHeader.swift */; };
+		BD2491552B664E870051EA5F /* InterviewFeedbackQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2491542B664E870051EA5F /* InterviewFeedbackQuestion.swift */; };
+		BD3443252B753A6D00955D19 /* STTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3443242B753A6D00955D19 /* STTService.swift */; };
+		BD3546E12B61EC8F006CC000 /* MockInterviewViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3546E02B61EC8F006CC000 /* MockInterviewViewHeader.swift */; };
+		BD3546E32B61F054006CC000 /* DetectLandmarksResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3546E22B61F054006CC000 /* DetectLandmarksResponse.swift */; };
+		BD3546E52B6202AA006CC000 /* MockInterviewFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3546E42B6202AA006CC000 /* MockInterviewFrame.swift */; };
+		BD85B8432B6254BB001F539A /* MockInterview.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD85B8422B6254BB001F539A /* MockInterview.swift */; };
+		BD85B8452B625EAA001F539A /* MockInterviewDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD85B8442B625EAA001F539A /* MockInterviewDao.swift */; };
+		BD85B8492B637CD2001F539A /* ConversationContinueRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD85B8482B637CD2001F539A /* ConversationContinueRequest.swift */; };
+		BDB4FB502B60EB990080EF9D /* FirstStepToCareerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB4FB4F2B60EB990080EF9D /* FirstStepToCareerApp.swift */; };
+		BDB4FB542B60EB9A0080EF9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDB4FB532B60EB9A0080EF9D /* Assets.xcassets */; };
+		BDB4FB572B60EB9A0080EF9D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDB4FB562B60EB9A0080EF9D /* Preview Assets.xcassets */; };
+		BDB4FB662B60EC580080EF9D /* NotoSansJP-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BDB4FB612B60EC580080EF9D /* NotoSansJP-Black.ttf */; };
+		BDB4FB672B60EC580080EF9D /* NotoSansJP-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BDB4FB622B60EC580080EF9D /* NotoSansJP-Medium.ttf */; };
+		BDB4FB682B60EC580080EF9D /* NotoSansJP-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BDB4FB632B60EC580080EF9D /* NotoSansJP-Bold.ttf */; };
+		BDB4FB692B60EC580080EF9D /* NotoSansJP-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BDB4FB642B60EC580080EF9D /* NotoSansJP-SemiBold.ttf */; };
+		BDB4FB6A2B60EC580080EF9D /* NotoSansJP-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BDB4FB652B60EC580080EF9D /* NotoSansJP-Regular.ttf */; };
+		BDB4FB722B60EE1C0080EF9D /* Font+CustomFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB4FB712B60EE1C0080EF9D /* Font+CustomFonts.swift */; };
+		BDB4FB742B60EE6D0080EF9D /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB4FB732B60EE6D0080EF9D /* HomeView.swift */; };
+		BDB4FB762B60EECE0080EF9D /* HomeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB4FB752B60EECE0080EF9D /* HomeManager.swift */; };
+		BDB4FB792B60EF870080EF9D /* HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB4FB782B60EF870080EF9D /* HomePage.swift */; };
+		BDB4FB7D2B60F3B60080EF9D /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB4FB7C2B60F3B60080EF9D /* LoadingIndicator.swift */; };
+		BDB4FB7F2B60F4AA0080EF9D /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB4FB7E2B60F4AA0080EF9D /* SplashView.swift */; };
+		BDB4FB832B60F6030080EF9D /* MockInterviewPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB4FB822B60F6030080EF9D /* MockInterviewPage.swift */; };
+		BDB4FB852B60F68D0080EF9D /* AnalyzePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB4FB842B60F68D0080EF9D /* AnalyzePage.swift */; };
+		BDB4FB872B60F6BF0080EF9D /* HistoryPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB4FB862B60F6BF0080EF9D /* HistoryPage.swift */; };
+		BDB4FB8B2B60F80A0080EF9D /* InterviewType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB4FB8A2B60F80A0080EF9D /* InterviewType.swift */; };
+		BDB4FB8D2B60F8220080EF9D /* CareerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB4FB8C2B60F8220080EF9D /* CareerType.swift */; };
+		BDB4FB8F2B60F8370080EF9D /* CompanyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB4FB8E2B60F8370080EF9D /* CompanyType.swift */; };
+		BDB4FB912B60FBE00080EF9D /* CompanyTypeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB4FB902B60FBE00080EF9D /* CompanyTypeSelectorView.swift */; };
+		BDB4FB932B60FBE90080EF9D /* CareerTypeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB4FB922B60FBE90080EF9D /* CareerTypeSelectorView.swift */; };
+		BDB944352B6101DF002A1A3D /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = BDB944342B6101DF002A1A3D /* Realm */; };
+		BDB944372B6101DF002A1A3D /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = BDB944362B6101DF002A1A3D /* RealmSwift */; };
+		BDB944392B610D3A002A1A3D /* InterviewInfoDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB944382B610D3A002A1A3D /* InterviewInfoDao.swift */; };
+		BDB9443C2B610D9A002A1A3D /* InterviewInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB9443B2B610D9A002A1A3D /* InterviewInfo.swift */; };
+		BDB944462B612422002A1A3D /* HTTPRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB944452B612422002A1A3D /* HTTPRequest.swift */; };
+		BDB944492B612A16002A1A3D /* RootResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB944482B612A16002A1A3D /* RootResponse.swift */; };
+		BDB9444B2B612AB1002A1A3D /* MockInterviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB9444A2B612AB1002A1A3D /* MockInterviewView.swift */; };
+		BDB9444D2B612B91002A1A3D /* MockInterviewInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB9444C2B612B91002A1A3D /* MockInterviewInfo.swift */; };
+		BDB9444F2B613CB7002A1A3D /* MockInterviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB9444E2B613CB7002A1A3D /* MockInterviewManager.swift */; };
+		BDB944522B613FF2002A1A3D /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB944512B613FF2002A1A3D /* CameraService.swift */; };
+		BDB944542B614001002A1A3D /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB944532B614001002A1A3D /* CameraPreview.swift */; };
+		BDB944572B614284002A1A3D /* MockInterviewCaution.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB944562B614284002A1A3D /* MockInterviewCaution.swift */; };
+		BDB9445C2B61461D002A1A3D /* ConversationStartRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB9445B2B61461D002A1A3D /* ConversationStartRequest.swift */; };
+		BDB9445E2B6146A1002A1A3D /* GPTResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB9445D2B6146A1002A1A3D /* GPTResponse.swift */; };
+		BDC8EA162B6CE47E00194698 /* AnalyzeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC8EA152B6CE47D00194698 /* AnalyzeData.swift */; };
+		BDC8EA192B6CE9A000194698 /* AnalyzeProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC8EA182B6CE9A000194698 /* AnalyzeProgressBar.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		BD24914F2B6635870051EA5F /* HistoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDetailView.swift; sourceTree = "<group>"; };
+		BD2491522B6642C00051EA5F /* InterviewFeedbackHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterviewFeedbackHeader.swift; sourceTree = "<group>"; };
+		BD2491542B664E870051EA5F /* InterviewFeedbackQuestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterviewFeedbackQuestion.swift; sourceTree = "<group>"; };
+		BD3443242B753A6D00955D19 /* STTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STTService.swift; sourceTree = "<group>"; };
+		BD3546E02B61EC8F006CC000 /* MockInterviewViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewViewHeader.swift; sourceTree = "<group>"; };
+		BD3546E22B61F054006CC000 /* DetectLandmarksResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetectLandmarksResponse.swift; sourceTree = "<group>"; };
+		BD3546E42B6202AA006CC000 /* MockInterviewFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewFrame.swift; sourceTree = "<group>"; };
+		BD85B8422B6254BB001F539A /* MockInterview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterview.swift; sourceTree = "<group>"; };
+		BD85B8442B625EAA001F539A /* MockInterviewDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewDao.swift; sourceTree = "<group>"; };
+		BD85B8482B637CD2001F539A /* ConversationContinueRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationContinueRequest.swift; sourceTree = "<group>"; };
+		BDB4FB4C2B60EB990080EF9D /* FirstStepToCareer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FirstStepToCareer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BDB4FB4F2B60EB990080EF9D /* FirstStepToCareerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstStepToCareerApp.swift; sourceTree = "<group>"; };
+		BDB4FB532B60EB9A0080EF9D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BDB4FB562B60EB9A0080EF9D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		BDB4FB5E2B60EBEB0080EF9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		BDB4FB612B60EC580080EF9D /* NotoSansJP-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansJP-Black.ttf"; sourceTree = "<group>"; };
+		BDB4FB622B60EC580080EF9D /* NotoSansJP-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansJP-Medium.ttf"; sourceTree = "<group>"; };
+		BDB4FB632B60EC580080EF9D /* NotoSansJP-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansJP-Bold.ttf"; sourceTree = "<group>"; };
+		BDB4FB642B60EC580080EF9D /* NotoSansJP-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansJP-SemiBold.ttf"; sourceTree = "<group>"; };
+		BDB4FB652B60EC580080EF9D /* NotoSansJP-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansJP-Regular.ttf"; sourceTree = "<group>"; };
+		BDB4FB712B60EE1C0080EF9D /* Font+CustomFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+CustomFonts.swift"; sourceTree = "<group>"; };
+		BDB4FB732B60EE6D0080EF9D /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		BDB4FB752B60EECE0080EF9D /* HomeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeManager.swift; sourceTree = "<group>"; };
+		BDB4FB782B60EF870080EF9D /* HomePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePage.swift; sourceTree = "<group>"; };
+		BDB4FB7C2B60F3B60080EF9D /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
+		BDB4FB7E2B60F4AA0080EF9D /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		BDB4FB822B60F6030080EF9D /* MockInterviewPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewPage.swift; sourceTree = "<group>"; };
+		BDB4FB842B60F68D0080EF9D /* AnalyzePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyzePage.swift; sourceTree = "<group>"; };
+		BDB4FB862B60F6BF0080EF9D /* HistoryPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryPage.swift; sourceTree = "<group>"; };
+		BDB4FB8A2B60F80A0080EF9D /* InterviewType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterviewType.swift; sourceTree = "<group>"; };
+		BDB4FB8C2B60F8220080EF9D /* CareerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareerType.swift; sourceTree = "<group>"; };
+		BDB4FB8E2B60F8370080EF9D /* CompanyType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyType.swift; sourceTree = "<group>"; };
+		BDB4FB902B60FBE00080EF9D /* CompanyTypeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyTypeSelectorView.swift; sourceTree = "<group>"; };
+		BDB4FB922B60FBE90080EF9D /* CareerTypeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareerTypeSelectorView.swift; sourceTree = "<group>"; };
+		BDB944382B610D3A002A1A3D /* InterviewInfoDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterviewInfoDao.swift; sourceTree = "<group>"; };
+		BDB9443B2B610D9A002A1A3D /* InterviewInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterviewInfo.swift; sourceTree = "<group>"; };
+		BDB944452B612422002A1A3D /* HTTPRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPRequest.swift; sourceTree = "<group>"; };
+		BDB944482B612A16002A1A3D /* RootResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootResponse.swift; sourceTree = "<group>"; };
+		BDB9444A2B612AB1002A1A3D /* MockInterviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewView.swift; sourceTree = "<group>"; };
+		BDB9444C2B612B91002A1A3D /* MockInterviewInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewInfo.swift; sourceTree = "<group>"; };
+		BDB9444E2B613CB7002A1A3D /* MockInterviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewManager.swift; sourceTree = "<group>"; };
+		BDB944512B613FF2002A1A3D /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
+		BDB944532B614001002A1A3D /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
+		BDB944562B614284002A1A3D /* MockInterviewCaution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockInterviewCaution.swift; sourceTree = "<group>"; };
+		BDB9445B2B61461D002A1A3D /* ConversationStartRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStartRequest.swift; sourceTree = "<group>"; };
+		BDB9445D2B6146A1002A1A3D /* GPTResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPTResponse.swift; sourceTree = "<group>"; };
+		BDC8EA152B6CE47D00194698 /* AnalyzeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyzeData.swift; sourceTree = "<group>"; };
+		BDC8EA182B6CE9A000194698 /* AnalyzeProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyzeProgressBar.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BDB4FB492B60EB990080EF9D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BDB944372B6101DF002A1A3D /* RealmSwift in Frameworks */,
+				BDB944352B6101DF002A1A3D /* Realm in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BD2491512B6642AB0051EA5F /* FeedBack */ = {
+			isa = PBXGroup;
+			children = (
+				BD2491522B6642C00051EA5F /* InterviewFeedbackHeader.swift */,
+				BD2491542B664E870051EA5F /* InterviewFeedbackQuestion.swift */,
+			);
+			path = FeedBack;
+			sourceTree = "<group>";
+		};
+		BD3443232B753A5900955D19 /* STT */ = {
+			isa = PBXGroup;
+			children = (
+				BD3443242B753A6D00955D19 /* STTService.swift */,
+			);
+			path = STT;
+			sourceTree = "<group>";
+		};
+		BDB4FB432B60EB990080EF9D = {
+			isa = PBXGroup;
+			children = (
+				BDB4FB4E2B60EB990080EF9D /* FirstStepToCareer */,
+				BDB4FB4D2B60EB990080EF9D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BDB4FB4D2B60EB990080EF9D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BDB4FB4C2B60EB990080EF9D /* FirstStepToCareer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BDB4FB4E2B60EB990080EF9D /* FirstStepToCareer */ = {
+			isa = PBXGroup;
+			children = (
+				BDB4FB5E2B60EBEB0080EF9D /* Info.plist */,
+				BDB4FB5D2B60EBA30080EF9D /* App */,
+				BDB4FB6D2B60ED000080EF9D /* Model */,
+				BDB4FB6C2B60ECF20080EF9D /* View */,
+				BDB4FB6E2B60ED0B0080EF9D /* ViewModel */,
+				BDB944502B613FE4002A1A3D /* Camera */,
+				BD3443232B753A5900955D19 /* STT */,
+				BDB4FB942B61001E0080EF9D /* Database */,
+				BDB9443E2B612270002A1A3D /* HTTPRequest */,
+				BDB4FB6F2B60ED2A0080EF9D /* Extensions */,
+				BDB4FB5F2B60EC0C0080EF9D /* Resource */,
+				BDB4FB552B60EB9A0080EF9D /* Preview Content */,
+			);
+			path = FirstStepToCareer;
+			sourceTree = "<group>";
+		};
+		BDB4FB552B60EB9A0080EF9D /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				BDB4FB562B60EB9A0080EF9D /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		BDB4FB5D2B60EBA30080EF9D /* App */ = {
+			isa = PBXGroup;
+			children = (
+				BDB4FB4F2B60EB990080EF9D /* FirstStepToCareerApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		BDB4FB5F2B60EC0C0080EF9D /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				BDB4FB602B60EC1F0080EF9D /* Fonts */,
+				BDB4FB532B60EB9A0080EF9D /* Assets.xcassets */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		BDB4FB602B60EC1F0080EF9D /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				BDB4FB612B60EC580080EF9D /* NotoSansJP-Black.ttf */,
+				BDB4FB632B60EC580080EF9D /* NotoSansJP-Bold.ttf */,
+				BDB4FB622B60EC580080EF9D /* NotoSansJP-Medium.ttf */,
+				BDB4FB652B60EC580080EF9D /* NotoSansJP-Regular.ttf */,
+				BDB4FB642B60EC580080EF9D /* NotoSansJP-SemiBold.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		BDB4FB6C2B60ECF20080EF9D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				BDB4FB7A2B60F3900080EF9D /* Core */,
+				BDB4FB7B2B60F3980080EF9D /* Component */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		BDB4FB6D2B60ED000080EF9D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				BDB9444C2B612B91002A1A3D /* MockInterviewInfo.swift */,
+				BDC8EA152B6CE47D00194698 /* AnalyzeData.swift */,
+				BDB4FB772B60EF770080EF9D /* Home */,
+				BDB4FB892B60F7F20080EF9D /* MockInterview */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		BDB4FB6E2B60ED0B0080EF9D /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				BDB9444E2B613CB7002A1A3D /* MockInterviewManager.swift */,
+				BDB4FB752B60EECE0080EF9D /* HomeManager.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		BDB4FB6F2B60ED2A0080EF9D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				BDB4FB712B60EE1C0080EF9D /* Font+CustomFonts.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		BDB4FB772B60EF770080EF9D /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				BDB4FB782B60EF870080EF9D /* HomePage.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		BDB4FB7A2B60F3900080EF9D /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				BDB4FB732B60EE6D0080EF9D /* HomeView.swift */,
+				BDB4FB7E2B60F4AA0080EF9D /* SplashView.swift */,
+				BDB4FB902B60FBE00080EF9D /* CompanyTypeSelectorView.swift */,
+				BDB4FB922B60FBE90080EF9D /* CareerTypeSelectorView.swift */,
+				BDB9444A2B612AB1002A1A3D /* MockInterviewView.swift */,
+				BD24914F2B6635870051EA5F /* HistoryDetailView.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		BDB4FB7B2B60F3980080EF9D /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				BDC8EA172B6CE98900194698 /* Analyze */,
+				BD2491512B6642AB0051EA5F /* FeedBack */,
+				BDB944552B614270002A1A3D /* MockInterview */,
+				BDB4FB812B60F5F00080EF9D /* HomeScreenPages */,
+				BDB4FB802B60F5E40080EF9D /* Indicator */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
+		BDB4FB802B60F5E40080EF9D /* Indicator */ = {
+			isa = PBXGroup;
+			children = (
+				BDB4FB7C2B60F3B60080EF9D /* LoadingIndicator.swift */,
+			);
+			path = Indicator;
+			sourceTree = "<group>";
+		};
+		BDB4FB812B60F5F00080EF9D /* HomeScreenPages */ = {
+			isa = PBXGroup;
+			children = (
+				BDB4FB822B60F6030080EF9D /* MockInterviewPage.swift */,
+				BDB4FB842B60F68D0080EF9D /* AnalyzePage.swift */,
+				BDB4FB862B60F6BF0080EF9D /* HistoryPage.swift */,
+			);
+			path = HomeScreenPages;
+			sourceTree = "<group>";
+		};
+		BDB4FB892B60F7F20080EF9D /* MockInterview */ = {
+			isa = PBXGroup;
+			children = (
+				BDB4FB8A2B60F80A0080EF9D /* InterviewType.swift */,
+				BDB4FB8E2B60F8370080EF9D /* CompanyType.swift */,
+				BDB4FB8C2B60F8220080EF9D /* CareerType.swift */,
+			);
+			path = MockInterview;
+			sourceTree = "<group>";
+		};
+		BDB4FB942B61001E0080EF9D /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				BDB9443D2B610DC0002A1A3D /* RealmObject */,
+				BDB9443A2B610D6C002A1A3D /* Dao */,
+			);
+			path = Database;
+			sourceTree = "<group>";
+		};
+		BDB9443A2B610D6C002A1A3D /* Dao */ = {
+			isa = PBXGroup;
+			children = (
+				BDB944382B610D3A002A1A3D /* InterviewInfoDao.swift */,
+				BD85B8442B625EAA001F539A /* MockInterviewDao.swift */,
+			);
+			path = Dao;
+			sourceTree = "<group>";
+		};
+		BDB9443D2B610DC0002A1A3D /* RealmObject */ = {
+			isa = PBXGroup;
+			children = (
+				BDB9443B2B610D9A002A1A3D /* InterviewInfo.swift */,
+				BD85B8422B6254BB001F539A /* MockInterview.swift */,
+			);
+			path = RealmObject;
+			sourceTree = "<group>";
+		};
+		BDB9443E2B612270002A1A3D /* HTTPRequest */ = {
+			isa = PBXGroup;
+			children = (
+				BDB944452B612422002A1A3D /* HTTPRequest.swift */,
+				BDB9445A2B6145FE002A1A3D /* Request */,
+				BDB944472B612A02002A1A3D /* Response */,
+			);
+			path = HTTPRequest;
+			sourceTree = "<group>";
+		};
+		BDB944472B612A02002A1A3D /* Response */ = {
+			isa = PBXGroup;
+			children = (
+				BDB944482B612A16002A1A3D /* RootResponse.swift */,
+				BDB9445D2B6146A1002A1A3D /* GPTResponse.swift */,
+				BD3546E22B61F054006CC000 /* DetectLandmarksResponse.swift */,
+			);
+			path = Response;
+			sourceTree = "<group>";
+		};
+		BDB944502B613FE4002A1A3D /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				BDB944512B613FF2002A1A3D /* CameraService.swift */,
+				BDB944532B614001002A1A3D /* CameraPreview.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+		BDB944552B614270002A1A3D /* MockInterview */ = {
+			isa = PBXGroup;
+			children = (
+				BDB944562B614284002A1A3D /* MockInterviewCaution.swift */,
+				BD3546E02B61EC8F006CC000 /* MockInterviewViewHeader.swift */,
+				BD3546E42B6202AA006CC000 /* MockInterviewFrame.swift */,
+			);
+			path = MockInterview;
+			sourceTree = "<group>";
+		};
+		BDB9445A2B6145FE002A1A3D /* Request */ = {
+			isa = PBXGroup;
+			children = (
+				BDB9445B2B61461D002A1A3D /* ConversationStartRequest.swift */,
+				BD85B8482B637CD2001F539A /* ConversationContinueRequest.swift */,
+			);
+			path = Request;
+			sourceTree = "<group>";
+		};
+		BDC8EA172B6CE98900194698 /* Analyze */ = {
+			isa = PBXGroup;
+			children = (
+				BDC8EA182B6CE9A000194698 /* AnalyzeProgressBar.swift */,
+			);
+			path = Analyze;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BDB4FB4B2B60EB990080EF9D /* FirstStepToCareer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BDB4FB5A2B60EB9A0080EF9D /* Build configuration list for PBXNativeTarget "FirstStepToCareer" */;
+			buildPhases = (
+				BDB4FB482B60EB990080EF9D /* Sources */,
+				BDB4FB492B60EB990080EF9D /* Frameworks */,
+				BDB4FB4A2B60EB990080EF9D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FirstStepToCareer;
+			packageProductDependencies = (
+				BDB944342B6101DF002A1A3D /* Realm */,
+				BDB944362B6101DF002A1A3D /* RealmSwift */,
+			);
+			productName = FirstStepToCareer;
+			productReference = BDB4FB4C2B60EB990080EF9D /* FirstStepToCareer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BDB4FB442B60EB990080EF9D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					BDB4FB4B2B60EB990080EF9D = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = BDB4FB472B60EB990080EF9D /* Build configuration list for PBXProject "FirstStepToCareer" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = BDB4FB432B60EB990080EF9D;
+			packageReferences = (
+				BDB944332B6101DF002A1A3D /* XCRemoteSwiftPackageReference "realm-swift" */,
+			);
+			productRefGroup = BDB4FB4D2B60EB990080EF9D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BDB4FB4B2B60EB990080EF9D /* FirstStepToCareer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BDB4FB4A2B60EB990080EF9D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BDB4FB572B60EB9A0080EF9D /* Preview Assets.xcassets in Resources */,
+				BDB4FB662B60EC580080EF9D /* NotoSansJP-Black.ttf in Resources */,
+				BDB4FB692B60EC580080EF9D /* NotoSansJP-SemiBold.ttf in Resources */,
+				BDB4FB682B60EC580080EF9D /* NotoSansJP-Bold.ttf in Resources */,
+				BDB4FB6A2B60EC580080EF9D /* NotoSansJP-Regular.ttf in Resources */,
+				BDB4FB672B60EC580080EF9D /* NotoSansJP-Medium.ttf in Resources */,
+				BDB4FB542B60EB9A0080EF9D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BDB4FB482B60EB990080EF9D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BDC8EA162B6CE47E00194698 /* AnalyzeData.swift in Sources */,
+				BDB944572B614284002A1A3D /* MockInterviewCaution.swift in Sources */,
+				BD3546E32B61F054006CC000 /* DetectLandmarksResponse.swift in Sources */,
+				BDB9445C2B61461D002A1A3D /* ConversationStartRequest.swift in Sources */,
+				BDC8EA192B6CE9A000194698 /* AnalyzeProgressBar.swift in Sources */,
+				BDB4FB8B2B60F80A0080EF9D /* InterviewType.swift in Sources */,
+				BD3546E52B6202AA006CC000 /* MockInterviewFrame.swift in Sources */,
+				BDB4FB7D2B60F3B60080EF9D /* LoadingIndicator.swift in Sources */,
+				BD2491552B664E870051EA5F /* InterviewFeedbackQuestion.swift in Sources */,
+				BD2491502B6635870051EA5F /* HistoryDetailView.swift in Sources */,
+				BDB4FB8F2B60F8370080EF9D /* CompanyType.swift in Sources */,
+				BDB4FB792B60EF870080EF9D /* HomePage.swift in Sources */,
+				BDB4FB762B60EECE0080EF9D /* HomeManager.swift in Sources */,
+				BDB4FB852B60F68D0080EF9D /* AnalyzePage.swift in Sources */,
+				BDB9444D2B612B91002A1A3D /* MockInterviewInfo.swift in Sources */,
+				BDB4FB742B60EE6D0080EF9D /* HomeView.swift in Sources */,
+				BDB944492B612A16002A1A3D /* RootResponse.swift in Sources */,
+				BD2491532B6642C00051EA5F /* InterviewFeedbackHeader.swift in Sources */,
+				BD3546E12B61EC8F006CC000 /* MockInterviewViewHeader.swift in Sources */,
+				BDB944542B614001002A1A3D /* CameraPreview.swift in Sources */,
+				BDB9444B2B612AB1002A1A3D /* MockInterviewView.swift in Sources */,
+				BD3443252B753A6D00955D19 /* STTService.swift in Sources */,
+				BDB4FB502B60EB990080EF9D /* FirstStepToCareerApp.swift in Sources */,
+				BDB9445E2B6146A1002A1A3D /* GPTResponse.swift in Sources */,
+				BDB4FB722B60EE1C0080EF9D /* Font+CustomFonts.swift in Sources */,
+				BD85B8432B6254BB001F539A /* MockInterview.swift in Sources */,
+				BD85B8492B637CD2001F539A /* ConversationContinueRequest.swift in Sources */,
+				BDB944522B613FF2002A1A3D /* CameraService.swift in Sources */,
+				BDB9443C2B610D9A002A1A3D /* InterviewInfo.swift in Sources */,
+				BDB9444F2B613CB7002A1A3D /* MockInterviewManager.swift in Sources */,
+				BDB4FB912B60FBE00080EF9D /* CompanyTypeSelectorView.swift in Sources */,
+				BDB4FB872B60F6BF0080EF9D /* HistoryPage.swift in Sources */,
+				BDB4FB832B60F6030080EF9D /* MockInterviewPage.swift in Sources */,
+				BDB4FB7F2B60F4AA0080EF9D /* SplashView.swift in Sources */,
+				BDB4FB8D2B60F8220080EF9D /* CareerType.swift in Sources */,
+				BDB944462B612422002A1A3D /* HTTPRequest.swift in Sources */,
+				BDB944392B610D3A002A1A3D /* InterviewInfoDao.swift in Sources */,
+				BD85B8452B625EAA001F539A /* MockInterviewDao.swift in Sources */,
+				BDB4FB932B60FBE90080EF9D /* CareerTypeSelectorView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		BDB4FB582B60EB9A0080EF9D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		BDB4FB592B60EB9A0080EF9D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BDB4FB5B2B60EB9A0080EF9D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"FirstStepToCareer/Preview Content\"";
+				DEVELOPMENT_TEAM = SHUGXU55KP;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FirstStepToCareer/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "就活一歩";
+				INFOPLIST_KEY_NSCameraUsageDescription = "模擬面接中の動画を録画します";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "模擬面接中の音声を録音します";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "生成した質問を読み上げます";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.znak99.FirstStepToCareer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BDB4FB5C2B60EB9A0080EF9D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"FirstStepToCareer/Preview Content\"";
+				DEVELOPMENT_TEAM = SHUGXU55KP;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FirstStepToCareer/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "就活一歩";
+				INFOPLIST_KEY_NSCameraUsageDescription = "模擬面接中の動画を録画します";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "模擬面接中の音声を録音します";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "生成した質問を読み上げます";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.znak99.FirstStepToCareer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BDB4FB472B60EB990080EF9D /* Build configuration list for PBXProject "FirstStepToCareer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BDB4FB582B60EB9A0080EF9D /* Debug */,
+				BDB4FB592B60EB9A0080EF9D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BDB4FB5A2B60EB9A0080EF9D /* Build configuration list for PBXNativeTarget "FirstStepToCareer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BDB4FB5B2B60EB9A0080EF9D /* Debug */,
+				BDB4FB5C2B60EB9A0080EF9D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BDB944332B6101DF002A1A3D /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BDB944342B6101DF002A1A3D /* Realm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDB944332B6101DF002A1A3D /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = Realm;
+		};
+		BDB944362B6101DF002A1A3D /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDB944332B6101DF002A1A3D /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = BDB4FB442B60EB990080EF9D /* Project object */;
+}
