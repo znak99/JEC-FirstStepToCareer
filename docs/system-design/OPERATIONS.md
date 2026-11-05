@@ -20,12 +20,12 @@
 | 이름 | 설명 | 필수 | local 기본값 |
 |---|---|---|---|
 | API_BASE_URL | 서버 주소. `Shared.xcconfig`에 커밋 | 예 | http://localhost:8787 |
-| DEVELOPMENT_TEAM | 빌드하는 사람의 Apple 팀 ID. `Local.xcconfig`에 작성 | 예 | 없음 |
-| APP_BUNDLE_ID | 빌드하는 사람별 고유 번들 ID. `Local.xcconfig`에 작성 | 예 | 없음 |
+| DEVELOPMENT_TEAM | 빌드하는 사람의 Apple 팀 ID. `Local.xcconfig`에 작성. 실제 iPhone 설치에 필요하고 시뮬레이터에는 불필요 | 실제 기기만 | 없음 |
+| APP_BUNDLE_ID | 번들 ID. 다른 Apple 계정으로 빌드할 때는 `Local.xcconfig`에서 고유한 값으로 덮어씀 | 예 | cloud.znak99.FirstStepToCareer |
 | APPLE_SIGN_IN_ENABLED | Apple 로그인 버튼과 권한 사용 여부. `Local.xcconfig`에 작성 | 아니오 | NO |
 
 ## 3. 실행·빌드·테스트
-아래 명령은 프로젝트 골격을 만든 뒤 사용할 수 있으며, 그때 실제로 실행해 확인하고 다르면 고친다. Node.js 버전은 mise로 프로젝트에만 고정한다.
+앱 명령은 실행해 확인했다. 서버 명령은 서버 골격을 만들 때 확인하고 다르면 고친다. Node.js 버전은 mise로 `api/`에만 고정한다.
 
 ### 서버 (`api/`에서 실행)
 | 작업 | 명령 |
@@ -40,7 +40,7 @@
 | 작업 | 명령 |
 |---|---|
 | 의존성 설치 | 없음 |
-| 개발 실행 | Xcode에서 `JobHuntFirstStep.xcodeproj`를 열고 실제 iPhone에 실행 |
+| 개발 실행 | Xcode에서 `JobHuntFirstStep.xcodeproj`를 열고 실행. 시선·머리 측정은 실제 iPhone 필요 |
 | 빌드 | `xcodebuild build -project JobHuntFirstStep.xcodeproj -scheme JobHuntFirstStep -destination 'generic/platform=iOS Simulator'` |
 | 테스트 | `xcodebuild test -project JobHuntFirstStep.xcodeproj -scheme JobHuntFirstStep -destination 'platform=iOS Simulator,name=iPhone 17'` |
 | 린트·포맷 | `swift format lint -r JobHuntFirstStep JobHuntFirstStepTests` |

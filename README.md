@@ -38,7 +38,7 @@ git clone https://github.com/znak99/JEC-FirstStepToCareer.git
 cd JEC-FirstStepToCareer
 cp Config/Local.xcconfig.example Config/Local.xcconfig
 ```
-Set your Apple team ID and a unique bundle ID in `Config/Local.xcconfig`. Leave `APPLE_SIGN_IN_ENABLED` as `NO` unless you have a paid Apple Developer Program membership; you can still use every feature without signing in.
+Set your Apple team ID and uncomment `APP_BUNDLE_ID` with a unique value in `Config/Local.xcconfig`. Leave `APPLE_SIGN_IN_ENABLED` as `NO` unless you have a paid Apple Developer Program membership; you can still use every feature without signing in.
 
 #### Run
 Open `JobHuntFirstStep.xcodeproj` in Xcode, select your iPhone, and press Run.
