@@ -2,7 +2,7 @@
 
 就職・転職活動のための模擬面接アプリ
 
-An iPhone app for practicing Japanese job interviews. It is a personal, non-commercial project that is not on the App Store. Anyone can build and try it from this public repository.
+An iPhone app for practicing Japanese job interviews. It is a personal, non-commercial project that is not on the App Store. Anyone can install it through TestFlight or build it from this public repository.
 
 ## Features
 - Practice interviews with AI-generated questions, read aloud and answered by voice
@@ -20,14 +20,19 @@ An iPhone app for practicing Japanese job interviews. It is a personal, non-comm
 - AI: Claude API
 
 ## Getting Started
-The project skeleton is not created yet, so the steps below describe the planned setup.
+The app is not available yet, so the steps below describe the planned setup.
 
-### Prerequisites
+### Install with TestFlight
+Install the free TestFlight app from the App Store, then open the public link. The link will be added here when it is ready.
+
+### Build from source
+
+#### Prerequisites
 - A Mac with Xcode 27 or later
 - An Apple account (free accounts work, but the installed app stops launching after 7 days until you install it again)
 - A physical iPhone running iOS 18 or later. Gaze and head tracking require a model with Face ID.
 
-### Install
+#### Install
 ```bash
 git clone https://github.com/znak99/JEC-FirstStepToCareer.git
 cd JEC-FirstStepToCareer
@@ -35,9 +40,10 @@ cp Config/Local.xcconfig.example Config/Local.xcconfig
 ```
 Set your Apple team ID and a unique bundle ID in `Config/Local.xcconfig`. Leave `APPLE_SIGN_IN_ENABLED` as `NO` unless you have a paid Apple Developer Program membership; you can still use every feature without signing in.
 
-### Run
+#### Run
 Open `JobHuntFirstStep.xcodeproj` in Xcode, select your iPhone, and press Run.
 
+### Availability
 AI features work only while the developer has turned them on. Schedules and past results remain available when AI is off.
 
 ## Privacy
