@@ -1,6 +1,6 @@
 import Testing
 
-@testable import JobHuntFirstStep
+@testable import FirstStepToCareer
 
 struct AppTabTests {
   @Test func tabsFollowTheSiteMapOrder() {

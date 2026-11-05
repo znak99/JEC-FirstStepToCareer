@@ -12,20 +12,20 @@
 			containerPortal = A70000000000000000000001 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = A50000000000000000000001;
-			remoteInfo = JobHuntFirstStep;
+			remoteInfo = FirstStepToCareer;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		A10000000000000000000004 /* JobHuntFirstStepTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobHuntFirstStepTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A10000000000000000000001 /* JobHuntFirstStep.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JobHuntFirstStep.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000004 /* FirstStepToCareerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FirstStepToCareerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000001 /* FirstStepToCareer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FirstStepToCareer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000002 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
 		A10000000000000000000003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		A20000000000000000000001 /* JobHuntFirstStep */ = {isa = PBXFileSystemSynchronizedRootGroup; path = JobHuntFirstStep; sourceTree = "<group>"; };
-		A20000000000000000000002 /* JobHuntFirstStepTests */ = {isa = PBXFileSystemSynchronizedRootGroup; path = JobHuntFirstStepTests; sourceTree = "<group>"; };
+		A20000000000000000000001 /* FirstStepToCareer */ = {isa = PBXFileSystemSynchronizedRootGroup; path = FirstStepToCareer; sourceTree = "<group>"; };
+		A20000000000000000000002 /* FirstStepToCareerTests */ = {isa = PBXFileSystemSynchronizedRootGroup; path = FirstStepToCareerTests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,8 +38,8 @@
 			isa = PBXGroup;
 			children = (
 				A40000000000000000000002 /* Config */,
-				A20000000000000000000001 /* JobHuntFirstStep */,
-				A20000000000000000000002 /* JobHuntFirstStepTests */,
+				A20000000000000000000001 /* FirstStepToCareer */,
+				A20000000000000000000002 /* FirstStepToCareerTests */,
 				A40000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -56,8 +56,8 @@
 		A40000000000000000000003 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A10000000000000000000001 /* JobHuntFirstStep.app */,
-				A10000000000000000000004 /* JobHuntFirstStepTests.xctest */,
+				A10000000000000000000001 /* FirstStepToCareer.app */,
+				A10000000000000000000004 /* FirstStepToCareerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -65,9 +65,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A50000000000000000000001 /* JobHuntFirstStep */ = {
+		A50000000000000000000001 /* FirstStepToCareer */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A90000000000000000000002 /* Build configuration list for PBXNativeTarget "JobHuntFirstStep" */;
+			buildConfigurationList = A90000000000000000000002 /* Build configuration list for PBXNativeTarget "FirstStepToCareer" */;
 			buildPhases = (
 				A60000000000000000000001 /* Sources */,
 				A30000000000000000000001 /* Frameworks */,
@@ -78,16 +78,16 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				A20000000000000000000001 /* JobHuntFirstStep */,
+				A20000000000000000000001 /* FirstStepToCareer */,
 			);
-			name = JobHuntFirstStep;
-			productName = JobHuntFirstStep;
-			productReference = A10000000000000000000001 /* JobHuntFirstStep.app */;
+			name = FirstStepToCareer;
+			productName = FirstStepToCareer;
+			productReference = A10000000000000000000001 /* FirstStepToCareer.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A50000000000000000000002 /* JobHuntFirstStepTests */ = {
+		A50000000000000000000002 /* FirstStepToCareerTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A90000000000000000000003 /* Build configuration list for PBXNativeTarget "JobHuntFirstStepTests" */;
+			buildConfigurationList = A90000000000000000000003 /* Build configuration list for PBXNativeTarget "FirstStepToCareerTests" */;
 			buildPhases = (
 				A60000000000000000000003 /* Sources */,
 				A30000000000000000000002 /* Frameworks */,
@@ -99,11 +99,11 @@
 				AC0000000000000000000001 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				A20000000000000000000002 /* JobHuntFirstStepTests */,
+				A20000000000000000000002 /* FirstStepToCareerTests */,
 			);
-			name = JobHuntFirstStepTests;
-			productName = JobHuntFirstStepTests;
-			productReference = A10000000000000000000004 /* JobHuntFirstStepTests.xctest */;
+			name = FirstStepToCareerTests;
+			productName = FirstStepToCareerTests;
+			productReference = A10000000000000000000004 /* FirstStepToCareerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -116,7 +116,7 @@
 				LastSwiftUpdateCheck = 2720;
 				LastUpgradeCheck = 2720;
 			};
-			buildConfigurationList = A90000000000000000000001 /* Build configuration list for PBXProject "JobHuntFirstStep" */;
+			buildConfigurationList = A90000000000000000000001 /* Build configuration list for PBXProject "FirstStepToCareer" */;
 			developmentRegion = ja;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -130,8 +130,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A50000000000000000000001 /* JobHuntFirstStep */,
-				A50000000000000000000002 /* JobHuntFirstStepTests */,
+				A50000000000000000000001 /* FirstStepToCareer */,
+				A50000000000000000000002 /* FirstStepToCareerTests */,
 			);
 		};
 /* End PBXProject section */
@@ -149,7 +149,7 @@
 /* Begin PBXTargetDependency section */
 		AC0000000000000000000001 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = A50000000000000000000001 /* JobHuntFirstStep */;
+			target = A50000000000000000000001 /* FirstStepToCareer */;
 			targetProxy = AB0000000000000000000001 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -228,7 +228,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID).Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JobHuntFirstStep.app/JobHuntFirstStep";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FirstStepToCareer.app/FirstStepToCareer";
 			};
 			name = Debug;
 		};
@@ -239,14 +239,14 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID).Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JobHuntFirstStep.app/JobHuntFirstStep";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FirstStepToCareer.app/FirstStepToCareer";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A90000000000000000000001 /* Build configuration list for PBXProject "JobHuntFirstStep" */ = {
+		A90000000000000000000001 /* Build configuration list for PBXProject "FirstStepToCareer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A80000000000000000000001 /* Debug */,
@@ -255,7 +255,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A90000000000000000000002 /* Build configuration list for PBXNativeTarget "JobHuntFirstStep" */ = {
+		A90000000000000000000002 /* Build configuration list for PBXNativeTarget "FirstStepToCareer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A80000000000000000000003 /* Debug */,
@@ -264,7 +264,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A90000000000000000000003 /* Build configuration list for PBXNativeTarget "JobHuntFirstStepTests" */ = {
+		A90000000000000000000003 /* Build configuration list for PBXNativeTarget "FirstStepToCareerTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A80000000000000000000005 /* Debug */,

@@ -45,9 +45,9 @@ flowchart LR
 ```
 이 저장소
 ```
-JobHuntFirstStep.xcodeproj   Xcode 프로젝트
-JobHuntFirstStep/            앱 소스 (App, Features, Domain, Data, Sensors)
-JobHuntFirstStepTests/       앱 테스트
+FirstStepToCareer.xcodeproj   Xcode 프로젝트
+FirstStepToCareer/            앱 소스 (App, Features, Domain, Data, Sensors)
+FirstStepToCareerTests/       앱 테스트
 Config/                      xcconfig. Local.xcconfig는 커밋하지 않음
 docs/                        프로젝트 문서
 api/                         서버 저장소. 이 저장소의 Git에는 포함되지 않음

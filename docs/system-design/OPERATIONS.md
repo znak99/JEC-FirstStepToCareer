@@ -40,10 +40,10 @@
 | 작업 | 명령 |
 |---|---|
 | 의존성 설치 | 없음 |
-| 개발 실행 | Xcode에서 `JobHuntFirstStep.xcodeproj`를 열고 실행. 시선·머리 측정은 실제 iPhone 필요 |
-| 빌드 | `xcodebuild build -project JobHuntFirstStep.xcodeproj -scheme JobHuntFirstStep -destination 'generic/platform=iOS Simulator'` |
-| 테스트 | `xcodebuild test -project JobHuntFirstStep.xcodeproj -scheme JobHuntFirstStep -destination 'platform=iOS Simulator,name=iPhone 17'` |
-| 린트·포맷 | `swift format lint -r JobHuntFirstStep JobHuntFirstStepTests` |
+| 개발 실행 | Xcode에서 `FirstStepToCareer.xcodeproj`를 열고 실행. 시선·머리 측정은 실제 iPhone 필요 |
+| 빌드 | `xcodebuild build -project FirstStepToCareer.xcodeproj -scheme FirstStepToCareer -destination 'generic/platform=iOS Simulator'` |
+| 테스트 | `xcodebuild test -project FirstStepToCareer.xcodeproj -scheme FirstStepToCareer -destination 'platform=iOS Simulator,name=iPhone 17'` |
+| 린트·포맷 | `swift format lint -r FirstStepToCareer FirstStepToCareerTests` |
 
 시선·머리 측정은 시뮬레이터에서 동작하지 않으므로 Face ID가 있는 실제 iPhone에서 확인한다.
 

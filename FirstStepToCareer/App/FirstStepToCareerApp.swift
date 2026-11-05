@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct JobHuntFirstStepApp: App {
+struct FirstStepToCareerApp: App {
   var body: some Scene {
     WindowGroup {
       RootTabView()
