@@ -68,7 +68,7 @@ Updating TASK.md and FEEDBACK.md as part of this workflow does not require appro
 - Respect the layer directions in docs/system-design/ARCHITECTURE.md section 5.
 - Before every commit that changes the app, build and test with `xcodebuild` and lint with `swift format lint -r ios`.
 - This is a public repository. The Claude API key lives only on the server. Never commit `ios/Config/Local.xcconfig` or any real secret, and never put a secret in the app.
-- The app must handle `503 AI_DISABLED` by explaining that AI is off and keeping schedules and past results usable. Automated tests must mock the server and never spend real API credit.
+- The app must handle `503 AI_DISABLED` by explaining that AI is off and keeping past results usable. Automated tests must mock the server and never spend real API credit.
 - Never turn the production AI switch on or off, deploy, upload a TestFlight build, or apply remote migrations unless the user asks.
 - Sign in with Apple is a build setting that is off by default, because free Apple accounts are expected to lack it. Every feature must work for guests. Send identity tokens only to the server, and never store the Apple email or name.
 - Never send or store camera video or microphone audio. Gaze and head tracking stay on the device; only numeric results and the transcript go to the server. Never log transcripts or device tokens.

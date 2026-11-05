@@ -8,7 +8,6 @@ An iPhone app for practicing Japanese job interviews. It is a personal, non-comm
 - Practice interviews by voice with an AI interviewer that reacts to each answer and asks the next question, like a real interview
 - A score for each answer's structure, logic, gaze, and head movement, plus overall feedback
 - On-device tracking of gaze and head movement during answers
-- A calendar for viewing, adding, editing, and deleting interview schedules
 - Charts showing how scores and tracking results change over time
 - Start without an account, or sign in with Apple to keep your data across devices
 
@@ -44,11 +43,11 @@ Set your Apple team ID and uncomment `APP_BUNDLE_ID` with a unique value in `ios
 Open `ios/FirstStepToCareer.xcodeproj` in Xcode, select your iPhone, and press Run.
 
 ### Availability
-AI features work only while the developer has turned them on. Schedules and past results remain available when AI is off.
+AI features work only while the developer has turned them on. Past results remain available when AI is off.
 
 ## Privacy
 - Camera video and microphone audio are not stored or sent to the server.
-- Transcribed answers, tracking numbers, and schedules are stored on the server under an anonymous device token or an Apple account identifier. The server operator can read them.
+- Transcribed answers and tracking counts are stored on the server under an anonymous device token or an Apple account identifier. The server operator can read them.
 - Your Apple email and name are not stored.
 - Transcribed answers are sent to the Claude API for evaluation.
 - Without signing in, data cannot be recovered if the device token is lost. Signing in with Apple lets you reach it again from the same build on another device.
