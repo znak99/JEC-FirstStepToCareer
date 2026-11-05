@@ -1,14 +1,13 @@
 # TASK
 
 ## 진행 중
-- [ ] 프로젝트 초기 설정
-  - [x] ARCHITECTURE.md 작성
-  - [x] DATA.md 작성
-  - [x] SITE_MAP.md 작성
-  - [x] OPERATIONS.md 작성
-  - [x] AGENTS.md의 Project-Specific Rules 작성
-  - [ ] README.md 작성
 
 ## 할 일
+- [ ] 프로젝트 골격 생성
+- [ ] 서버 기반과 AI 스위치 구현
+- [ ] 모의면접 기능 구현
+- [ ] 면접 일정 관리 기능 구현
+- [ ] 면접 분석 기능 구현
 
 ## 완료
+- [x] 프로젝트 초기 설정 (2026-11-06)
