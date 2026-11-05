@@ -16,6 +16,7 @@ struct InterviewSetupView: View {
       Section("会社名") {
         TextField("例：就活一歩株式会社", text: $draft.companyName)
           .textInputAutocapitalization(.never)
+          .submitLabel(.done)
       }
       Section("業界") {
         ChoicePicker(
@@ -51,6 +52,7 @@ struct InterviewSetupView: View {
         Text("質問数はメニューで変更できます。")
       }
     }
+    .scrollDismissesKeyboard(.immediately)
     .navigationTitle("面接の設定")
     .navigationBarTitleDisplayMode(.inline)
     .safeAreaInset(edge: .bottom) {

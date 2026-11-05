@@ -4,6 +4,12 @@
 <dict>
 	<key>API_BASE_URL</key>
 	<string>$(API_BASE_URL)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>面接中の視線と頭の動きを評価するために前面カメラを使います。映像は保存も送信もしません。</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>面接の回答を聞き取るためにマイクを使います。音声は保存も送信もしません。</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>面接の回答を文字に起こすために音声認識を使います。</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsLocalNetworking</key>

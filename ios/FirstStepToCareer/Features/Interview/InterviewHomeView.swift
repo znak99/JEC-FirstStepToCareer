@@ -40,7 +40,9 @@ struct InterviewHomeView: View {
         case .setup:
           InterviewSetupView { draft in path.append(.preparation(draft)) }
         case .preparation(let draft):
-          PreparationView(draft: draft)
+          PreparationView(draft: draft) { context in path.append(.session(context)) }
+        case .session(let context):
+          InterviewSessionView(context: context)
         }
       }
       .task { await refresh() }
