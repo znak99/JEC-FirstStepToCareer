@@ -3,7 +3,7 @@
 ## 진행 중
 - [ ] 프로젝트 초기 설정
   - [x] ARCHITECTURE.md 작성
-  - [ ] DATA.md 작성
+  - [x] DATA.md 작성
   - [ ] SITE_MAP.md 작성
   - [ ] OPERATIONS.md 작성
   - [ ] AGENTS.md의 Project-Specific Rules 작성
