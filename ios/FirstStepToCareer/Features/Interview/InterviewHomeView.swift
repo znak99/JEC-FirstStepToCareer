@@ -42,7 +42,12 @@ struct InterviewHomeView: View {
         case .preparation(let draft):
           PreparationView(draft: draft) { context in path.append(.session(context)) }
         case .session(let context):
-          InterviewSessionView(context: context)
+          InterviewSessionView(
+            context: context,
+            onFinished: { id in path = [.result(id)] },
+            onQuit: { path = [] })
+        case .result(let id):
+          InterviewResultView(interviewId: id) { path = [] }
         }
       }
       .task { await refresh() }
