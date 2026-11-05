@@ -25,16 +25,16 @@
 | APPLE_SIGN_IN_ENABLED | Apple 로그인 버튼과 권한 사용 여부. `Local.xcconfig`에 작성 | 아니오 | NO |
 
 ## 3. 실행·빌드·테스트
-앱 명령은 실행해 확인했다. 서버 명령은 서버 골격을 만들 때 확인하고 다르면 고친다. Node.js 버전은 mise로 `api/`에만 고정한다.
+앱과 서버 명령은 모두 실행해 확인했다. 서버의 Node.js 버전은 `api/mise.toml`에 고정되어 있다.
 
 ### 서버 (`api/`에서 실행)
 | 작업 | 명령 |
 |---|---|
-| 의존성 설치 | `npm ci` |
+| 의존성 설치 | `npm ci` 후 `cp .dev.vars.example .dev.vars` |
 | 개발 실행 | `npm run dev` |
 | 빌드 | `npm run typecheck` |
 | 테스트 | `npm test` |
-| 린트·포맷 | `npm run lint` |
+| 린트·포맷 | `npm run lint` (자동 정리는 `npm run format`) |
 
 ### 앱 (저장소 최상위에서 실행)
 | 작업 | 명령 |

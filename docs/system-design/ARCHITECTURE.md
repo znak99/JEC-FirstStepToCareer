@@ -20,7 +20,8 @@
 | 서버 | TypeScript, Hono, Cloudflare Workers | 사용자 결정. 서버 관리 부담이 적음 |
 | 데이터 저장 | Cloudflare D1 (SQLite) | 사용자 결정. Workers와 바로 연동 |
 | AI | Claude API (`@anthropic-ai/sdk`), 기본 모델 `claude-opus-5-5` | 사용자 결정. 비밀 키는 서버에만 둠 |
-| 테스트 | Swift Testing(앱), Vitest + `@cloudflare/vitest-pool-workers`(서버) | 각 플랫폼의 표준 도구 |
+| 테스트 | Swift Testing(앱), Vitest + `@cloudflare/vitest-plugin`(서버) | 각 플랫폼의 표준 도구 |
+| 린트·포맷 | swift format(앱), Biome(서버) | 별도 설치가 적고 한 도구로 검사와 정리를 함께 한다 |
 | 호스팅·배포 | Cloudflare Workers(서버), TestFlight와 소스 직접 빌드(앱) | 개발자가 아니어도 설치할 수 있고, 코드를 보려는 사람은 직접 빌드할 수 있다 |
 
 ## 3. 시스템 구성도
