@@ -50,6 +50,7 @@ AI features work only while the developer has turned them on. Past results remai
 - Transcribed answers and tracking counts are stored on the server under an anonymous device token or an Apple account identifier. The server operator can read them.
 - Your Apple email and name are not stored.
 - Transcribed answers are sent to the Claude API for evaluation.
+- You can delete all of your data from the menu at any time.
 - Without signing in, data cannot be recovered if the device token is lost. Signing in with Apple lets you reach it again from the same build on another device.
 
 ## Documentation
