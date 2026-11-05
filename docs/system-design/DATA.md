@@ -148,7 +148,7 @@ erDiagram
 
 | 기법 | 넣어야 할 데이터 | 위치 |
 |---|---|---|
-| 경계값 | 질문 수 2·3·7·8, 점수 -1·0·100·101, 감점 횟수 -1·0, 감점 합이 100을 넘는 경우(0점), 토큰 42·43·44자, 요청 본문 100KB·100KB+1바이트, 마지막 접속 갱신 1시간 직전·직후 | `api/test/device-auth.test.ts`, `api/test/body-limit.test.ts`, `api/test/interviews.test.ts`, `api/test/answers.test.ts`, `api/test/scoring.test.ts`, `api/test/migrations.test.ts` |
+| 경계값 | 질문 수 2·3·7·8, 점수 -1·0·100·101, 감점 횟수 -1·0, 감점 합이 100을 넘는 경우(0점), 토큰 42·43·44자, 요청 본문 100KB·100KB+1바이트, 마지막 접속 갱신 1시간 직전·직후 | `api/test/device-auth.test.ts`, `api/test/body-limit.test.ts`, `api/test/interviews.test.ts`, `api/test/answers.test.ts`, `api/test/scoring.test.ts`, `api/test/migrations.test.ts`, `ios/FirstStepToCareerTests/InterviewDraftTests.swift`, `ios/FirstStepToCareerTests/DeviationTests.swift` |
 | 문자열 길이 | 빈 문자열, 최소 길이, 최대 길이, 최대 초과 | `api/test/interviews.test.ts`, `api/test/answers.test.ts` |
 | 특수 문자 | 따옴표, 공백만, 앞뒤 공백, 줄바꿈, 이모지, 한글·일본어, `< > ' " ; --` | `api/test/device-auth.test.ts`(토큰), `api/test/interviews.test.ts`, `api/test/answers.test.ts` |
 | 형식 | JSON이 아닌 본문, 잘못된 커서, 없는 ID, 숫자 자리의 문자열 | `api/test/interviews.test.ts` |

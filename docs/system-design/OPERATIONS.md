@@ -19,7 +19,7 @@
 ### 앱 (`ios/Config/`)
 | 이름 | 설명 | 필수 | local 기본값 |
 |---|---|---|---|
-| API_BASE_URL | 서버 주소. `Shared.xcconfig`에 커밋 | 예 | http://localhost:8787 |
+| API_BASE_URL | 서버 주소. `Shared.xcconfig`에 운영 주소를 커밋하고, 로컬 서버로 개발할 때만 `Local.xcconfig`에서 `http:/$()/localhost:8787`로 덮어씀(시뮬레이터 전용) | 예 | https://first-step-to-career-api.znak99.cloud |
 | DEVELOPMENT_TEAM | 빌드하는 사람의 Apple 팀 ID. `Local.xcconfig`에 작성. 실제 iPhone 설치에 필요하고 시뮬레이터에는 불필요 | 실제 기기만 | 없음 |
 | APP_BUNDLE_ID | 번들 ID. 다른 Apple 계정으로 빌드할 때는 `Local.xcconfig`에서 고유한 값으로 덮어씀 | 예 | cloud.znak99.FirstStepToCareer |
 | APPLE_SIGN_IN_ENABLED | Apple 로그인 버튼과 권한 사용 여부. `Local.xcconfig`에 작성 | 아니오 | NO |
@@ -42,10 +42,12 @@
 | 의존성 설치 | 없음 |
 | 개발 실행 | Xcode에서 `ios/FirstStepToCareer.xcodeproj`를 열고 실행. 시선·머리 측정은 실제 iPhone 필요 |
 | 빌드 | `xcodebuild build -project ios/FirstStepToCareer.xcodeproj -scheme FirstStepToCareer -destination 'generic/platform=iOS Simulator'` |
-| 테스트 | `xcodebuild test -project ios/FirstStepToCareer.xcodeproj -scheme FirstStepToCareer -destination 'platform=iOS Simulator,name=iPhone 17'` |
+| 테스트 | `xcodebuild test -project ios/FirstStepToCareer.xcodeproj -scheme FirstStepToCareer -destination 'platform=iOS Simulator,name=iPhone 17,OS=27.0'` |
 | 린트·포맷 | `swift format lint -r ios` |
 
-시선·머리 측정은 시뮬레이터에서 동작하지 않으므로 Face ID가 있는 실제 iPhone에서 확인한다.
+시선·머리 측정은 시뮬레이터에서 동작하지 않으므로 Face ID가 있는 실제 iPhone에서 확인한다. 시뮬레이터의 음성 인식은 Mac 마이크로 동작한다.
+
+시뮬레이터에서 질문 수를 바꿀 때: `xcrun simctl spawn <기기> defaults write cloud.znak99.FirstStepToCareer questionCount -int 3`
 
 ## 4. 배포
 - 서버 방법: `api/`에서 `npx wrangler deploy`. 새 마이그레이션이 있으면 먼저 `npx wrangler d1 migrations apply first-step-to-career --remote`를 실행한다.
