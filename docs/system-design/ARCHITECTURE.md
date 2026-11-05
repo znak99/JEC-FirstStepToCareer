@@ -113,7 +113,6 @@ wrangler.jsonc               Workers·D1 설정
 | `DELETE /v1/interviews/:id` | 면접 삭제. 면접을 중간에 그만둘 때도 쓴다 | 아니오 |
 | `PUT /v1/interviews/:id/questions/:questionId/answer` | 답변과 측정값 저장, 맞장구와 다음 질문 생성 | 예 |
 | `POST /v1/interviews/:id/evaluation` | 면접 평가 | 예 |
-| `GET /v1/analytics?from&to` | 그래프용 집계 | 아니오 |
 
 AI를 쓰는 경로는 스위치가 꺼져 있으면 Claude를 호출하지 않고 `503 AI_DISABLED`를 돌려준다.
 
@@ -197,8 +196,10 @@ AI를 쓰는 경로는 스위치가 꺼져 있으면 Claude를 호출하지 않�
 최신순으로 20개씩 돌려준다. 다음 페이지는 응답의 `nextCursor`를 `?cursor=`로 보낸다. 마지막 페이지면 `nextCursor`는 `null`이다.
 
 ```json
-{ "items": [ { "id": "…", "companyName": "…", "industry": "…", "jobTitle": "…", "interviewType": "hr", "hiringType": "new_grad", "status": "completed", "startedAt": "…", "completedAt": "…", "totalScore": 78.4 } ], "nextCursor": null }
+{ "items": [ { "id": "…", "companyName": "…", "industry": "…", "jobTitle": "…", "interviewType": "hr", "hiringType": "new_grad", "status": "completed", "startedAt": "…", "completedAt": "…", "scores": { "total": 78.4, "structure": 80.0, "logic": 75.5, "gaze": 82.3, "head": 75.8 } } ], "nextCursor": null }
 ```
+
+- `scores`는 면접 상세의 `scores`와 같고, 평가 전이면 `null`이다. 기록 탭의 추이 그래프는 앱이 이 값으로 그린다.
 
 ## 6. 핵심 흐름
 ### 6.1 모의면접
@@ -232,6 +233,7 @@ AI를 쓰는 경로는 스위치가 꺼져 있으면 Claude를 호출하지 않�
 ## 7. 설계 결정 기록
 | 날짜 | 결정 | 이유 | 버린 대안 |
 |---|---|---|---|
+| 2026-11-06 | 분석 그래프는 앱이 기록 목록의 점수로 계산해 그리고, 분석 API는 두지 않는다. 대신 목록 응답에 항목별 총점을 넣는다 | 사용자 결정. 서버 사용을 최소로 한다. 필요한 점수는 이미 저장되어 있어 앱에서 평균과 추이만 계산하면 된다 | 서버의 분석 API(`GET /v1/analytics`), 면접마다 상세를 따로 조회 |
 | 2026-11-06 | 하단 탭을 면접·기록·메뉴로 한다. 분석 그래프는 기록 탭 위쪽에, 설정과 계정은 메뉴 탭에 둔다. 메뉴에 데이터 전체 삭제를 넣는다 | 사용자 결정. 지난 기록과 그 추이를 한 화면에서 본다. 데이터 삭제는 사용자가 직접 기록을 지울 수 있게 하고, TestFlight 심사에서 요구될 수 있다 | 면접·분석 탭과 설정 시트 |
 | 2026-11-06 | 면접 일정 관리 기능을 넣지 않는다 | 사용자 결정. 모의면접과 결과 분석에 집중한다. 이전의 일정 관리 기능과 일정 탭을 없앤다 | 달력 기반 일정 조회·추가·수정·삭제 |
 | 2026-11-06 | 시선·머리 점수는 질문마다 100점에서 시작해 1초마다 기준점과의 차이를 4단계로 판정해 감점한다. 앱은 단계별 횟수를 보내고 서버가 점수를 계산한다 | 사용자 결정. 계산은 서버에 두어 앱과 분석의 점수가 어긋나지 않게 한다. 이전의 '벗어난 시간 비율·평균 각도' 계산식을 대체한다 | 벗어난 시간 비율과 평균 각도로 계산, 앱에서 점수 계산 |
