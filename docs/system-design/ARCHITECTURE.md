@@ -1,47 +1,116 @@
 # ARCHITECTURE
 
-<!-- 프로젝트 초기 설정 태스크에서 에이전트가 채운다. 구조나 주요 결정이 바뀔 때마다 갱신한다. -->
-<!-- Profile의 Type이 Script면 3·5·6은 생략해도 된다. -->
-
 ## 1. 개요
-<!-- 이 시스템이 무엇을 하는지 2~3줄. 어디까지가 이 저장소의 책임이고 무엇이 바깥(외부 API, 기존 서비스)인지. -->
+就活一歩는 일본 취업·이직 준비생을 위한 iPhone 모의면접 앱이다. AI가 질문을 만들고, 사용자가 말로 답하면 답변의 구성과 논리를 AI가 평가하며, 면접 중 시선과 머리의 움직임을 함께 측정한다. 면접 일정 관리와 결과 분석 그래프도 제공한다.
+
+- 이 저장소의 책임: iOS 앱(`ios/`), 서버(`server/`), 문서
+- 바깥의 서비스: Claude API(질문 생성·평가), Cloudflare(서버 실행·DB)
+- 상용 서비스가 아니다. App Store에 출시하지 않고 공개 저장소의 소스를 직접 빌드해 설치한다.
 
 ## 2. 기술 스택
-<!-- 해당 없는 행은 삭제. Web + Mobile이면 클라이언트별로 행을 나눈다. -->
 | 영역 | 선택 | 이유 |
 |---|---|---|
-| 언어 | | |
-| 프레임워크 | | |
-| 데이터 저장 | | |
-| 빌드·패키징 | | |
-| 테스트 | | |
-| 호스팅·배포 | | |
+| 앱 언어·UI | Swift 6, SwiftUI (iOS 18 이상) | iPhone 전용. 카메라·음성 기능을 Apple 공식 API로 바로 사용 |
+| 시선·머리 측정 | ARKit Face Tracking | 시선 방향과 머리 각도를 기기 안에서 계산. 영상을 서버로 보내지 않음 |
+| 음성 인식(STT) | Apple Speech (`ja-JP`) | 추가 비용 없음 |
+| 음성 합성(TTS) | AVSpeechSynthesizer (`ja-JP`) | 추가 비용 없음 |
+| 그래프 | Swift Charts | Apple 기본 제공. 외부 의존성 없음 |
+| 서버 | TypeScript, Hono, Cloudflare Workers | 사용자 결정. 서버 관리 부담이 적음 |
+| 데이터 저장 | Cloudflare D1 (SQLite) | 사용자 결정. Workers와 바로 연동 |
+| AI | Claude API (`@anthropic-ai/sdk`), 기본 모델 `claude-opus-5-5` | 사용자 결정. 비밀 키는 서버에만 둠 |
+| 테스트 | Swift Testing(앱), Vitest + `@cloudflare/vitest-pool-workers`(서버) | 각 플랫폼의 표준 도구 |
+| 호스팅·배포 | Cloudflare Workers(서버), 소스 직접 빌드(앱) | TestFlight 없이 공개 저장소로 배포 |
 
 ## 3. 시스템 구성도
-<!-- 주요 구성요소와 그 사이의 통신. Server 있음이면 클라이언트 / 서버 / 저장소 / 외부 서비스를 구분한다. -->
 ```mermaid
 flowchart LR
-  Client --> Server --> DB[(DB)]
+  subgraph iPhone
+    App[SwiftUI 앱]
+    Sensors[ARKit · Speech · AVSpeech]
+    Keychain[(Keychain: 기기 토큰)]
+    App --- Sensors
+    App --- Keychain
+  end
+  App -- HTTPS + 기기 토큰 --> Worker[Hono on Workers]
+  Worker --> D1[(D1)]
+  Worker -- AI 스위치가 켜졌을 때만 --> Claude[Claude API]
+  Owner[개발자] -- wrangler 또는 Cloudflare 대시보드 --> D1
 ```
 
 ## 4. 디렉터리 구조
-<!-- 최상위 2단계까지. 각 디렉터리에 한 줄 설명. -->
 ```
-src/
-  ...
+ios/
+  JobHuntFirstStep.xcodeproj   Xcode 프로젝트
+  JobHuntFirstStep/            앱 소스 (App, Features, Domain, Data, Sensors)
+  JobHuntFirstStepTests/       앱 테스트
+  Config/                      xcconfig. Local.xcconfig는 커밋하지 않음
+server/
+  src/                         라우트, 서비스, 저장소, AI 호출
+  migrations/                  D1 마이그레이션 SQL
+  test/                        서버 테스트와 픽스처
+  wrangler.jsonc               Workers·D1 설정
+docs/                          프로젝트 문서
 ```
 
 ## 5. 모듈·레이어와 의존 방향
-<!-- 어떤 계층이 있고, 의존은 어느 방향으로만 허용되는지. 예: UI → 서비스 → 저장소, 역방향 금지. -->
+### 앱
 | 레이어·모듈 | 책임 | 의존 가능 대상 |
 |---|---|---|
+| Features | 화면과 화면 상태 | Domain, Sensors, Data |
+| Sensors | 카메라 추적, STT, TTS | Domain |
+| Data | API 호출, Keychain | Domain |
+| Domain | 모델과 계산 규칙 | 없음 |
+
+### 서버
+| 레이어·모듈 | 책임 | 의존 가능 대상 |
+|---|---|---|
+| routes | 요청 검증, 응답 변환 | services |
+| services | 업무 규칙, AI 스위치 확인 | repositories, ai |
+| repositories | D1 쿼리 | 없음 |
+| ai | Claude 호출과 응답 스키마 | 없음 |
+
+### API
+모든 요청은 `Authorization: Bearer <기기 토큰>`을 보낸다. 오류 응답의 형식은 `{ "error": { "code", "message" } }`이다.
+
+| 메서드·경로 | 용도 | AI 사용 |
+|---|---|---|
+| `GET /v1/status` | AI 스위치 상태 조회 | 아니오 |
+| `POST /v1/interviews` | 면접 생성과 질문 생성 | 예 |
+| `GET /v1/interviews` | 면접 기록 목록 | 아니오 |
+| `GET /v1/interviews/:id` | 면접 상세 | 아니오 |
+| `DELETE /v1/interviews/:id` | 면접 삭제 | 아니오 |
+| `PUT /v1/interviews/:id/questions/:questionId/answer` | 답변과 측정값 저장 | 아니오 |
+| `POST /v1/interviews/:id/evaluation` | 답변 평가 | 예 |
+| `GET /v1/schedules?from&to` | 일정 조회 | 아니오 |
+| `POST /v1/schedules` | 일정 추가 | 아니오 |
+| `PUT /v1/schedules/:id` | 일정 수정 | 아니오 |
+| `DELETE /v1/schedules/:id` | 일정 삭제 | 아니오 |
+| `GET /v1/analytics?from&to` | 그래프용 집계 | 아니오 |
+
+AI를 쓰는 경로는 스위치가 꺼져 있으면 Claude를 호출하지 않고 `503 AI_DISABLED`를 돌려준다.
 
 ## 6. 핵심 흐름
-<!-- 가장 대표적인 요청·동작 1~2개를 단계별로. 이 흐름을 따라가면 코드 구조가 이해되는 것으로 고른다. -->
-### 6.1 [흐름 이름]
-1.
+### 6.1 모의면접
+1. 앱이 `GET /v1/status`로 AI 스위치를 확인한다. 꺼져 있으면 면접 시작을 막고 안내한다.
+2. 사용자가 회사명(선택), 직무, 면접 유형, 질문 수를 입력한다.
+3. `POST /v1/interviews`가 Claude로 일본어 질문을 만들어 저장하고 돌려준다.
+4. 앱이 질문을 TTS로 읽고, 사용자의 말을 STT로 받아 적으며, ARKit으로 시선과 머리 움직임을 측정한다.
+5. 답변마다 받아쓴 글과 측정 수치를 저장한다. 영상과 음성은 저장하거나 전송하지 않는다.
+6. 마지막 답변 뒤 `POST /v1/interviews/:id/evaluation`이 답변별 구성·논리 점수와 피드백을 저장한다.
+7. 평가 중 스위치가 꺼지거나 실패하면 답변은 그대로 두고, 나중에 평가를 다시 시도할 수 있다.
+
+### 6.2 AI 스위치
+1. 개발자가 D1의 `app_setting.ai_enabled` 값을 `1` 또는 `0`으로 바꾼다. 명령은 OPERATIONS.md 4절을 따른다.
+2. 서버는 AI를 쓰는 요청마다 이 값을 읽으므로 다시 배포하지 않아도 바로 적용된다.
+3. 켜진 동안에는 앱 안에서 사용 횟수를 제한하지 않는다. 기본값은 꺼짐이다.
 
 ## 7. 설계 결정 기록
-<!-- 되돌리기 어렵거나 나중에 "왜 이렇게 했지?"가 나올 결정만. 최신이 위. 결정을 뒤집을 때는 지우지 말고 새 행을 추가한다. -->
 | 날짜 | 결정 | 이유 | 버린 대안 |
 |---|---|---|---|
+| 2026-11-06 | Claude 요청에 구조화된 출력(`output_config.format`)과 `fallbacks: "default"`를 사용한다 | 응답을 스키마로 검증하고, 안전 분류기의 오탐으로 인한 거절 시 면접이 끊기지 않게 한다 | 자유 텍스트 응답 파싱 |
+| 2026-11-06 | 질문은 면접 시작 때 한 번에 만들고, 평가는 면접 끝에 한 번에 호출한다 | 첫 버전의 호출 횟수와 비용, 대기 시간을 줄인다 | 답변마다 꼬리질문 생성·평가 |
+| 2026-11-06 | 시선·머리 측정에 ARKit을 사용한다 | 시선 방향 값을 바로 얻어 구현이 단순하다. 단, Face ID가 있는 iPhone에서만 동작하고 시뮬레이터에서는 시험할 수 없다 | Vision 프레임워크(모든 기기 가능, 시선 정확도 낮음) |
+| 2026-11-06 | 기기 안에서 만든 무작위 토큰을 Keychain에 두고, 서버에는 해시만 저장한다 | 로그인 없이 사용자별 데이터를 구분한다 | 로그인, 추측 가능한 기기 식별자 |
+| 2026-11-06 | 면접 일정·답변·분석 결과를 서버 D1에 저장한다 | 사용자 결정 | 기기 저장 |
+| 2026-11-06 | AI 사용을 개발자가 D1 값으로 켜고 끄며, 켜진 동안 횟수 제한을 두지 않는다 | 사용자 결정. 시연할 때만 켜는 운영 방식. 관리자 API가 없어 공격 표면도 늘지 않는다 | 기기별 사용량 제한, 사용자 본인 API 키 |
+| 2026-11-06 | 소스를 직접 빌드해 설치한다 | 사용자 결정. 비용이 들지 않는다 | TestFlight 공개 링크 |
