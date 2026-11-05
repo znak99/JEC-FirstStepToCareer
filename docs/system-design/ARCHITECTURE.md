@@ -3,7 +3,8 @@
 ## 1. 개요
 就活一歩는 일본 취업·이직 준비생을 위한 iPhone 모의면접 앱이다. AI가 질문을 만들고, 사용자가 말로 답하면 답변의 구성과 논리를 AI가 평가하며, 면접 중 시선과 머리의 움직임을 함께 측정한다. 면접 일정 관리와 결과 분석 그래프도 제공한다.
 
-- 이 저장소의 책임: iOS 앱(`ios/`), 서버(`server/`), 문서
+- 이 저장소의 책임: iOS 앱, 앱과 서버가 공유하는 설계 문서(API 계약, 데이터 모델)
+- 서버 저장소의 책임: 서버 코드, 마이그레이션, 서버 테스트와 배포. 별도 저장소로 분리한다(이름 미정, 생성 후 여기에 링크).
 - 바깥의 서비스: Claude API(질문 생성·평가), Cloudflare(서버 실행·DB), Apple(로그인 신원 확인)
 - 상용 서비스가 아니다. App Store에 출시하지 않고 공개 저장소의 소스를 직접 빌드해 설치한다.
 
@@ -42,17 +43,22 @@ flowchart LR
 
 ## 4. 디렉터리 구조
 ```
-ios/
-  JobHuntFirstStep.xcodeproj   Xcode 프로젝트
-  JobHuntFirstStep/            앱 소스 (App, Features, Domain, Data, Sensors)
-  JobHuntFirstStepTests/       앱 테스트
-  Config/                      xcconfig. Local.xcconfig는 커밋하지 않음
-server/
-  src/                         라우트, 서비스, 저장소, AI 호출
-  migrations/                  D1 마이그레이션 SQL
-  test/                        서버 테스트와 픽스처
-  wrangler.jsonc               Workers·D1 설정
-docs/                          프로젝트 문서
+이 저장소
+```
+JobHuntFirstStep.xcodeproj   Xcode 프로젝트
+JobHuntFirstStep/            앱 소스 (App, Features, Domain, Data, Sensors)
+JobHuntFirstStepTests/       앱 테스트
+Config/                      xcconfig. Local.xcconfig는 커밋하지 않음
+docs/                        프로젝트 문서
+```
+
+서버 저장소
+```
+src/                         라우트, 서비스, 저장소, AI 호출
+migrations/                  D1 마이그레이션 SQL
+seed/                        개발용 시드
+test/                        서버 테스트와 픽스처
+wrangler.jsonc               Workers·D1 설정
 ```
 
 ## 5. 모듈·레이어와 의존 방향
@@ -64,7 +70,7 @@ docs/                          프로젝트 문서
 | Data | API 호출, Keychain | Domain |
 | Domain | 모델과 계산 규칙 | 없음 |
 
-### 서버
+### 서버 (서버 저장소)
 | 레이어·모듈 | 책임 | 의존 가능 대상 |
 |---|---|---|
 | routes | 요청 검증, 응답 변환 | services |
@@ -121,6 +127,8 @@ AI를 쓰는 경로는 스위치가 꺼져 있으면 Claude를 호출하지 않�
 ## 7. 설계 결정 기록
 | 날짜 | 결정 | 이유 | 버린 대안 |
 |---|---|---|---|
+| 2026-11-06 | 서버를 별도 저장소로 분리하고, 설계 문서는 이 저장소에 하나만 둔다 | 사용자 결정. 문서를 두 곳에 두면 API 계약과 데이터 모델이 어긋나기 쉽다 | 한 저장소에 앱과 서버를 함께 두기 |
+| 2026-11-06 | 개발자가 직접 빌드한 앱에서는 Apple 로그인을 켠다 | 개발자가 Apple Developer Program 계정을 보유하고 있다 | 게스트만 사용 |
 | 2026-11-06 | Apple 로그인과 로그인 없이 시작을 모두 제공한다. Apple 로그인은 빌드 설정으로 켜는 선택 기능이다 | 사용자 결정. Apple 로그인은 유료 Apple Developer Program이 필요한 것으로 알려져 있어, 무료 계정 빌드에서는 끄고 게스트로 사용하게 한다. 구현 시 Apple 문서로 재확인한다 | 로그인 없음(이전 결정), Apple 로그인 필수 |
 | 2026-11-06 | Claude 요청에 구조화된 출력(`output_config.format`)과 `fallbacks: "default"`를 사용한다 | 응답을 스키마로 검증하고, 안전 분류기의 오탐으로 인한 거절 시 면접이 끊기지 않게 한다 | 자유 텍스트 응답 파싱 |
 | 2026-11-06 | 질문은 면접 시작 때 한 번에 만들고, 평가는 면접 끝에 한 번에 호출한다 | 첫 버전의 호출 횟수와 비용, 대기 시간을 줄인다 | 답변마다 꼬리질문 생성·평가 |

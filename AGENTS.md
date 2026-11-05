@@ -63,13 +63,14 @@ Updating TASK.md and FEEDBACK.md as part of this workflow does not require appro
 - Never report a task as done without verifying it works.
 
 ## Project-Specific Rules
-- Layout: `ios/` is the SwiftUI app and `server/` is the Hono API on Cloudflare Workers with D1. Commands are in docs/system-design/OPERATIONS.md.
+- Layout: this repository holds the SwiftUI app and the shared design documents. The Hono API on Cloudflare Workers with D1 lives in a separate server repository. Commands are in docs/system-design/OPERATIONS.md.
+- The design documents here are the single source for the API contract and data model. When either changes, update them here and report what the server repository must change.
 - Respect the layer directions in docs/system-design/ARCHITECTURE.md section 5.
-- Run the checks for the side you changed before every commit. App: build and test with `xcodebuild`, lint with `swift format lint -r ios`. Server: `npm run typecheck`, `npm run lint`, and `npm test` in `server/`.
-- This is a public repository. The Claude API key lives only on the server. Never commit `server/.dev.vars`, `ios/Config/Local.xcconfig`, or any real secret, and never put a secret in the app.
-- Every route that calls Claude must check the `ai_enabled` switch first and return `503 AI_DISABLED` without calling Claude when it is off. Cap input lengths and question counts on the server. Automated tests must mock Claude and never spend real API credit.
+- Before every commit that changes the app, build and test with `xcodebuild` and lint with `swift format lint -r JobHuntFirstStep JobHuntFirstStepTests`.
+- This is a public repository. The Claude API key lives only on the server. Never commit `Config/Local.xcconfig` or any real secret, and never put a secret in the app.
+- The app must handle `503 AI_DISABLED` by explaining that AI is off and keeping schedules and past results usable. Automated tests must mock the server and never spend real API credit.
 - Never turn the production AI switch on or off, deploy, or apply remote migrations unless the user asks.
-- Sign in with Apple is optional and off by default, because free Apple accounts are expected to lack it. Every feature must work for guests. Verify identity tokens on the server (signature, `iss`, `aud`, `exp`, `nonce`), and store only `sub`, never the Apple email or name.
+- Sign in with Apple is a build setting that is off by default, because free Apple accounts are expected to lack it. Every feature must work for guests. Send identity tokens only to the server, and never store the Apple email or name.
 - Never send or store camera video or microphone audio. Gaze and head tracking stay on the device; only numeric results and the transcript go to the server. Never log transcripts or device tokens.
 - Face tracking needs a physical iPhone with Face ID. Say so in the report when a change could not be verified on one.
 - User-facing strings are Japanese and go through String Catalogs. AI prompts must request Japanese questions and feedback.

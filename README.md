@@ -14,7 +14,7 @@ An iPhone app for practicing Japanese job interviews. It is a personal, non-comm
 
 ## Tech Stack
 - App: Swift 6, SwiftUI, ARKit, Speech, AVFoundation, Swift Charts (iOS 18+)
-- Server: TypeScript, Hono, Cloudflare Workers
+- Server: TypeScript, Hono, Cloudflare Workers (separate repository, link to be added)
 - Database: Cloudflare D1 (SQLite)
 - Sign-in: Sign in with Apple (optional)
 - AI: Claude API
@@ -31,12 +31,12 @@ The project skeleton is not created yet, so the steps below describe the planned
 ```bash
 git clone https://github.com/znak99/JEC-FirstStepToCareer.git
 cd JEC-FirstStepToCareer
-cp ios/Config/Local.xcconfig.example ios/Config/Local.xcconfig
+cp Config/Local.xcconfig.example Config/Local.xcconfig
 ```
-Set your Apple team ID and a unique bundle ID in `ios/Config/Local.xcconfig`. Leave `APPLE_SIGN_IN_ENABLED` as `NO` unless you have a paid Apple Developer Program membership; you can still use every feature without signing in.
+Set your Apple team ID and a unique bundle ID in `Config/Local.xcconfig`. Leave `APPLE_SIGN_IN_ENABLED` as `NO` unless you have a paid Apple Developer Program membership; you can still use every feature without signing in.
 
 ### Run
-Open `ios/JobHuntFirstStep.xcodeproj` in Xcode, select your iPhone, and press Run.
+Open `JobHuntFirstStep.xcodeproj` in Xcode, select your iPhone, and press Run.
 
 AI features work only while the developer has turned them on. Schedules and past results remain available when AI is off.
 

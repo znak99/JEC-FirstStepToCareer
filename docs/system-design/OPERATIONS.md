@@ -7,7 +7,7 @@
 | production | 실제 사용 | Workers URL (서버 첫 배포 때 기록) | 공개 저장소에 적히는 공개 주소 |
 
 ## 2. 환경 변수
-실제 값은 커밋하지 않는다. 로컬 서버는 `server/.dev.vars`, 운영 서버는 Wrangler secret을 쓴다.
+실제 값은 커밋하지 않는다. 로컬 서버는 서버 저장소의 `.dev.vars`, 운영 서버는 Wrangler secret을 쓴다.
 
 ### 서버
 | 이름 | 설명 | 필수 | local 기본값 |
@@ -16,7 +16,7 @@
 | ANTHROPIC_MODEL | 사용할 모델 ID. 비용 조절을 위해 코드 수정 없이 변경 | 아니오 | claude-opus-5-5 |
 | APPLE_BUNDLE_IDS | Apple 로그인을 허용할 번들 ID 목록(쉼표 구분). 비어 있으면 Apple 로그인 거부 | 아니오 | 없음 |
 
-### 앱 (`ios/Config/`)
+### 앱 (`Config/`)
 | 이름 | 설명 | 필수 | local 기본값 |
 |---|---|---|---|
 | API_BASE_URL | 서버 주소. `Shared.xcconfig`에 커밋 | 예 | http://localhost:8787 |
@@ -27,7 +27,7 @@
 ## 3. 실행·빌드·테스트
 아래 명령은 프로젝트 골격을 만든 뒤 사용할 수 있으며, 그때 실제로 실행해 확인하고 다르면 고친다. Node.js 버전은 mise로 프로젝트에만 고정한다.
 
-### 서버 (`server/`에서 실행)
+### 서버 (서버 저장소 최상위에서 실행)
 | 작업 | 명령 |
 |---|---|
 | 의존성 설치 | `npm ci` |
@@ -40,15 +40,15 @@
 | 작업 | 명령 |
 |---|---|
 | 의존성 설치 | 없음 |
-| 개발 실행 | Xcode에서 `ios/JobHuntFirstStep.xcodeproj`를 열고 실제 iPhone에 실행 |
-| 빌드 | `xcodebuild build -project ios/JobHuntFirstStep.xcodeproj -scheme JobHuntFirstStep -destination 'generic/platform=iOS Simulator'` |
-| 테스트 | `xcodebuild test -project ios/JobHuntFirstStep.xcodeproj -scheme JobHuntFirstStep -destination 'platform=iOS Simulator,name=iPhone 17'` |
-| 린트·포맷 | `swift format lint -r ios` |
+| 개발 실행 | Xcode에서 `JobHuntFirstStep.xcodeproj`를 열고 실제 iPhone에 실행 |
+| 빌드 | `xcodebuild build -project JobHuntFirstStep.xcodeproj -scheme JobHuntFirstStep -destination 'generic/platform=iOS Simulator'` |
+| 테스트 | `xcodebuild test -project JobHuntFirstStep.xcodeproj -scheme JobHuntFirstStep -destination 'platform=iOS Simulator,name=iPhone 17'` |
+| 린트·포맷 | `swift format lint -r JobHuntFirstStep JobHuntFirstStepTests` |
 
 시선·머리 측정은 시뮬레이터에서 동작하지 않으므로 Face ID가 있는 실제 iPhone에서 확인한다.
 
 ## 4. 배포
-- 서버 방법: `server/`에서 `npx wrangler deploy`
+- 서버 방법: 서버 저장소 최상위에서 `npx wrangler deploy`
 - 앱 방법: 사용자가 저장소를 받아 `Local.xcconfig`를 작성하고 Xcode로 직접 설치한다. 무료 Apple 계정으로 설치한 앱은 7일 뒤 실행되지 않으므로 같은 계정으로 다시 설치한다.
 
 ### Apple 로그인
@@ -59,7 +59,7 @@
 4. 그 번들 ID를 서버의 `APPLE_BUNDLE_IDS`에 추가한다.
 
 ### AI 스위치
-Cloudflare 대시보드의 D1 콘솔에서 같은 SQL을 실행해도 된다. 다시 배포할 필요는 없다.
+서버 저장소 최상위에서 실행한다. Cloudflare 대시보드의 D1 콘솔에서 같은 SQL을 실행해도 된다. 다시 배포할 필요는 없다.
 
 | 작업 | 명령 |
 |---|---|
