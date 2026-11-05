@@ -4,7 +4,7 @@
 | 환경 | 용도 | 접근 경로 | 비고 |
 |---|---|---|---|
 | local | 개발 | http://localhost:8787 | `wrangler dev`, 로컬 D1 |
-| production | 실제 사용 | Workers URL (서버 첫 배포 때 기록) | 공개 저장소에 적히는 공개 주소 |
+| production | 실제 사용 | https://first-step-to-career-api.znak99.cloud | Cloudflare 사용자 지정 도메인. `workers.dev` 주소는 끔 |
 
 ## 2. 환경 변수
 실제 값은 커밋하지 않는다. 로컬 서버는 `api/.dev.vars`, 운영 서버는 Wrangler secret을 쓴다.
@@ -48,7 +48,8 @@
 시선·머리 측정은 시뮬레이터에서 동작하지 않으므로 Face ID가 있는 실제 iPhone에서 확인한다.
 
 ## 4. 배포
-- 서버 방법: `api/`에서 `npx wrangler deploy`
+- 서버 방법: `api/`에서 `npx wrangler deploy`. 새 마이그레이션이 있으면 먼저 `npx wrangler d1 migrations apply first-step-to-career --remote`를 실행한다.
+- 서버 비밀 키 등록: `api/`에서 `npx wrangler secret put ANTHROPIC_API_KEY` (입력 내용은 화면에 보이지 않음)
 - 앱 방법 1, TestFlight: 개발자가 빌드를 올리고 공개 링크를 공유한다. 받는 사람은 TestFlight 앱을 설치한 뒤 링크를 연다.
 - 앱 방법 2, 소스 직접 빌드: 사용자가 저장소를 받아 `Local.xcconfig`를 작성하고 Xcode로 직접 설치한다. 무료 Apple 계정으로 설치한 앱은 7일 뒤 실행되지 않으므로 같은 계정으로 다시 설치한다.
 
