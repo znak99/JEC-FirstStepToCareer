@@ -4,6 +4,6 @@ import Testing
 
 struct AppTabTests {
   @Test func tabsFollowTheSiteMapOrder() {
-    #expect(AppTab.allCases == [.interview, .schedule, .analytics])
+    #expect(AppTab.allCases == [.interview, .history, .menu])
   }
 }

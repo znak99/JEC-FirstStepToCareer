@@ -17,8 +17,8 @@ struct RootTabView: View {
   private func screen(for tab: AppTab) -> some View {
     switch tab {
     case .interview: InterviewHomeView()
-    case .schedule: ScheduleCalendarView()
-    case .analytics: AnalyticsView()
+    case .history: HistoryView()
+    case .menu: MenuView()
     }
   }
 }
