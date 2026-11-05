@@ -1,7 +1,7 @@
 # ARCHITECTURE
 
 ## 1. 개요
-就活一歩는 일본 취업·이직 준비생을 위한 iPhone 모의면접 앱이다. AI가 질문을 만들고, 사용자가 말로 답하면 답변의 구성과 논리를 AI가 평가하며, 면접 중 시선과 머리의 움직임을 함께 측정한다. 면접 일정 관리와 결과 분석 그래프도 제공한다.
+就活一歩는 일본 취업·이직 준비생을 위한 iPhone 모의면접 앱이다. AI 면접관이 실제 면접처럼 한 질문씩 묻고, 사용자가 말로 답하면 맞장구를 친 뒤 다음 질문을 한다. 면접이 끝나면 답변의 구성과 논리를 AI가 평가하고, 면접 중 측정한 시선과 머리의 움직임도 점수로 보여 준다. 면접 일정 관리와 결과 분석 그래프도 제공한다.
 
 - 이 저장소의 책임: iOS 앱, 앱과 서버가 공유하는 설계 문서(API 계약, 데이터 모델)
 - 서버 저장소의 책임: 서버 코드, 마이그레이션, 서버 테스트와 배포. 비공개 저장소 `znak99/first-step-to-career-api`이며, 이 저장소 안의 `api/` 폴더에 받아 두고 `.gitignore`로 제외한다.
@@ -19,7 +19,7 @@
 | 그래프 | Swift Charts | Apple 기본 제공. 외부 의존성 없음 |
 | 서버 | TypeScript, Hono, Cloudflare Workers | 사용자 결정. 서버 관리 부담이 적음 |
 | 데이터 저장 | Cloudflare D1 (SQLite) | 사용자 결정. Workers와 바로 연동 |
-| AI | Claude API (`@anthropic-ai/sdk`), 기본 모델 `claude-opus-5-5` | 사용자 결정. 비밀 키는 서버에만 둠 |
+| AI | Claude API (`@anthropic-ai/sdk`), 모델 `claude-haiku-5-5`, effort `medium` | 사용자 결정. 질문마다 호출하므로 응답이 빠르고 저렴한 모델을 쓴다. 비밀 키는 서버에만 둠 |
 | 테스트 | Swift Testing(앱), Vitest + `@cloudflare/vitest-plugin`(서버) | 각 플랫폼의 표준 도구 |
 | 린트·포맷 | swift format(앱), Biome(서버) | 별도 설치가 적고 한 도구로 검사와 정리를 함께 한다 |
 | 호스팅·배포 | Cloudflare Workers(서버), TestFlight와 소스 직접 빌드(앱) | 개발자가 아니어도 설치할 수 있고, 코드를 보려는 사람은 직접 빌드할 수 있다 |
@@ -92,8 +92,11 @@ wrangler.jsonc               Workers·D1 설정
 |---|---|---|
 | 401 | `UNAUTHORIZED` | 토큰이 없거나 형식이 틀림 |
 | 404 | `NOT_FOUND` | 없는 경로, 또는 다른 계정의 데이터 |
+| 400 | `VALIDATION_ERROR` | 입력값이 형식이나 범위를 벗어남 |
+| 409 | `INVALID_STATE` | 지금 상태에서 할 수 없는 요청 (예: 평가가 끝난 면접에 답변 저장) |
 | 413 | `PAYLOAD_TOO_LARGE` | 요청 본문이 100KB 초과 |
 | 500 | `INTERNAL_ERROR` | 서버 내부 오류 |
+| 502 | `AI_FAILED` | Claude 호출이 실패했거나 거절됨. 같은 요청을 다시 보내면 재시도된다 |
 | 503 | `AI_DISABLED` | AI 스위치가 꺼진 상태에서 AI 경로 호출 |
 
 
@@ -103,12 +106,12 @@ wrangler.jsonc               Workers·D1 설정
 | `POST /v1/auth/logout` | 현재 기기 토큰을 무효화 | 아니오 |
 | `GET /v1/me` | 로그인 상태 조회 | 아니오 |
 | `GET /v1/status` | AI 스위치 상태 조회. 응답 `{ "aiEnabled": boolean }` | 아니오 |
-| `POST /v1/interviews` | 면접 생성과 질문 생성 | 예 |
+| `POST /v1/interviews` | 면접 생성과 첫 질문 생성 | 예 |
 | `GET /v1/interviews` | 면접 기록 목록 | 아니오 |
 | `GET /v1/interviews/:id` | 면접 상세 | 아니오 |
-| `DELETE /v1/interviews/:id` | 면접 삭제 | 아니오 |
-| `PUT /v1/interviews/:id/questions/:questionId/answer` | 답변과 측정값 저장 | 아니오 |
-| `POST /v1/interviews/:id/evaluation` | 답변 평가 | 예 |
+| `DELETE /v1/interviews/:id` | 면접 삭제. 면접을 중간에 그만둘 때도 쓴다 | 아니오 |
+| `PUT /v1/interviews/:id/questions/:questionId/answer` | 답변과 측정값 저장, 맞장구와 다음 질문 생성 | 예 |
+| `POST /v1/interviews/:id/evaluation` | 면접 평가 | 예 |
 | `GET /v1/schedules?from&to` | 일정 조회 | 아니오 |
 | `POST /v1/schedules` | 일정 추가 | 아니오 |
 | `PUT /v1/schedules/:id` | 일정 수정 | 아니오 |
@@ -117,15 +120,93 @@ wrangler.jsonc               Workers·D1 설정
 
 AI를 쓰는 경로는 스위치가 꺼져 있으면 Claude를 호출하지 않고 `503 AI_DISABLED`를 돌려준다.
 
+### 모의면접 API 상세
+#### `POST /v1/interviews`
+요청 본문. 모든 항목이 필수다.
+
+| 키 | 형식 | 설명 |
+|---|---|---|
+| `companyName` | 문자열 1~100자 | 회사명 |
+| `industry` | 문자열 1~50자 | 업종. 앱의 목록 값 또는 직접 입력한 값 |
+| `jobTitle` | 문자열 1~50자 | 직무. 앱의 목록 값 또는 직접 입력한 값 |
+| `interviewType` | `hr` / `job` | 인사 면접(人事面接) / 직무 면접(職務面接) |
+| `hiringType` | `new_grad` / `mid_career` | 신졸(新卒) / 중도(中途) |
+| `questionCount` | 정수 3~7 | 질문 수. 앱 설정 화면의 값 |
+
+문자열은 앞뒤 공백을 지운 뒤 길이를 검사한다. Claude가 인사와 첫 질문을 만들고, 면접과 첫 질문을 저장한 뒤 `201`로 면접 상세를 돌려준다.
+
+#### `PUT /v1/interviews/:id/questions/:questionId/answer`
+요청 본문
+
+| 키 | 형식 | 설명 |
+|---|---|---|
+| `transcript` | 문자열 1~10000자 | 받아쓴 답변 |
+| `durationMs` | 정수 0 이상 | 답변 시간 |
+| `gazeAwayRatio` | 0~1 또는 `null` | 시선이 화면에서 벗어난 시간의 비율. 얼굴 추적을 못 하면 `null` |
+| `headMovementDeg` | 0 이상 또는 `null` | 머리 각도 변화의 평균(도). 얼굴 추적을 못 하면 `null` |
+
+- 답할 수 있는 질문은 가장 마지막에 나온 질문 하나뿐이다. 그 밖의 질문이면 `409 INVALID_STATE`.
+- 답변을 저장한 뒤 Claude가 답변에 대한 짧은 맞장구(예: 「なるほど、〜を経験されたのですね」)와 다음 질문을 만든다. 마지막 질문이면 맞장구와 마무리 인사를 만들고, 면접은 `awaiting_evaluation`이 된다.
+- Claude 호출이 실패하면 답변은 저장된 채 `502 AI_FAILED`를 돌려준다. 같은 답변을 다시 보내면 덮어쓰고 다시 생성한다.
+
+응답 `200`
+
+```json
+{
+  "status": "in_progress",
+  "nextQuestion": { "id": "…", "position": 2, "preface": "なるほど…", "text": "…" },
+  "closingMessage": null
+}
+```
+
+마지막 질문이면 `nextQuestion`은 `null`이고, `closingMessage`에 맞장구와 마무리 인사가 들어간다.
+
+#### `POST /v1/interviews/:id/evaluation`
+`awaiting_evaluation`인 면접만 평가한다. 그 밖의 상태면 `409 INVALID_STATE`. Claude가 질문별 구성·논리 점수와 면접 전체에 대한 피드백 하나를 만들고, 서버가 시선·머리 점수를 계산해 저장한 뒤 면접은 `completed`가 된다. 응답은 면접 상세다. 실패하면 `502 AI_FAILED`이고 상태는 그대로라 다시 시도할 수 있다.
+
+#### `GET /v1/interviews/:id` (면접 상세)
+```json
+{
+  "id": "…",
+  "companyName": "…", "industry": "…", "jobTitle": "…",
+  "interviewType": "hr", "hiringType": "new_grad", "questionCount": 4,
+  "status": "completed",
+  "startedAt": "…", "completedAt": "…",
+  "scores": { "total": 78.4, "structure": 80.0, "logic": 75.5, "gaze": 82.3, "head": 75.8 },
+  "feedback": "…",
+  "closingMessage": "…",
+  "questions": [
+    {
+      "id": "…", "position": 1, "preface": "…", "text": "…",
+      "answer": { "transcript": "…", "durationMs": 52000, "gazeAwayRatio": 0.12, "headMovementDeg": 3.4 },
+      "scores": { "structure": 80, "logic": 70, "gaze": 88.0, "head": 83.0 }
+    }
+  ]
+}
+```
+
+- 평가 전에는 `scores`와 `feedback`, 질문별 `scores`가 `null`이다. 답하지 않은 질문의 `answer`는 `null`이다.
+- 점수 계산 규칙은 DATA.md 5절을 따른다.
+
+#### `GET /v1/interviews`
+최신순으로 20개씩 돌려준다. 다음 페이지는 응답의 `nextCursor`를 `?cursor=`로 보낸다. 마지막 페이지면 `nextCursor`는 `null`이다.
+
+```json
+{ "items": [ { "id": "…", "companyName": "…", "industry": "…", "jobTitle": "…", "interviewType": "hr", "hiringType": "new_grad", "status": "completed", "startedAt": "…", "completedAt": "…", "totalScore": 78.4 } ], "nextCursor": null }
+```
+
 ## 6. 핵심 흐름
 ### 6.1 모의면접
 1. 앱이 `GET /v1/status`로 AI 스위치를 확인한다. 꺼져 있으면 면접 시작을 막고 안내한다.
-2. 사용자가 회사명(선택), 직무, 면접 유형, 질문 수를 입력한다.
-3. `POST /v1/interviews`가 Claude로 일본어 질문을 만들어 저장하고 돌려준다.
-4. 앱이 질문을 TTS로 읽고, 사용자의 말을 STT로 받아 적으며, ARKit으로 시선과 머리 움직임을 측정한다.
-5. 답변마다 받아쓴 글과 측정 수치를 저장한다. 영상과 음성은 저장하거나 전송하지 않는다.
-6. 마지막 답변 뒤 `POST /v1/interviews/:id/evaluation`이 답변별 구성·논리 점수와 피드백을 저장한다.
-7. 평가 중 스위치가 꺼지거나 실패하면 답변은 그대로 두고, 나중에 평가를 다시 시도할 수 있다.
+2. 사용자가 회사명, 업종, 직무, 면접 유형, 채용 유형을 입력한다. 질문 수(3~7)는 설정 화면의 값을 쓴다.
+3. `POST /v1/interviews`가 Claude로 인사와 첫 질문을 만들어 저장하고 돌려준다.
+4. 앱이 질문을 TTS로 읽고, 사용자의 말을 STT로 받아 적으며, ARKit으로 시선과 머리 움직임을 측정한다. 영상과 음성은 저장하거나 전송하지 않는다.
+5. 답변을 마치면 받아쓴 글과 측정값을 보낸다. 서버는 지금까지의 대화를 Claude에 보내 맞장구와 다음 질문을 받아 저장하고 돌려준다. 앱은 맞장구와 다음 질문을 이어서 읽는다.
+6. 질문 수만큼 반복한다. 마지막 답변에는 맞장구와 마무리 인사가 돌아오고, 면접은 평가 대기 상태가 된다.
+7. 앱이 `POST /v1/interviews/:id/evaluation`을 호출한다. Claude가 질문별 구성·논리 점수와 전체 피드백을 만들고, 서버가 시선·머리 점수와 합계를 계산한다.
+8. 일시 정지는 앱 안에서만 처리하고 서버 상태는 바꾸지 않는다. 앱을 다시 열면 면접 상세에서 아직 답하지 않은 마지막 질문부터 이어 간다.
+9. 면접을 중간에 그만두면 앱이 `DELETE /v1/interviews/:id`로 지운다. 끝까지 마친 면접만 기록과 분석에 남는다.
+10. 스위치가 꺼지거나 Claude 호출이 실패하면 저장된 답변은 그대로 두고, 같은 요청을 다시 보내 이어 갈 수 있다.
 
 ### 6.2 AI 스위치
 1. 개발자가 D1의 `app_setting.ai_enabled` 값을 `1` 또는 `0`으로 바꾼다. 명령은 OPERATIONS.md 4절을 따른다.
@@ -143,6 +224,11 @@ AI를 쓰는 경로는 스위치가 꺼져 있으면 Claude를 호출하지 않�
 ## 7. 설계 결정 기록
 | 날짜 | 결정 | 이유 | 버린 대안 |
 |---|---|---|---|
+| 2026-11-06 | 면접은 한 질문씩 진행한다. 답변마다 Claude가 맞장구와 다음 질문을 만들고, 평가는 면접 끝에 한 번 한다 | 사용자 결정. 실제 면접처럼 답변 내용을 이어받아 질문한다. 이전의 '질문을 한 번에 생성' 결정을 대체한다 | 질문을 시작 때 한 번에 생성 |
+| 2026-11-06 | Claude 모델은 `claude-haiku-5-5`, effort `medium`을 쓰고 다른 모델로 넘기지 않는다. 거절되면 `502 AI_FAILED`를 돌려주고 앱이 다시 시도한다 | 사용자 결정. 질문마다 호출하므로 빠르고 저렴해야 한다. Claude Haiku 5.5에는 서버 측 자동 전환(fallbacks) 기능이 없다. 이전의 `claude-opus-5-5`와 `fallbacks: "default"` 결정을 대체한다 | `claude-opus-5-5`, 거절 시 다른 모델로 자동 전환 |
+| 2026-11-06 | 면접을 중간에 그만두면 삭제하고, 일시 정지는 앱 안에서만 처리한다 | 사용자 결정. 끝까지 마친 면접만 기록과 분석에 의미가 있다 | 중단 API와 중단 상태 |
+| 2026-11-06 | 피드백은 질문별이 아니라 면접 전체에 하나만 둔다 | 사용자 결정 | 질문별 구성·논리 피드백 |
+| 2026-11-06 | 시선·머리 점수는 측정값으로 서버가 계산해 평가 시점에 저장하고, 합계는 조회할 때 계산한다 | 계산식이 바뀌어도 지난 기록의 점수가 변하지 않는다. 합계는 저장된 점수에서 늘 같은 값이 나온다 | 앱에서 계산, 합계까지 저장 |
 | 2026-11-06 | 서버 주소를 `first-step-to-career-api.znak99.cloud`로 한다 | 사용자 결정. 개인 도메인의 하위 주소라 다른 용도와 겹치지 않는다 | `workers.dev` 기본 주소, 도메인 전체 사용 |
 | 2026-11-06 | 앱 아이콘은 예전 인물·책상 그림을 유지하고, 배경을 진한 파란색 그라데이션과 하프톤 도트로 바꾼다 | 사용자 결정. 예전 앱의 인상을 살리면서 테크 느낌을 더한다 | 예전 아이콘 그대로, 고른 도트(B), 가장자리 도트(C) |
 | 2026-11-06 | 번들 ID를 `cloud.znak99.FirstStepToCareer`로 한다 | 사용자 결정. TestFlight 등록 후에는 바꾸기 어렵다 | `com.znak99.JobHuntFirstStep` |

@@ -5,8 +5,8 @@
 An iPhone app for practicing Japanese job interviews. It is a personal, non-commercial project that is not on the App Store. Anyone can install it through TestFlight or build it from this public repository.
 
 ## Features
-- Practice interviews with AI-generated questions, read aloud and answered by voice
-- AI evaluation of each answer's structure and logic
+- Practice interviews by voice with an AI interviewer that reacts to each answer and asks the next question, like a real interview
+- A score for each answer's structure, logic, gaze, and head movement, plus overall feedback
 - On-device tracking of gaze and head movement during answers
 - A calendar for viewing, adding, editing, and deleting interview schedules
 - Charts showing how scores and tracking results change over time

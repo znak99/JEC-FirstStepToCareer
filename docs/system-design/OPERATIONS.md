@@ -13,7 +13,7 @@
 | 이름 | 설명 | 필수 | local 기본값 |
 |---|---|---|---|
 | ANTHROPIC_API_KEY | Claude API 비밀 키 | 예 | 없음 |
-| ANTHROPIC_MODEL | 사용할 모델 ID. 비용 조절을 위해 코드 수정 없이 변경 | 아니오 | claude-opus-5-5 |
+| ANTHROPIC_MODEL | 사용할 모델 ID. 코드 수정 없이 변경 가능 | 아니오 | claude-haiku-5-5 |
 | APPLE_BUNDLE_IDS | Apple 로그인을 허용할 번들 ID 목록(쉼표 구분). 비어 있으면 Apple 로그인 거부 | 아니오 | 없음 |
 
 ### 앱 (`ios/Config/`)
