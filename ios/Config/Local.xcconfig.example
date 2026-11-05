@@ -3,3 +3,6 @@ DEVELOPMENT_TEAM = YOUR_TEAM_ID
 
 // 다른 Apple 계정으로 빌드할 때는 고유한 값으로 바꾼다.
 // APP_BUNDLE_ID = com.example.FirstStepToCareer
+
+// 로컬 서버(npm run dev)에 연결할 때만 쓴다. 시뮬레이터에서만 동작한다.
+// API_BASE_URL = http:/$()/localhost:8787

@@ -1,6 +1,6 @@
 // 커밋되는 공통 설정. 개인 값은 Local.xcconfig에서 덮어쓴다.
 APP_BUNDLE_ID = cloud.znak99.FirstStepToCareer
-API_BASE_URL = http:/$()/localhost:8787
+API_BASE_URL = https:/$()/first-step-to-career-api.znak99.cloud
 
 SDKROOT = iphoneos
 SUPPORTED_PLATFORMS = iphoneos iphonesimulator

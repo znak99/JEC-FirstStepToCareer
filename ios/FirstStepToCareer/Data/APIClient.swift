@@ -1,0 +1,122 @@
+import Foundation
+
+enum APIError: Error, Equatable {
+  // 서버가 정해진 오류 형식으로 돌려준 경우
+  case server(status: Int, code: String)
+  case network
+  case invalidResponse
+
+  var code: String? {
+    if case .server(_, let code) = self { return code }
+    return nil
+  }
+}
+
+struct APIClient: Sendable {
+  let baseURL: URL
+  let tokenStore: DeviceTokenStore
+  let session: URLSession
+
+  init(
+    baseURL: URL, tokenStore: DeviceTokenStore = DeviceTokenStore(), session: URLSession = .shared
+  ) {
+    self.baseURL = baseURL
+    self.tokenStore = tokenStore
+    self.session = session
+  }
+
+  static func fromBundle() -> APIClient {
+    let value = Bundle.main.object(forInfoDictionaryKey: "API_BASE_URL") as? String ?? ""
+    guard let url = URL(string: value), url.scheme != nil else {
+      fatalError("API_BASE_URL is not configured")
+    }
+    return APIClient(baseURL: url)
+  }
+
+  func status() async throws -> ServiceStatus {
+    try await send("GET", "/v1/status")
+  }
+
+  func createInterview(_ body: NewInterview) async throws -> InterviewDetail {
+    try await send("POST", "/v1/interviews", body: body)
+  }
+
+  func interview(id: String) async throws -> InterviewDetail {
+    try await send("GET", "/v1/interviews/\(id)")
+  }
+
+  func interviews(cursor: String? = nil) async throws -> InterviewPage {
+    var path = "/v1/interviews"
+    if let cursor { path += "?cursor=\(cursor)" }
+    return try await send("GET", path)
+  }
+
+  func deleteInterview(id: String) async throws {
+    try await sendWithoutResponse("DELETE", "/v1/interviews/\(id)")
+  }
+
+  func submitAnswer(interviewId: String, questionId: String, _ body: AnswerSubmission) async throws
+    -> AnswerResult
+  {
+    try await send(
+      "PUT", "/v1/interviews/\(interviewId)/questions/\(questionId)/answer", body: body)
+  }
+
+  func evaluate(interviewId: String) async throws -> InterviewDetail {
+    try await send("POST", "/v1/interviews/\(interviewId)/evaluation")
+  }
+
+  private struct Empty: Encodable {}
+  private struct ErrorBody: Decodable {
+    struct Detail: Decodable { let code: String }
+    let error: Detail
+  }
+
+  private func send<Response: Decodable>(_ method: String, _ path: String) async throws -> Response
+  {
+    try await send(method, path, body: Optional<Empty>.none)
+  }
+
+  private func send<Body: Encodable, Response: Decodable>(
+    _ method: String, _ path: String, body: Body?
+  ) async throws -> Response {
+    let data = try await perform(method, path, body: body)
+    do {
+      return try JSONDecoder().decode(Response.self, from: data)
+    } catch {
+      throw APIError.invalidResponse
+    }
+  }
+
+  private func sendWithoutResponse(_ method: String, _ path: String) async throws {
+    _ = try await perform(method, path, body: Optional<Empty>.none)
+  }
+
+  private func perform<Body: Encodable>(_ method: String, _ path: String, body: Body?) async throws
+    -> Data
+  {
+    guard let url = URL(string: path, relativeTo: baseURL) else { throw APIError.invalidResponse }
+    var request = URLRequest(url: url)
+    request.httpMethod = method
+    request.timeoutInterval = 90
+    request.setValue("Bearer \(try tokenStore.currentToken())", forHTTPHeaderField: "Authorization")
+    if let body {
+      request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+      request.httpBody = try JSONEncoder().encode(body)
+    }
+
+    let data: Data
+    let response: URLResponse
+    do {
+      (data, response) = try await session.data(for: request)
+    } catch {
+      throw APIError.network
+    }
+    guard let http = response as? HTTPURLResponse else { throw APIError.invalidResponse }
+    guard (200..<300).contains(http.statusCode) else {
+      let code = (try? JSONDecoder().decode(ErrorBody.self, from: data))?.error.code ?? "UNKNOWN"
+      throw APIError.server(status: http.statusCode, code: code)
+    }
+    return data
+  }
+}
