@@ -149,6 +149,7 @@ erDiagram
 ## 6. 마이그레이션
 - 도구: Wrangler D1 migrations
 - 파일 위치·이름 규칙: `api/migrations/NNNN_설명.sql`
+- 현재 마이그레이션: `0001_init.sql`(계정·기기 토큰·앱 설정), `0002_interview.sql`(면접·질문·답변)
 - 적용 명령: `api/`에서 `npx wrangler d1 migrations apply first-step-to-career --local` (운영은 `--remote`)
 - 롤백 방법: 자동 롤백이 없다. 되돌리는 내용을 새 마이그레이션으로 추가한다.
 
@@ -161,10 +162,10 @@ erDiagram
 
 | 기법 | 넣어야 할 데이터 | 위치 |
 |---|---|---|
-| 경계값 | 질문 수 2·3·7·8, 점수 -1·0·100·101, 감점 횟수 -1·0, 감점 합이 100을 넘는 경우(0점), 토큰 42·43·44자, 요청 본문 100KB·100KB+1바이트, 마지막 접속 갱신 1시간 직전·직후 | `api/test/device-auth.test.ts`, `api/test/body-limit.test.ts` |
-| 문자열 길이 | 빈 문자열, 최소 길이, 최대 길이, 최대 초과 | |
-| 특수 문자 | 따옴표, 공백만, 앞뒤 공백, 줄바꿈, 이모지, 한글·일본어, `< > ' " ; --` | `api/test/device-auth.test.ts`(토큰) |
+| 경계값 | 질문 수 2·3·7·8, 점수 -1·0·100·101, 감점 횟수 -1·0, 감점 합이 100을 넘는 경우(0점), 토큰 42·43·44자, 요청 본문 100KB·100KB+1바이트, 마지막 접속 갱신 1시간 직전·직후 | `api/test/device-auth.test.ts`, `api/test/body-limit.test.ts`, `api/test/interviews.test.ts`, `api/test/answers.test.ts`, `api/test/scoring.test.ts`, `api/test/migrations.test.ts` |
+| 문자열 길이 | 빈 문자열, 최소 길이, 최대 길이, 최대 초과 | `api/test/interviews.test.ts`, `api/test/answers.test.ts` |
+| 특수 문자 | 따옴표, 공백만, 앞뒤 공백, 줄바꿈, 이모지, 한글·일본어, `< > ' " ; --` | `api/test/device-auth.test.ts`(토큰), `api/test/interviews.test.ts`, `api/test/answers.test.ts` |
 | 형식 | 잘못된 날짜와 UUID, `ends_at`이 `starts_at`보다 이른 일정 | |
-| 수량 | 면접·일정 0건, 1건, 한 페이지(20건)를 넘는 다수, 같은 질문에 답변 재전송, 이미 지나간 질문에 답변 | |
-| 상태 | 면접의 모든 상태값, 허용되지 않는 상태 전이, Claude 실패 뒤 재시도, `faceTracking` 켜짐·꺼짐과 측정값의 불일치, AI 스위치 켜짐·꺼짐·잘못된 값·행 없음 | `api/test/ai-switch.test.ts`(AI 스위치) |
-| 동등 분할 | 유효·무효 입력 대표 사례, 다른 계정의 데이터 접근, 토큰 없음·잘못된 토큰, Apple 토큰의 서명·`aud`·`exp`·`nonce` 오류, 게스트 데이터가 있는 상태의 기존 Apple 계정 로그인 | |
+| 수량 | 면접·일정 0건, 1건, 한 페이지(20건)를 넘는 다수, 같은 질문에 답변 재전송, 이미 지나간 질문에 답변 | `api/test/interviews.test.ts`, `api/test/answers.test.ts` (일정은 일정 API에서 추가) |
+| 상태 | 면접의 모든 상태값, 허용되지 않는 상태 전이, Claude 실패 뒤 재시도, `faceTracking` 켜짐·꺼짐과 측정값의 불일치, AI 스위치 켜짐·꺼짐·잘못된 값·행 없음 | `api/test/ai-switch.test.ts`, `api/test/answers.test.ts`, `api/test/evaluation.test.ts` |
+| 동등 분할 | 유효·무효 입력 대표 사례, 다른 계정의 데이터 접근, 토큰 없음·잘못된 토큰, Apple 토큰의 서명·`aud`·`exp`·`nonce` 오류, 게스트 데이터가 있는 상태의 기존 Apple 계정 로그인 | `api/test/device-auth.test.ts`, `api/test/interviews.test.ts`, `api/test/answers.test.ts`, `api/test/evaluation.test.ts` (Apple 토큰은 Apple 로그인 API에서 추가) |
