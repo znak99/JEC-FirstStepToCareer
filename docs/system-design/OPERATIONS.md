@@ -14,6 +14,7 @@
 |---|---|---|---|
 | ANTHROPIC_API_KEY | Claude API 비밀 키 | 예 | 없음 |
 | ANTHROPIC_MODEL | 사용할 모델 ID. 비용 조절을 위해 코드 수정 없이 변경 | 아니오 | claude-opus-5-5 |
+| APPLE_BUNDLE_IDS | Apple 로그인을 허용할 번들 ID 목록(쉼표 구분). 비어 있으면 Apple 로그인 거부 | 아니오 | 없음 |
 
 ### 앱 (`ios/Config/`)
 | 이름 | 설명 | 필수 | local 기본값 |
@@ -21,6 +22,7 @@
 | API_BASE_URL | 서버 주소. `Shared.xcconfig`에 커밋 | 예 | http://localhost:8787 |
 | DEVELOPMENT_TEAM | 빌드하는 사람의 Apple 팀 ID. `Local.xcconfig`에 작성 | 예 | 없음 |
 | APP_BUNDLE_ID | 빌드하는 사람별 고유 번들 ID. `Local.xcconfig`에 작성 | 예 | 없음 |
+| APPLE_SIGN_IN_ENABLED | Apple 로그인 버튼과 권한 사용 여부. `Local.xcconfig`에 작성 | 아니오 | NO |
 
 ## 3. 실행·빌드·테스트
 아래 명령은 프로젝트 골격을 만든 뒤 사용할 수 있으며, 그때 실제로 실행해 확인하고 다르면 고친다. Node.js 버전은 mise로 프로젝트에만 고정한다.
@@ -48,6 +50,13 @@
 ## 4. 배포
 - 서버 방법: `server/`에서 `npx wrangler deploy`
 - 앱 방법: 사용자가 저장소를 받아 `Local.xcconfig`를 작성하고 Xcode로 직접 설치한다. 무료 Apple 계정으로 설치한 앱은 7일 뒤 실행되지 않으므로 같은 계정으로 다시 설치한다.
+
+### Apple 로그인
+무료 Apple 계정으로 빌드할 때는 `APPLE_SIGN_IN_ENABLED`를 `NO`로 두고 로그인 없이 사용한다. 켜려면 다음을 모두 해야 한다.
+1. Apple Developer Program에 가입한다.
+2. 앱의 App ID에 Sign in with Apple 기능을 켠다.
+3. `Local.xcconfig`에서 `APPLE_SIGN_IN_ENABLED = YES`로 설정한다.
+4. 그 번들 ID를 서버의 `APPLE_BUNDLE_IDS`에 추가한다.
 
 ### AI 스위치
 Cloudflare 대시보드의 D1 콘솔에서 같은 SQL을 실행해도 된다. 다시 배포할 필요는 없다.

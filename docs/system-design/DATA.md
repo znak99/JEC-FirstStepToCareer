@@ -11,19 +11,21 @@
 ## 2. 엔티티 목록
 | 엔티티 | 설명 | 저장소 |
 |---|---|---|
-| device | 익명 사용자(기기) | D1 |
+| account | 사용자. 게스트이거나 Apple 계정에 연결됨 | D1 |
+| device_token | 기기별 인증 토큰. 한 계정에 여러 개 가능 | D1 |
 | interview | 모의면접 1회 | D1 |
 | question | 면접의 질문 | D1 |
 | answer | 질문에 대한 답변, 측정값, 평가 | D1 |
 | schedule | 면접 일정 | D1 |
 | app_setting | 앱 전체 설정. AI 스위치 포함 | D1 |
-| device token | 서버 인증에 쓰는 무작위 값 | Keychain |
+| 기기 토큰 원본 | 서버 인증에 쓰는 무작위 값 | Keychain |
 
 ## 3. ERD
 ```mermaid
 erDiagram
-  DEVICE ||--o{ INTERVIEW : has
-  DEVICE ||--o{ SCHEDULE : has
+  ACCOUNT ||--|{ DEVICE_TOKEN : authenticates
+  ACCOUNT ||--o{ INTERVIEW : has
+  ACCOUNT ||--o{ SCHEDULE : has
   INTERVIEW ||--|{ QUESTION : contains
   QUESTION ||--o| ANSWER : receives
 ```
@@ -31,11 +33,18 @@ erDiagram
 ## 4. 엔티티 상세
 시각은 모두 UTC ISO 8601 문자열로 저장하고, 화면에 보여줄 때 기기 시간대로 바꾼다.
 
-### 4.1 device
+### 4.1 account
 | 컬럼 | 타입 | 제약 | 설명 |
 |---|---|---|---|
 | id | TEXT | PK | UUID |
-| token_hash | TEXT | NOT NULL, UNIQUE | 기기 토큰의 SHA-256 해시 |
+| apple_sub | TEXT | NULL 허용, UNIQUE | Apple 사용자 식별자. NULL이면 게스트 |
+| created_at | TEXT | NOT NULL | 생성 시각 |
+
+### 4.1.1 device_token
+| 컬럼 | 타입 | 제약 | 설명 |
+|---|---|---|---|
+| token_hash | TEXT | PK | 기기 토큰의 SHA-256 해시 |
+| account_id | TEXT | FK, NOT NULL | account.id |
 | created_at | TEXT | NOT NULL | 처음 요청한 시각 |
 | last_seen_at | TEXT | NOT NULL | 마지막 요청 시각 |
 
@@ -43,7 +52,7 @@ erDiagram
 | 컬럼 | 타입 | 제약 | 설명 |
 |---|---|---|---|
 | id | TEXT | PK | UUID |
-| device_id | TEXT | FK, NOT NULL | device.id |
+| account_id | TEXT | FK, NOT NULL | account.id |
 | company_name | TEXT | NULL 허용, 100자 이하 | 회사명 |
 | job_title | TEXT | NOT NULL, 1~100자 | 직무 |
 | interview_type | TEXT | NOT NULL | `new_grad` / `career_change` |
@@ -78,7 +87,7 @@ erDiagram
 | 컬럼 | 타입 | 제약 | 설명 |
 |---|---|---|---|
 | id | TEXT | PK | UUID |
-| device_id | TEXT | FK, NOT NULL | device.id |
+| account_id | TEXT | FK, NOT NULL | account.id |
 | title | TEXT | NOT NULL, 1~100자 | 일정 이름 |
 | starts_at | TEXT | NOT NULL | 시작 시각 |
 | ends_at | TEXT | NULL 허용, starts_at 이후 | 종료 시각 |
@@ -96,9 +105,12 @@ erDiagram
 
 ## 5. 관계와 제약 조건
 - `interview.status`의 전이: `in_progress` → `awaiting_evaluation` → `completed`. 진행 중 그만두면 `in_progress` → `abandoned`. 그 밖의 전이는 허용하지 않는다.
-- 삭제는 연쇄 삭제다. device → interview·schedule, interview → question → answer.
-- 모든 조회와 변경은 인증된 기기의 데이터로 범위를 제한한다. 다른 기기의 데이터는 존재 여부도 알리지 않고 404를 돌려준다.
-- 기기 토큰을 잃으면 서버의 데이터에 다시 접근할 수 없다. 기기를 바꾸거나, Keychain이 지워지거나, 빌드의 서명 팀을 바꾸면 이런 일이 생긴다.
+- 삭제는 연쇄 삭제다. account → device_token·interview·schedule, interview → question → answer.
+- Apple 이메일과 이름은 저장하지 않는다.
+- 게스트가 이미 있는 Apple 계정으로 로그인하면 면접과 일정을 그 계정으로 옮기고 게스트 계정을 지운다. 이 작업은 하나의 트랜잭션(D1 batch)으로 처리한다.
+- 모든 조회와 변경은 인증된 계정의 데이터로 범위를 제한한다. 다른 계정의 데이터는 존재 여부도 알리지 않고 404를 돌려준다.
+- 게스트가 기기 토큰을 잃으면 서버의 데이터에 다시 접근할 수 없다. 기기를 바꾸거나, Keychain이 지워지거나, 빌드의 서명 팀을 바꾸면 이런 일이 생긴다.
+- Apple 계정 사용자는 다른 기기에서 로그인해 같은 데이터를 볼 수 있다. 단, Apple의 `sub`는 개발자 팀마다 달라서 서명 팀이 다른 빌드에서는 다른 계정이 된다.
 - 답변 원문은 개인정보가 될 수 있다. 서버 관리자는 D1에서 원문을 볼 수 있고, 평가할 때 Claude API로 전송된다. 이 사실을 README와 앱 안에 알린다.
 
 ## 6. 마이그레이션
@@ -122,4 +134,4 @@ erDiagram
 | 형식 | 잘못된 날짜와 UUID, `ends_at`이 `starts_at`보다 이른 일정 | |
 | 수량 | 면접·일정 0건, 1건, 한 페이지를 넘는 다수, 같은 질문에 답변 재전송 | |
 | 상태 | 면접의 모든 상태값, 허용되지 않는 상태 전이, AI 스위치 켜짐·꺼짐 | |
-| 동등 분할 | 유효·무효 입력 대표 사례, 다른 기기의 데이터 접근, 토큰 없음·잘못된 토큰 | |
+| 동등 분할 | 유효·무효 입력 대표 사례, 다른 계정의 데이터 접근, 토큰 없음·잘못된 토큰, Apple 토큰의 서명·`aud`·`exp`·`nonce` 오류, 게스트 데이터가 있는 상태의 기존 Apple 계정 로그인 | |

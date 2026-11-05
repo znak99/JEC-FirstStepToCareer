@@ -69,6 +69,7 @@ Updating TASK.md and FEEDBACK.md as part of this workflow does not require appro
 - This is a public repository. The Claude API key lives only on the server. Never commit `server/.dev.vars`, `ios/Config/Local.xcconfig`, or any real secret, and never put a secret in the app.
 - Every route that calls Claude must check the `ai_enabled` switch first and return `503 AI_DISABLED` without calling Claude when it is off. Cap input lengths and question counts on the server. Automated tests must mock Claude and never spend real API credit.
 - Never turn the production AI switch on or off, deploy, or apply remote migrations unless the user asks.
+- Sign in with Apple is optional and off by default, because free Apple accounts are expected to lack it. Every feature must work for guests. Verify identity tokens on the server (signature, `iss`, `aud`, `exp`, `nonce`), and store only `sub`, never the Apple email or name.
 - Never send or store camera video or microphone audio. Gaze and head tracking stay on the device; only numeric results and the transcript go to the server. Never log transcripts or device tokens.
 - Face tracking needs a physical iPhone with Face ID. Say so in the report when a change could not be verified on one.
 - User-facing strings are Japanese and go through String Catalogs. AI prompts must request Japanese questions and feedback.

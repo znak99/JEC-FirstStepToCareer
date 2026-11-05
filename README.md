@@ -10,11 +10,13 @@ An iPhone app for practicing Japanese job interviews. It is a personal, non-comm
 - On-device tracking of gaze and head movement during answers
 - A calendar for viewing, adding, editing, and deleting interview schedules
 - Charts showing how scores and tracking results change over time
+- Start without an account, or sign in with Apple to keep your data across devices
 
 ## Tech Stack
 - App: Swift 6, SwiftUI, ARKit, Speech, AVFoundation, Swift Charts (iOS 18+)
 - Server: TypeScript, Hono, Cloudflare Workers
 - Database: Cloudflare D1 (SQLite)
+- Sign-in: Sign in with Apple (optional)
 - AI: Claude API
 
 ## Getting Started
@@ -31,7 +33,7 @@ git clone https://github.com/znak99/JEC-FirstStepToCareer.git
 cd JEC-FirstStepToCareer
 cp ios/Config/Local.xcconfig.example ios/Config/Local.xcconfig
 ```
-Set your Apple team ID and a unique bundle ID in `ios/Config/Local.xcconfig`.
+Set your Apple team ID and a unique bundle ID in `ios/Config/Local.xcconfig`. Leave `APPLE_SIGN_IN_ENABLED` as `NO` unless you have a paid Apple Developer Program membership; you can still use every feature without signing in.
 
 ### Run
 Open `ios/JobHuntFirstStep.xcodeproj` in Xcode, select your iPhone, and press Run.
@@ -40,9 +42,10 @@ AI features work only while the developer has turned them on. Schedules and past
 
 ## Privacy
 - Camera video and microphone audio are not stored or sent to the server.
-- Transcribed answers, tracking numbers, and schedules are stored on the server under an anonymous device token. The server operator can read them.
+- Transcribed answers, tracking numbers, and schedules are stored on the server under an anonymous device token or an Apple account identifier. The server operator can read them.
+- Your Apple email and name are not stored.
 - Transcribed answers are sent to the Claude API for evaluation.
-- There is no login, so data cannot be recovered if the device token is lost.
+- Without signing in, data cannot be recovered if the device token is lost. Signing in with Apple lets you reach it again from the same build on another device.
 
 ## Documentation
 | Document | What it covers |
