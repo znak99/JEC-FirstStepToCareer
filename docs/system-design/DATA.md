@@ -154,4 +154,4 @@ erDiagram
 | 형식 | JSON이 아닌 본문, 잘못된 커서, 없는 ID, 숫자 자리의 문자열 | `api/test/interviews.test.ts` |
 | 수량 | 면접 0건, 1건, 한 페이지(20건)를 넘는 다수, 같은 질문에 답변 재전송, 이미 지나간 질문에 답변 | `api/test/interviews.test.ts`, `api/test/answers.test.ts` |
 | 상태 | 면접의 모든 상태값, 허용되지 않는 상태 전이, Claude 실패 뒤 재시도, `faceTracking` 켜짐·꺼짐과 측정값의 불일치, AI 스위치 켜짐·꺼짐·잘못된 값·행 없음 | `api/test/ai-switch.test.ts`, `api/test/answers.test.ts`, `api/test/evaluation.test.ts` |
-| 동등 분할 | 유효·무효 입력 대표 사례, 다른 계정의 데이터 접근, 토큰 없음·잘못된 토큰, Apple 토큰의 서명·`aud`·`exp`·`nonce` 오류, 게스트 데이터가 있는 상태의 기존 Apple 계정 로그인 | `api/test/device-auth.test.ts`, `api/test/interviews.test.ts`, `api/test/answers.test.ts`, `api/test/evaluation.test.ts` (Apple 토큰은 Apple 로그인 API에서 추가) |
+| 동등 분할 | 유효·무효 입력 대표 사례, 다른 계정의 데이터 접근, 토큰 없음·잘못된 토큰, Apple 토큰의 서명·`aud`·`exp`·`nonce` 오류, 게스트 데이터가 있는 상태의 기존 Apple 계정 로그인 | `api/test/device-auth.test.ts`, `api/test/interviews.test.ts`, `api/test/answers.test.ts`, `api/test/evaluation.test.ts`, `api/test/apple-token.test.ts`, `api/test/account.test.ts` |
