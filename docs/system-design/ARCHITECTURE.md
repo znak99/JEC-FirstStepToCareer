@@ -84,12 +84,25 @@ wrangler.jsonc               Workers·D1 설정
 ### API
 모든 요청은 `Authorization: Bearer <기기 토큰>`을 보낸다. 오류 응답의 형식은 `{ "error": { "code", "message" } }`이다.
 
+- 기기 토큰: 앱이 무작위 32바이트를 만들어 패딩 없는 base64url로 인코딩한 43자 문자열(`A-Z a-z 0-9 - _`). 서버는 SHA-256 해시만 저장한다.
+- JSON 키는 camelCase를 쓴다. 시각은 UTC ISO 8601 문자열(`2026-11-06T00:00:00.000Z`)이다.
+- 요청 본문은 100KB까지 받는다.
+
+| 상태 | 오류 코드 | 상황 |
+|---|---|---|
+| 401 | `UNAUTHORIZED` | 토큰이 없거나 형식이 틀림 |
+| 404 | `NOT_FOUND` | 없는 경로, 또는 다른 계정의 데이터 |
+| 413 | `PAYLOAD_TOO_LARGE` | 요청 본문이 100KB 초과 |
+| 500 | `INTERNAL_ERROR` | 서버 내부 오류 |
+| 503 | `AI_DISABLED` | AI 스위치가 꺼진 상태에서 AI 경로 호출 |
+
+
 | 메서드·경로 | 용도 | AI 사용 |
 |---|---|---|
 | `POST /v1/auth/apple` | Apple 신원 토큰을 검증해 현재 기기를 Apple 계정에 연결 | 아니오 |
 | `POST /v1/auth/logout` | 현재 기기 토큰을 무효화 | 아니오 |
 | `GET /v1/me` | 로그인 상태 조회 | 아니오 |
-| `GET /v1/status` | AI 스위치 상태 조회 | 아니오 |
+| `GET /v1/status` | AI 스위치 상태 조회. 응답 `{ "aiEnabled": boolean }` | 아니오 |
 | `POST /v1/interviews` | 면접 생성과 질문 생성 | 예 |
 | `GET /v1/interviews` | 면접 기록 목록 | 아니오 |
 | `GET /v1/interviews/:id` | 면접 상세 | 아니오 |

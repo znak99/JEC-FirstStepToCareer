@@ -73,8 +73,10 @@
 
 | 작업 | 명령 |
 |---|---|
-| 켜기 | `npx wrangler d1 execute <DB 이름> --remote --command "UPDATE app_setting SET value = '1', updated_at = datetime('now') WHERE key = 'ai_enabled'"` |
-| 끄기 | `npx wrangler d1 execute <DB 이름> --remote --command "UPDATE app_setting SET value = '0', updated_at = datetime('now') WHERE key = 'ai_enabled'"` |
+| 켜기 | `npx wrangler d1 execute first-step-to-career --remote --command "UPDATE app_setting SET value = '1', updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE key = 'ai_enabled'"` |
+| 끄기 | `npx wrangler d1 execute first-step-to-career --remote --command "UPDATE app_setting SET value = '0', updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE key = 'ai_enabled'"` |
+
+로컬 서버에서 시험할 때는 `--remote` 대신 `--local`을 쓴다. 로컬 DB는 처음에 `npx wrangler d1 migrations apply first-step-to-career --local`로 만든다.
 
 ### 비용 안전장치
 서버 주소는 공개 저장소에 있으므로, 스위치가 켜진 동안에는 앱 사용자가 아닌 사람도 API를 호출할 수 있다.
