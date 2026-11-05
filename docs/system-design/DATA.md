@@ -59,6 +59,7 @@ erDiagram
 | interview_type | TEXT | NOT NULL | `hr`(인사 면접) / `job`(직무 면접) |
 | hiring_type | TEXT | NOT NULL | `new_grad`(新卒) / `mid_career`(中途) |
 | question_count | INTEGER | NOT NULL, 3~7 | 질문 수 |
+| face_tracking | INTEGER | NOT NULL, 0 또는 1 | 시선·머리 측정 여부. 준비 화면의 판정 결과 |
 | status | TEXT | NOT NULL | 5절의 상태 |
 | closing_message | TEXT | NULL 허용 | 마지막 답변 뒤의 맞장구와 마무리 인사 |
 | feedback | TEXT | NULL 허용 | 면접 전체에 대한 AI 피드백(일본어) |
@@ -80,8 +81,8 @@ erDiagram
 | question_id | TEXT | PK, FK | question.id |
 | transcript | TEXT | NOT NULL, 10000자 이하 | STT로 받아쓴 답변 |
 | duration_ms | INTEGER | NOT NULL, 0 이상 | 답변 시간 |
-| gaze_away_ratio | REAL | NULL 허용, 0~1 | 화면에서 시선이 벗어난 시간의 비율 |
-| head_movement_deg | REAL | NULL 허용, 0 이상 | 답변을 시작할 때의 머리 방향에서 벗어난 각도의 평균(도) |
+| gaze_minor / gaze_moderate / gaze_major / gaze_outside | INTEGER | NULL 허용, 0 이상 | 시선 감점 단계별 횟수. 측정하지 않으면 모두 NULL |
+| head_minor / head_moderate / head_major / head_outside | INTEGER | NULL 허용, 0 이상 | 머리 감점 단계별 횟수. 측정하지 않으면 모두 NULL |
 | structure_score | INTEGER | NULL 허용, 0~100 | 답변 구성 점수. 평가 때 Claude가 매김 |
 | logic_score | INTEGER | NULL 허용, 0~100 | 답변 논리 점수. 평가 때 Claude가 매김 |
 | gaze_score | REAL | NULL 허용, 0~100 | 시선 점수. 평가 때 서버가 계산 |
@@ -119,13 +120,24 @@ erDiagram
 | 점수 | 계산 |
 |---|---|
 | 구성·논리 (질문별) | Claude가 정수로 매긴다 |
-| 시선 (질문별) | `100 × (1 − gaze_away_ratio)` |
-| 머리 움직임 (질문별) | `max(0, 100 − 5 × head_movement_deg)`. 평균 20도 이상 움직이면 0점 |
+| 시선·머리 (질문별) | `max(0, 100 − 0.1 × minor − 0.2 × moderate − 0.3 × major − 0.5 × outside)` |
 | 항목별 총점 | 질문별 점수의 평균 |
 | 면접 총점 | 4개 항목별 총점의 평균 |
 
-- 얼굴 추적을 못 해 측정값이 `null`이면 그 질문의 시선·머리 점수도 `null`이다. 평균은 값이 있는 질문만으로 내고, 모든 질문이 `null`이면 항목별 총점도 `null`이다. 면접 총점은 `null`이 아닌 항목만으로 평균을 낸다.
-- 시선·머리 계산식의 계수는 첫 값이다. 실제 iPhone으로 시험한 뒤 조정할 수 있으며, 바꾸면 이 표와 설계 결정 기록을 함께 고친다.
+- `face_tracking`이 0인 면접은 시선·머리 점수와 그 항목별 총점이 `null`이고, 면접 총점은 구성·논리 2개 항목의 평균이다.
+
+### 5.2 시선·머리 감점 판정 (앱)
+답변하는 동안 1초마다 한 프레임을 보고, 준비 화면에서 만든 기준점에서 벗어난 정도를 아래 단계로 판정한다. 기준 이내면 감점하지 않는다.
+
+| 단계 | 감점 | 시선 (기준점과의 각도) | 머리 (기준점과의 각도) |
+|---|---|---|---|
+| 조금 (`minor`) | 0.1 | 5° 이상 10° 미만 | 5° 이상 10° 미만 |
+| 꽤 (`moderate`) | 0.2 | 10° 이상 15° 미만 | 10° 이상 20° 미만 |
+| 많이 (`major`) | 0.3 | 15° 이상 | 20° 이상 30° 미만 |
+| 밖 (`outside`) | 0.5 | 시선이 화면 밖이거나 얼굴을 찾지 못함 | 30° 이상이거나 얼굴을 찾지 못함 |
+
+- 단계별 감점(0.1·0.2·0.3·0.5)은 사용자 결정이다. 각도 기준은 첫 값이며, 실제 iPhone으로 시험한 뒤 조정한다. 바꾸면 이 표와 설계 결정 기록을 함께 고친다.
+- 각도는 앱 안에서만 쓰고 서버에는 단계별 횟수만 보낸다.
 - 삭제는 연쇄 삭제다. account → device_token·interview·schedule, interview → question → answer.
 - Apple 이메일과 이름은 저장하지 않는다.
 - 게스트가 이미 있는 Apple 계정으로 로그인하면 면접과 일정을 그 계정으로 옮기고 게스트 계정을 지운다. 이 작업은 하나의 트랜잭션(D1 batch)으로 처리한다.
@@ -149,10 +161,10 @@ erDiagram
 
 | 기법 | 넣어야 할 데이터 | 위치 |
 |---|---|---|
-| 경계값 | 질문 수 2·3·7·8, 점수 -1·0·100·101, `head_movement_deg` 0·20·21, `gaze_away_ratio` -0.1·0·1·1.1, 토큰 42·43·44자, 요청 본문 100KB·100KB+1바이트, 마지막 접속 갱신 1시간 직전·직후 | `api/test/device-auth.test.ts`, `api/test/body-limit.test.ts` |
+| 경계값 | 질문 수 2·3·7·8, 점수 -1·0·100·101, 감점 횟수 -1·0, 감점 합이 100을 넘는 경우(0점), 토큰 42·43·44자, 요청 본문 100KB·100KB+1바이트, 마지막 접속 갱신 1시간 직전·직후 | `api/test/device-auth.test.ts`, `api/test/body-limit.test.ts` |
 | 문자열 길이 | 빈 문자열, 최소 길이, 최대 길이, 최대 초과 | |
 | 특수 문자 | 따옴표, 공백만, 앞뒤 공백, 줄바꿈, 이모지, 한글·일본어, `< > ' " ; --` | `api/test/device-auth.test.ts`(토큰) |
 | 형식 | 잘못된 날짜와 UUID, `ends_at`이 `starts_at`보다 이른 일정 | |
 | 수량 | 면접·일정 0건, 1건, 한 페이지(20건)를 넘는 다수, 같은 질문에 답변 재전송, 이미 지나간 질문에 답변 | |
-| 상태 | 면접의 모든 상태값, 허용되지 않는 상태 전이, Claude 실패 뒤 재시도, 측정값이 `null`인 질문, AI 스위치 켜짐·꺼짐·잘못된 값·행 없음 | `api/test/ai-switch.test.ts`(AI 스위치) |
+| 상태 | 면접의 모든 상태값, 허용되지 않는 상태 전이, Claude 실패 뒤 재시도, `faceTracking` 켜짐·꺼짐과 측정값의 불일치, AI 스위치 켜짐·꺼짐·잘못된 값·행 없음 | `api/test/ai-switch.test.ts`(AI 스위치) |
 | 동등 분할 | 유효·무효 입력 대표 사례, 다른 계정의 데이터 접근, 토큰 없음·잘못된 토큰, Apple 토큰의 서명·`aud`·`exp`·`nonce` 오류, 게스트 데이터가 있는 상태의 기존 Apple 계정 로그인 | |
