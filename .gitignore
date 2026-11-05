@@ -1,1 +1,6 @@
 api/
+Config/Local.xcconfig
+.DS_Store
+xcuserdata/
+DerivedData/
+build/

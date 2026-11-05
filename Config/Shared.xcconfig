@@ -1,0 +1,16 @@
+// 커밋되는 공통 설정. 개인 값은 Local.xcconfig에서 덮어쓴다.
+APP_BUNDLE_ID = cloud.znak99.FirstStepToCareer
+API_BASE_URL = http:/$()/localhost:8787
+
+SDKROOT = iphoneos
+SUPPORTED_PLATFORMS = iphoneos iphonesimulator
+TARGETED_DEVICE_FAMILY = 1
+IPHONEOS_DEPLOYMENT_TARGET = 18.0
+SWIFT_VERSION = 6.0
+CODE_SIGN_STYLE = Automatic
+MARKETING_VERSION = 0.1.0
+CURRENT_PROJECT_VERSION = 1
+SWIFT_EMIT_LOC_STRINGS = YES
+ENABLE_USER_SCRIPT_SANDBOXING = YES
+
+#include? "Local.xcconfig"
