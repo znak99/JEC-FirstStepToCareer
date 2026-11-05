@@ -36,12 +36,12 @@ Install the free TestFlight app from the App Store, then open the public link. T
 ```bash
 git clone https://github.com/znak99/JEC-FirstStepToCareer.git
 cd JEC-FirstStepToCareer
-cp Config/Local.xcconfig.example Config/Local.xcconfig
+cp ios/Config/Local.xcconfig.example ios/Config/Local.xcconfig
 ```
-Set your Apple team ID and uncomment `APP_BUNDLE_ID` with a unique value in `Config/Local.xcconfig`. Leave `APPLE_SIGN_IN_ENABLED` as `NO` unless you have a paid Apple Developer Program membership; you can still use every feature without signing in.
+Set your Apple team ID and uncomment `APP_BUNDLE_ID` with a unique value in `ios/Config/Local.xcconfig`. Leave `APPLE_SIGN_IN_ENABLED` as `NO` unless you have a paid Apple Developer Program membership; you can still use every feature without signing in.
 
 #### Run
-Open `FirstStepToCareer.xcodeproj` in Xcode, select your iPhone, and press Run.
+Open `ios/FirstStepToCareer.xcodeproj` in Xcode, select your iPhone, and press Run.
 
 ### Availability
 AI features work only while the developer has turned them on. Schedules and past results remain available when AI is off.

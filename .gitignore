@@ -1,5 +1,5 @@
 api/
-Config/Local.xcconfig
+ios/Config/Local.xcconfig
 .DS_Store
 xcuserdata/
 DerivedData/

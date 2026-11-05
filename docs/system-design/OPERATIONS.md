@@ -16,7 +16,7 @@
 | ANTHROPIC_MODEL | 사용할 모델 ID. 비용 조절을 위해 코드 수정 없이 변경 | 아니오 | claude-opus-5-5 |
 | APPLE_BUNDLE_IDS | Apple 로그인을 허용할 번들 ID 목록(쉼표 구분). 비어 있으면 Apple 로그인 거부 | 아니오 | 없음 |
 
-### 앱 (`Config/`)
+### 앱 (`ios/Config/`)
 | 이름 | 설명 | 필수 | local 기본값 |
 |---|---|---|---|
 | API_BASE_URL | 서버 주소. `Shared.xcconfig`에 커밋 | 예 | http://localhost:8787 |
@@ -40,10 +40,10 @@
 | 작업 | 명령 |
 |---|---|
 | 의존성 설치 | 없음 |
-| 개발 실행 | Xcode에서 `FirstStepToCareer.xcodeproj`를 열고 실행. 시선·머리 측정은 실제 iPhone 필요 |
-| 빌드 | `xcodebuild build -project FirstStepToCareer.xcodeproj -scheme FirstStepToCareer -destination 'generic/platform=iOS Simulator'` |
-| 테스트 | `xcodebuild test -project FirstStepToCareer.xcodeproj -scheme FirstStepToCareer -destination 'platform=iOS Simulator,name=iPhone 17'` |
-| 린트·포맷 | `swift format lint -r FirstStepToCareer FirstStepToCareerTests` |
+| 개발 실행 | Xcode에서 `ios/FirstStepToCareer.xcodeproj`를 열고 실행. 시선·머리 측정은 실제 iPhone 필요 |
+| 빌드 | `xcodebuild build -project ios/FirstStepToCareer.xcodeproj -scheme FirstStepToCareer -destination 'generic/platform=iOS Simulator'` |
+| 테스트 | `xcodebuild test -project ios/FirstStepToCareer.xcodeproj -scheme FirstStepToCareer -destination 'platform=iOS Simulator,name=iPhone 17'` |
+| 린트·포맷 | `swift format lint -r ios` |
 
 시선·머리 측정은 시뮬레이터에서 동작하지 않으므로 Face ID가 있는 실제 iPhone에서 확인한다.
 
