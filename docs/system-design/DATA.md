@@ -115,12 +115,12 @@ erDiagram
 
 ## 6. 마이그레이션
 - 도구: Wrangler D1 migrations
-- 파일 위치·이름 규칙: 서버 저장소의 `migrations/NNNN_설명.sql`
+- 파일 위치·이름 규칙: `api/migrations/NNNN_설명.sql`
 - 적용 명령: `npx wrangler d1 migrations apply <DB 이름> --local` (운영은 `--remote`)
 - 롤백 방법: 자동 롤백이 없다. 되돌리는 내용을 새 마이그레이션으로 추가한다.
 
 ## 7. 시드·초기 데이터
-- 개발용 시드: `migrations/`에 넣지 않고 서버 저장소의 `seed/dev.sql`에 둔다.
+- 개발용 시드: `api/migrations/`에 넣지 않고 `api/seed/dev.sql`에 둔다.
 - 필수 기준 데이터: `app_setting`의 `ai_enabled = '0'`을 첫 마이그레이션에 포함한다.
 
 ### 7.1 테스트용 데이터

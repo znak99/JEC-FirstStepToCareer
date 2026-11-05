@@ -14,7 +14,7 @@ An iPhone app for practicing Japanese job interviews. It is a personal, non-comm
 
 ## Tech Stack
 - App: Swift 6, SwiftUI, ARKit, Speech, AVFoundation, Swift Charts (iOS 18+)
-- Server: TypeScript, Hono, Cloudflare Workers (separate repository, link to be added)
+- Server: TypeScript, Hono, Cloudflare Workers (private repository, not needed to build the app)
 - Database: Cloudflare D1 (SQLite)
 - Sign-in: Sign in with Apple (optional)
 - AI: Claude API

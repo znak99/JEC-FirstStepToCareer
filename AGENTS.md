@@ -63,8 +63,8 @@ Updating TASK.md and FEEDBACK.md as part of this workflow does not require appro
 - Never report a task as done without verifying it works.
 
 ## Project-Specific Rules
-- Layout: this repository holds the SwiftUI app and the shared design documents. The Hono API on Cloudflare Workers with D1 lives in a separate server repository. Commands are in docs/system-design/OPERATIONS.md.
-- The design documents here are the single source for the API contract and data model. When either changes, update them here and report what the server repository must change.
+- Layout: this repository holds the SwiftUI app and the shared design documents. The Hono API on Cloudflare Workers with D1 is a separate private Git repository checked out at `api/` and ignored by this repository. Run server Git commands inside `api/`, commit there separately, and follow that repository's own rules. Commands are in docs/system-design/OPERATIONS.md.
+- The design documents here are the single source for the API contract and data model. When either changes, update them here and report what `api/` must change.
 - Respect the layer directions in docs/system-design/ARCHITECTURE.md section 5.
 - Before every commit that changes the app, build and test with `xcodebuild` and lint with `swift format lint -r JobHuntFirstStep JobHuntFirstStepTests`.
 - This is a public repository. The Claude API key lives only on the server. Never commit `Config/Local.xcconfig` or any real secret, and never put a secret in the app.
