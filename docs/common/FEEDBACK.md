@@ -18,4 +18,4 @@ Corrections the user has given to AI agents. Read this before any work, every se
 - (none yet)
 
 ## This project
-- (none yet)
+- [2026-11-06] Do not assume a general wish covers everything; confirm which items are in scope before planning.
