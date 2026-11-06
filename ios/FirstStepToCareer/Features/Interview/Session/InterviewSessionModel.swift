@@ -23,6 +23,7 @@ final class InterviewSessionModel {
   var canPause: Bool { phase == .speaking || phase == .listening }
 
   @ObservationIgnored private let api: APIClient
+  @ObservationIgnored private let activeStore = ActiveInterviewStore()
   @ObservationIgnored private let synthesizer = SpeechSynthesizer()
   @ObservationIgnored private let recognizer = SpeechRecognizer()
   @ObservationIgnored private let tracker: FaceTracker?
@@ -151,6 +152,8 @@ final class InterviewSessionModel {
       if let next = result.nextQuestion {
         await ask(next)
       } else {
+        // 마지막 답변이 저장되어 평가 대기가 됐으므로 다음 실행 때 지우지 않게 한다
+        activeStore.clear()
         phase = .closing
         await synthesizer.speak(result.closingMessage ?? "")
         finish()
@@ -184,10 +187,12 @@ final class InterviewSessionModel {
     }
   }
 
-  // 그만두면 면접을 지운다. 지우지 못해도 화면은 닫는다
+  // 그만두면 면접을 지운다. 지우지 못해도 화면은 닫고, 다음 실행 때 다시 지운다
   func quit() async {
     tearDown()
-    try? await api.deleteInterview(id: interview.id)
+    if (try? await api.deleteInterview(id: interview.id)) != nil {
+      activeStore.clear()
+    }
   }
 
   private func finish() {

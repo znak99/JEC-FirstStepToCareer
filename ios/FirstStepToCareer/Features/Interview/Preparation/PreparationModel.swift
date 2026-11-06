@@ -115,6 +115,7 @@ final class PreparationModel {
     let baseline = baseline
     do {
       let interview = try await api.createInterview(draft.request(faceTracking: baseline != nil))
+      ActiveInterviewStore().save(interview.id)
       if baseline == nil { tracker?.stop() }
       return InterviewSessionContext(
         interview: interview, tracker: baseline == nil ? nil : tracker, baseline: baseline)

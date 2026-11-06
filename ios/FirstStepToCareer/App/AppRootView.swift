@@ -19,6 +19,8 @@ struct AppRootView: View {
   }
 
   private func setStarted(_ value: Bool) {
+    // 로그아웃·데이터 삭제 뒤에는 이전 계정의 면접이므로 지울 필요가 없다
+    if !value { ActiveInterviewStore().clear() }
     AppSettings.setHasStarted(value)
     hasStarted = value
   }

@@ -37,6 +37,15 @@ final class StubURLProtocol: URLProtocol {
   override func stopLoading() {}
 }
 
+// 스텁 서버가 받은 요청을 순서대로 모은다. 요청은 다른 스레드에서 오므로 잠근다
+final class Recorder: @unchecked Sendable {
+  private let lock = NSLock()
+  private var storage: [String] = []
+
+  var items: [String] { lock.withLock { storage } }
+  func append(_ item: String) { lock.withLock { storage.append(item) } }
+}
+
 @Suite(.serialized)
 struct APIClientTests {
   let client: APIClient
@@ -155,6 +164,113 @@ struct APIClientTests {
     let model = StartModel(api: client)
     #expect(await model.signIn(AppleSignInRequest(identityToken: "t", nonce: "n")) == false)
     #expect(model.signInFailed)
+  }
+
+  // 남은 면접 정리 테스트용. 요청을 "메서드 경로"로 기록하고 경로별로 응답한다
+  private func cleaner(
+    storedId: String?, routes: @escaping (String, String) -> (Int, String)
+  ) throws -> (LeftoverInterviewCleaner, ActiveInterviewStore, Recorder) {
+    let defaults = try #require(UserDefaults(suiteName: "test.\(UUID().uuidString)"))
+    let store = ActiveInterviewStore(defaults: defaults)
+    if let storedId { store.save(storedId) }
+    let recorder = Recorder()
+    StubURLProtocol.handler = { request in
+      let method = request.httpMethod ?? ""
+      // cursor가 붙은 요청을 구분할 수 있게 쿼리도 포함한다
+      let path = (request.url?.path ?? "") + (request.url?.query.map { "?\($0)" } ?? "")
+      recorder.append("\(method) \(path)")
+      let (status, body) = routes(method, path)
+      return (status, Data(body.utf8))
+    }
+    return (LeftoverInterviewCleaner(api: client, store: store), store, recorder)
+  }
+
+  private static func detail(status: String) -> String {
+    #"{"id":"i1","companyName":"A","industry":"IT","jobTitle":"SE","interviewType":"hr","hiringType":"new_grad","questionCount":3,"faceTracking":false,"status":""#
+      + status
+      + #"","startedAt":"2026-11-06T00:00:00.000Z","completedAt":null,"scores":null,"feedback":null,"closingMessage":null,"questions":[]}"#
+  }
+
+  private static func summary(id: String, status: String) -> String {
+    #"{"id":""# + id
+      + #"","companyName":"A","industry":"IT","jobTitle":"SE","interviewType":"hr","hiringType":"new_grad","status":""#
+      + status + #"","startedAt":"2026-11-06T00:00:00.000Z","completedAt":null,"scores":null}"#
+  }
+
+  @Test func deletesUnfinishedInterviewStartedOnThisDevice() async throws {
+    let (cleaner, store, recorder) = try cleaner(storedId: "i1") { method, _ in
+      method == "DELETE" ? (204, "") : (200, Self.detail(status: "in_progress"))
+    }
+    await cleaner.deleteUnfinished()
+    #expect(recorder.items == ["GET /v1/interviews/i1", "DELETE /v1/interviews/i1"])
+    #expect(store.interviewId == nil)
+  }
+
+  @Test func keepsAwaitingInterviewInsteadOfDeleting() async throws {
+    let (cleaner, store, recorder) = try cleaner(storedId: "i1") { _, _ in
+      (200, Self.detail(status: "awaiting_evaluation"))
+    }
+    await cleaner.deleteUnfinished()
+    #expect(recorder.items == ["GET /v1/interviews/i1"])
+    #expect(store.interviewId == nil)
+  }
+
+  @Test func forgetsInterviewThatNoLongerExists() async throws {
+    let (cleaner, store, _) = try cleaner(storedId: "i1") { _, _ in
+      (404, #"{"error":{"code":"NOT_FOUND","message":"none"}}"#)
+    }
+    await cleaner.deleteUnfinished()
+    #expect(store.interviewId == nil)
+  }
+
+  @Test func keepsInterviewIdWhenDeleteFails() async throws {
+    let (cleaner, store, _) = try cleaner(storedId: "i1") { method, _ in
+      method == "DELETE"
+        ? (500, #"{"error":{"code":"INTERNAL","message":"x"}}"#)
+        : (200, Self.detail(status: "in_progress"))
+    }
+    await cleaner.deleteUnfinished()
+    #expect(store.interviewId == "i1")
+  }
+
+  @Test func doesNothingWithoutStoredInterview() async throws {
+    let (cleaner, _, recorder) = try cleaner(storedId: nil) { _, _ in (500, "") }
+    await cleaner.deleteUnfinished()
+    #expect(recorder.items.isEmpty)
+  }
+
+  @Test func evaluatesOnlyAwaitingInterviewsAcrossPages() async throws {
+    let (cleaner, _, recorder) = try cleaner(storedId: nil) { method, path in
+      switch (method, path) {
+      case ("GET", "/v1/status"): return (200, #"{"aiEnabled":true}"#)
+      case ("GET", "/v1/interviews"):
+        return (
+          200,
+          #"{"items":["# + Self.summary(id: "a", status: "awaiting_evaluation") + ","
+            + Self.summary(id: "b", status: "completed") + #"],"nextCursor":"c1"}"#
+        )
+      case ("GET", "/v1/interviews?cursor=c1"):
+        return (
+          200,
+          #"{"items":["# + Self.summary(id: "c", status: "awaiting_evaluation") + ","
+            + Self.summary(id: "d", status: "in_progress") + #"],"nextCursor":null}"#
+        )
+      default: return (200, Self.detail(status: "completed"))
+      }
+    }
+    await cleaner.evaluatePending()
+    #expect(
+      recorder.items.filter { $0.hasPrefix("POST") } == [
+        "POST /v1/interviews/a/evaluation", "POST /v1/interviews/c/evaluation",
+      ])
+  }
+
+  @Test func skipsEvaluationWhenAIIsOff() async throws {
+    let (cleaner, _, recorder) = try cleaner(storedId: nil) { _, _ in
+      (200, #"{"aiEnabled":false}"#)
+    }
+    await cleaner.evaluatePending()
+    #expect(recorder.items == ["GET /v1/status"])
   }
 
   @Test func reportsNetworkFailure() async {
