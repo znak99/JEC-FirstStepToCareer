@@ -1,4 +1,3 @@
-import Charts
 import SwiftUI
 
 enum HistoryRoute: Hashable {
@@ -61,10 +60,15 @@ struct HistoryView: View {
       GeometryReader { proxy in
         List {
           Section {
-            NavigationLink(value: HistoryRoute.analysis) {
+            Button {
+              path.append(.analysis)
+            } label: {
               SummaryCard(summary: model.summary)
                 .frame(height: proxy.size.height * 0.3)
             }
+            .buttonStyle(.plain)
+            .listRowInsets(EdgeInsets())
+            .listRowBackground(Color.clear)
           }
           Section("過去の面接") {
             ForEach(model.interviews) { interview in
@@ -84,34 +88,47 @@ private struct SummaryCard: View {
   let summary: HistorySummary
 
   var body: some View {
-    VStack(alignment: .leading, spacing: 8) {
-      Text("最新の総合点").font(.subheadline).foregroundStyle(.secondary)
-      HStack(alignment: .firstTextBaseline, spacing: 12) {
-        Text(ScoreFormat.text(summary.latest))
-          .font(.system(size: 36, weight: .bold))
-        if let difference = summary.difference {
-          Text("前回比 \(String(format: "%+.1f", difference))")
-            .font(.subheadline.bold())
-            .foregroundStyle(difference >= 0 ? .green : .red)
+    VStack(alignment: .leading, spacing: 10) {
+      HStack(alignment: .top, spacing: 16) {
+        ScoreGauge(value: summary.latest)
+        VStack(alignment: .leading, spacing: 6) {
+          Text("最新の総合点").font(.subheadline.weight(.semibold))
+          if let difference = summary.difference {
+            DifferenceBadge(difference: difference)
+          }
+          MiniTrendChart(points: summary.recentTotals)
         }
       }
-      Chart(Array(summary.recentTotals.enumerated()), id: \.element.id) { index, point in
-        LineMark(x: .value("回", index), y: .value("点", point.value))
-        PointMark(x: .value("回", index), y: .value("点", point.value))
-      }
-      .chartYScale(domain: 0...100)
-      .chartXAxis(.hidden)
-      .chartYAxis {
-        AxisMarks(values: [0, 50, 100])
-      }
       .frame(maxHeight: .infinity)
-      // 그래프가 탭을 가로채지 않게 해 카드 어디를 눌러도 분석 화면으로 가게 한다
-      .allowsHitTesting(false)
-      Text("直近\(summary.recentTotals.count)回の総合点・タップで分析を見る")
-        .font(.caption)
-        .foregroundStyle(.secondary)
+      HStack {
+        Text("直近\(summary.recentTotals.count)回の総合点・タップで分析を見る")
+        Spacer()
+        Image(systemName: "chevron.right")
+      }
+      .font(.caption)
+      .foregroundStyle(.secondary)
     }
-    .padding(.vertical, 4)
+    .padding(16)
+    .background(TechCardBackground())
+    .contentShape(Rectangle())
+  }
+}
+
+private struct DifferenceBadge: View {
+  let difference: Double
+
+  var body: some View {
+    let tint = difference >= 0 ? TechPalette.positive : TechPalette.negative
+    HStack(spacing: 4) {
+      Image(systemName: difference >= 0 ? "arrow.up.right" : "arrow.down.right")
+      Text("前回比 \(String(format: "%+.1f", difference))")
+    }
+    .font(.caption.monospaced().weight(.semibold))
+    .foregroundStyle(tint)
+    .padding(.horizontal, 8)
+    .padding(.vertical, 3)
+    .background(tint.opacity(0.12), in: Capsule())
+    .overlay { Capsule().strokeBorder(tint.opacity(0.4)) }
   }
 }
 
