@@ -1,0 +1,38 @@
+import AuthenticationServices
+import SwiftUI
+
+// 메뉴와 시작 화면에서 함께 쓰는 Apple 로그인 버튼. 이메일과 이름은 요청하지 않는다
+struct AppleSignInButton: View {
+  let onSignedIn: (AppleSignInRequest) -> Void
+  let onFailed: () -> Void
+
+  @Environment(\.colorScheme) private var colorScheme
+  @State private var nonce = ""
+
+  var body: some View {
+    SignInWithAppleButton(.signIn) { request in
+      nonce = SignInNonce.make()
+      request.requestedScopes = []
+      request.nonce = SignInNonce.sha256Hex(nonce)
+    } onCompletion: { result in
+      switch result {
+      case .success(let authorization):
+        guard
+          let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
+          let data = credential.identityToken,
+          let token = String(data: data, encoding: .utf8)
+        else {
+          onFailed()
+          return
+        }
+        onSignedIn(AppleSignInRequest(identityToken: token, nonce: nonce))
+      case .failure(let error):
+        // 사용자가 스스로 닫은 경우는 오류로 알리지 않는다
+        if (error as? ASAuthorizationError)?.code == .canceled { return }
+        onFailed()
+      }
+    }
+    .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
+    .frame(height: 44)
+  }
+}

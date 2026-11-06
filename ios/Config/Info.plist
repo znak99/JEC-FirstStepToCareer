@@ -4,6 +4,8 @@
 <dict>
 	<key>API_BASE_URL</key>
 	<string>$(API_BASE_URL)</string>
+	<key>APPLE_SIGN_IN_ENABLED</key>
+	<string>$(APPLE_SIGN_IN_ENABLED)</string>
 	<key>NSCameraUsageDescription</key>
 	<string>面接中の視線と頭の動きを評価するために前面カメラを使います。映像は保存も送信もしません。</string>
 	<key>NSMicrophoneUsageDescription</key>

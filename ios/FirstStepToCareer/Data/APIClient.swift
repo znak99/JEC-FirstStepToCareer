@@ -66,6 +66,25 @@ struct APIClient: Sendable {
     try await send("POST", "/v1/interviews/\(interviewId)/evaluation")
   }
 
+  func me() async throws -> AccountStatus {
+    try await send("GET", "/v1/me")
+  }
+
+  func signInWithApple(_ body: AppleSignInRequest) async throws -> AccountStatus {
+    try await send("POST", "/v1/auth/apple", body: body)
+  }
+
+  // 서버가 지금 토큰을 지우므로 성공하면 새 기기 토큰으로 바꾼다
+  func signOut() async throws {
+    try await sendWithoutResponse("POST", "/v1/auth/logout")
+    _ = try tokenStore.replaceToken()
+  }
+
+  func deleteAllData() async throws {
+    try await sendWithoutResponse("DELETE", "/v1/me")
+    _ = try tokenStore.replaceToken()
+  }
+
   private struct Empty: Encodable {}
   private struct ErrorBody: Decodable {
     struct Detail: Decodable { let code: String }

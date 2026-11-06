@@ -22,7 +22,7 @@
 | API_BASE_URL | 서버 주소. `Shared.xcconfig`에 운영 주소를 커밋하고, 로컬 서버로 개발할 때만 `Local.xcconfig`에서 `http:/$()/localhost:8787`로 덮어씀(시뮬레이터 전용) | 예 | https://first-step-to-career-api.znak99.cloud |
 | DEVELOPMENT_TEAM | 빌드하는 사람의 Apple 팀 ID. `Local.xcconfig`에 작성. 실제 iPhone 설치에 필요하고 시뮬레이터에는 불필요 | 실제 기기만 | 없음 |
 | APP_BUNDLE_ID | 번들 ID. 다른 Apple 계정으로 빌드할 때는 `Local.xcconfig`에서 고유한 값으로 덮어씀 | 예 | cloud.znak99.FirstStepToCareer |
-| APPLE_SIGN_IN_ENABLED | Apple 로그인 버튼과 권한 사용 여부. `Local.xcconfig`에 작성 | 아니오 | NO |
+| APPLE_SIGN_IN_ENABLED | Apple 로그인 버튼과 권한 사용 여부. 기본값 `NO`는 `Shared.xcconfig`에 있고, 켤 때만 `Local.xcconfig`에서 `YES`로 덮어씀. `YES`면 `Config/AppleSignIn.entitlements`(Sign in with Apple 권한)가 함께 적용됨 | 아니오 | NO |
 
 ## 3. 실행·빌드·테스트
 앱과 서버 명령은 모두 실행해 확인했다. 서버의 Node.js 버전은 `api/mise.toml`에 고정되어 있다.
@@ -70,6 +70,8 @@
 2. 앱의 App ID에 Sign in with Apple 기능을 켠다.
 3. `Local.xcconfig`에서 `APPLE_SIGN_IN_ENABLED = YES`로 설정한다.
 4. 그 번들 ID를 서버의 `APPLE_BUNDLE_IDS`에 추가한다.
+
+시뮬레이터는 iOS 설정에서 Apple 계정에 로그인해 두지 않으면 로그인 창 대신 「Apple 계정에 로그인」 안내가 뜨고, 앱은 로그인 실패를 알린다.
 
 ### AI 스위치
 `api/`에서 실행한다. Cloudflare 대시보드의 D1 콘솔에서 같은 SQL을 실행해도 된다. 다시 배포할 필요는 없다.

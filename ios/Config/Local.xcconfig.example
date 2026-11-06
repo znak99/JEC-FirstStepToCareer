@@ -6,3 +6,6 @@ DEVELOPMENT_TEAM = YOUR_TEAM_ID
 
 // 로컬 서버(npm run dev)에 연결할 때만 쓴다. 시뮬레이터에서만 동작한다.
 // API_BASE_URL = http:/$()/localhost:8787
+
+// Apple 로그인을 쓸 때만 켠다. 유료 Apple Developer Program 계정과 App ID의 Sign in with Apple 기능이 필요하다.
+// APPLE_SIGN_IN_ENABLED = YES

@@ -99,6 +99,47 @@ struct APIClientTests {
     #expect(detail.questions.first?.scores?.gaze == nil)
   }
 
+  @Test func decodesAccountStatus() async throws {
+    StubURLProtocol.handler = { _ in (200, Data(#"{"accountType":"guest"}"#.utf8)) }
+    #expect(try await client.me().accountType == .guest)
+    #expect(StubURLProtocol.lastRequest?.url?.path == "/v1/me")
+  }
+
+  @Test func sendsAppleIdentityTokenAndRawNonce() async throws {
+    StubURLProtocol.handler = { _ in (200, Data(#"{"accountType":"apple"}"#.utf8)) }
+    let status = try await client.signInWithApple(
+      AppleSignInRequest(identityToken: "token", nonce: "raw-nonce-1234567890"))
+    #expect(status.accountType == .apple)
+    let body = try #require(StubURLProtocol.lastBody)
+    let json = try #require(try JSONSerialization.jsonObject(with: body) as? [String: String])
+    #expect(json == ["identityToken": "token", "nonce": "raw-nonce-1234567890"])
+  }
+
+  @Test func signOutAndDeleteReplaceDeviceToken() async throws {
+    StubURLProtocol.handler = { _ in (204, Data()) }
+    let first = try client.tokenStore.currentToken()
+    try await client.signOut()
+    #expect(StubURLProtocol.lastRequest?.httpMethod == "POST")
+    #expect(
+      StubURLProtocol.lastRequest?.value(forHTTPHeaderField: "Authorization") == "Bearer \(first)")
+    let second = try client.tokenStore.currentToken()
+    #expect(second != first)
+    try await client.deleteAllData()
+    #expect(StubURLProtocol.lastRequest?.httpMethod == "DELETE")
+    #expect(try client.tokenStore.currentToken() != second)
+  }
+
+  @Test func keepsDeviceTokenWhenSignOutFails() async throws {
+    StubURLProtocol.handler = { _ in
+      (409, Data(#"{"error":{"code":"INVALID_STATE","message":"guest"}}"#.utf8))
+    }
+    let first = try client.tokenStore.currentToken()
+    await #expect(throws: APIError.server(status: 409, code: "INVALID_STATE")) {
+      try await client.signOut()
+    }
+    #expect(try client.tokenStore.currentToken() == first)
+  }
+
   @Test func reportsNetworkFailure() async {
     StubURLProtocol.handler = nil
     let configuration = URLSessionConfiguration.ephemeral
@@ -124,6 +165,20 @@ struct DeviceTokenTests {
     #expect(try store.currentToken() == first)
     let replaced = try store.replaceToken()
     #expect(replaced != first)
+  }
+}
+
+struct SignInNonceTests {
+  @Test func makesRandomNonceWithinServerLimits() {
+    let nonce = SignInNonce.make()
+    #expect((16...128).contains(nonce.count))
+    #expect(nonce != SignInNonce.make())
+  }
+
+  @Test func hashesWithSHA256Hex() {
+    #expect(
+      SignInNonce.sha256Hex("abc")
+        == "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad")
   }
 }
 
