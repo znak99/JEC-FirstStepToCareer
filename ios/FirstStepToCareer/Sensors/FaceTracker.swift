@@ -56,25 +56,19 @@ final class FaceTracker: NSObject {
     if sample != nil { lastUpdate = Date() }
   }
 
-  nonisolated static func sample(from anchor: ARFaceAnchor) -> FaceSample? {
+  nonisolated static func sample(from anchor: ARFaceAnchor, camera: simd_float4x4) -> FaceSample? {
     guard anchor.isTracked else { return nil }
-    let look = anchor.lookAtPoint
-    let gaze = Direction(
-      yaw: Double(atan2(look.x, look.z)) * 180 / .pi,
-      pitch: Double(atan2(look.y, look.z)) * 180 / .pi)
-    let forward = anchor.transform.columns.2
-    let horizontal = (forward.x * forward.x + forward.z * forward.z).squareRoot()
-    let head = Direction(
-      yaw: Double(atan2(forward.x, forward.z)) * 180 / .pi,
-      pitch: Double(atan2(forward.y, horizontal)) * 180 / .pi)
-    return FaceSample(gaze: gaze, head: head)
+    return FaceSample.make(
+      face: anchor.transform, camera: camera, lookAtPoint: anchor.lookAtPoint,
+      leftEye: anchor.leftEyeTransform, rightEye: anchor.rightEyeTransform)
   }
 }
 
 extension FaceTracker: ARSessionDelegate {
-  nonisolated func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-    guard let anchor = anchors.compactMap({ $0 as? ARFaceAnchor }).first else { return }
-    let sample = Self.sample(from: anchor)
+  // 얼굴과 카메라 위치를 같은 프레임에서 읽어야 휴대폰 기준 방향이 맞는다
+  nonisolated func session(_ session: ARSession, didUpdate frame: ARFrame) {
+    let anchor = frame.anchors.lazy.compactMap { $0 as? ARFaceAnchor }.first
+    let sample = anchor.flatMap { Self.sample(from: $0, camera: frame.camera.transform) }
     // ARSession은 delegateQueue를 지정하지 않으면 메인 큐에서 호출한다
     MainActor.assumeIsolated { update(sample) }
   }
