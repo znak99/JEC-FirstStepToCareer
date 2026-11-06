@@ -62,20 +62,14 @@ struct StartView: View {
 
   private var header: some View {
     VStack(spacing: 16) {
-      ZStack {
-        Circle()
-          .stroke(TechPalette.accent.opacity(0.25), style: StrokeStyle(lineWidth: 1, dash: [2, 4]))
-          .frame(width: 128, height: 128)
-        Circle()
-          .stroke(TechPalette.accent, lineWidth: 3)
-          .frame(width: 104, height: 104)
-          .shadow(color: TechPalette.accent.opacity(0.8), radius: 8)
-        Image(systemName: "shoeprints.fill")
-          .font(.system(size: 40, weight: .semibold))
-          .foregroundStyle(TechPalette.accent)
-          .shadow(color: TechPalette.accent.opacity(0.6), radius: 4)
-      }
-      .accessibilityHidden(true)
+      // 앱 아이콘과 같은 그림. 홈 화면 아이콘처럼 모서리를 둥글게 자른다
+      Image("AppLogo")
+        .resizable()
+        .scaledToFit()
+        .frame(width: 112, height: 112)
+        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
+        .shadow(color: TechPalette.accent.opacity(0.5), radius: 16)
+        .accessibilityHidden(true)
       Text("就活一歩")
         .font(.system(size: 34, weight: .bold))
       Text("就職・転職活動のための模擬面接")

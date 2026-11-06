@@ -33,6 +33,8 @@ struct AppleSignInButton: View {
       }
     }
     .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
+    // 앱을 켠 채로 밝은/어두운 모드를 바꾸면 버튼 색이 그대로라 새로 만든다
+    .id(colorScheme)
     .frame(height: 44)
   }
 }
