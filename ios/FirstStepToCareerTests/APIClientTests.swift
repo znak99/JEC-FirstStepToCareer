@@ -140,6 +140,23 @@ struct APIClientTests {
     #expect(try client.tokenStore.currentToken() == first)
   }
 
+  @MainActor @Test func startSignInSucceeds() async {
+    StubURLProtocol.handler = { _ in (200, Data(#"{"accountType":"apple"}"#.utf8)) }
+    let model = StartModel(api: client)
+    #expect(await model.signIn(AppleSignInRequest(identityToken: "t", nonce: "n")))
+    #expect(!model.signInFailed)
+    #expect(!model.isSigningIn)
+  }
+
+  @MainActor @Test func startSignInFailureStaysOnStartScreen() async {
+    StubURLProtocol.handler = { _ in
+      (401, Data(#"{"error":{"code":"UNAUTHORIZED","message":"bad"}}"#.utf8))
+    }
+    let model = StartModel(api: client)
+    #expect(await model.signIn(AppleSignInRequest(identityToken: "t", nonce: "n")) == false)
+    #expect(model.signInFailed)
+  }
+
   @Test func reportsNetworkFailure() async {
     StubURLProtocol.handler = nil
     let configuration = URLSessionConfiguration.ephemeral
@@ -190,5 +207,14 @@ struct AppSettingsTests {
     #expect(AppSettings.questionCount(in: defaults) == 7)
     AppSettings.setQuestionCount(1, in: defaults)
     #expect(AppSettings.questionCount(in: defaults) == 3)
+  }
+
+  @Test func hasStartedDefaultsToFalseAndCanBeReset() throws {
+    let defaults = try #require(UserDefaults(suiteName: "test.\(UUID().uuidString)"))
+    #expect(AppSettings.hasStarted(in: defaults) == false)
+    AppSettings.setHasStarted(true, in: defaults)
+    #expect(AppSettings.hasStarted(in: defaults))
+    AppSettings.setHasStarted(false, in: defaults)
+    #expect(AppSettings.hasStarted(in: defaults) == false)
   }
 }

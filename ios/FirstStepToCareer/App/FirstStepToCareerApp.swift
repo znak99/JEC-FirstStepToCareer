@@ -4,7 +4,7 @@ import SwiftUI
 struct FirstStepToCareerApp: App {
   var body: some Scene {
     WindowGroup {
-      RootTabView()
+      AppRootView()
     }
   }
 }

@@ -105,7 +105,7 @@ struct TechCardBackground: View {
 }
 
 // 앱 아이콘과 같은 도트 무늬
-private struct DotGrid: View {
+struct DotGrid: View {
   var body: some View {
     Canvas { context, size in
       let spacing: CGFloat = 14

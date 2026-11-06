@@ -6,7 +6,7 @@ enum MenuRoute: Hashable {
 }
 
 struct MenuView: View {
-  // 로그아웃·데이터 삭제가 끝났을 때 부른다. 시작 화면이 생기기 전까지는 면접 탭으로 돌아간다
+  // 로그아웃·데이터 삭제가 끝났을 때 부른다. 시작 화면으로 돌아간다
   var onReset: () -> Void = {}
 
   @Environment(\.apiClient) private var api
