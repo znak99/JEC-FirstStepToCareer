@@ -19,3 +19,4 @@ Corrections the user has given to AI agents. Read this before any work, every se
 
 ## This project
 - [2026-11-06] Do not assume a general wish covers everything; confirm which items are in scope before planning.
+- [2026-11-06] Build every normal flow first; handle abnormal flows (crashes, failures, leftover states) afterward.
