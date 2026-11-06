@@ -1,4 +1,3 @@
-import ARKit
 import SwiftUI
 
 struct PreparationView: View {
@@ -32,60 +31,96 @@ struct PreparationView: View {
     }
   }
 
+  @ViewBuilder
   private func content(_ model: PreparationModel) -> some View {
-    List {
-      Section("確認項目") {
-        CheckRow(title: "読み上げ（音声合成）", state: model.speech)
-        CheckRow(title: "聞き取り（音声認識）", state: model.recognition)
-        CheckRow(title: "サーバー・AI", state: model.server)
-      }
-      Section {
-        faceSection(model)
-      } header: {
-        Text("視線・頭の動き")
-      } footer: {
-        if model.tracker != nil {
+    if let tracker = model.tracker, showsCamera(model) {
+      cameraLayout(model, tracker: tracker)
+    } else {
+      listLayout(model)
+    }
+  }
+
+  // 얼굴 추적을 쓸 수 있으면 카메라를 화면 전체에 깔고, 점검 항목과 버튼은 아래 카드에 둔다
+  private func cameraLayout(_ model: PreparationModel, tracker: FaceTracker) -> some View {
+    ZStack {
+      FaceCameraView(session: tracker.session)
+        .ignoresSafeArea()
+      VStack(spacing: 12) {
+        GazeTargetView(tracker: tracker, baseline: model.baseline)
+        Spacer()
+        VStack(alignment: .leading, spacing: 12) {
+          if model.requiredChecksPassed {
+            Label("読み上げ・聞き取り・サーバーを確認しました", systemImage: "checkmark.circle.fill")
+              .font(.footnote)
+              .foregroundStyle(.green)
+          } else {
+            checkRows(model)
+          }
+          Divider()
+          faceStatus(model)
           Text("スマートフォンを手に持って面接を受ける場合も、その姿勢のまま基準点を設定してください。")
+            .font(.caption)
+            .foregroundStyle(.secondary)
+          if let error = model.startError {
+            Label(error, systemImage: "exclamationmark.triangle").foregroundStyle(.red)
+          }
+          startButton(model)
         }
+        .padding()
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
       }
+      .padding()
+    }
+    .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
+  }
+
+  private func listLayout(_ model: PreparationModel) -> some View {
+    List {
+      Section("確認項目") { checkRows(model) }
+      Section("視線・頭の動き") { faceStatus(model) }
       if let error = model.startError {
         Section { Label(error, systemImage: "exclamationmark.triangle").foregroundStyle(.red) }
       }
     }
     .safeAreaInset(edge: .bottom) {
-      Button {
-        Task {
-          if let context = await model.start() {
-            started = true
-            onStart(context)
-          }
-        }
-      } label: {
-        Group {
-          if model.isStarting {
-            ProgressView()
-          } else {
-            Text("面接を始める")
-          }
-        }
-        .frame(maxWidth: .infinity)
-      }
-      .buttonStyle(.borderedProminent)
-      .controlSize(.large)
-      .disabled(!model.canStart)
-      .padding()
-      .background(.bar)
+      startButton(model)
+        .padding()
+        .background(.bar)
     }
   }
 
   @ViewBuilder
-  private func faceSection(_ model: PreparationModel) -> some View {
-    if let tracker = model.tracker, model.face != .checking, !isUnavailable(model.face) {
-      CameraPreview(session: tracker.session)
-        .frame(height: 220)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .listRowInsets(EdgeInsets())
+  private func checkRows(_ model: PreparationModel) -> some View {
+    CheckRow(title: "読み上げ（音声合成）", state: model.speech)
+    CheckRow(title: "聞き取り（音声認識）", state: model.recognition)
+    CheckRow(title: "サーバー・AI", state: model.server)
+  }
+
+  private func startButton(_ model: PreparationModel) -> some View {
+    Button {
+      Task {
+        if let context = await model.start() {
+          started = true
+          onStart(context)
+        }
+      }
+    } label: {
+      Group {
+        if model.isStarting {
+          ProgressView()
+        } else {
+          Text("面接を始める")
+        }
+      }
+      .frame(maxWidth: .infinity)
     }
+    .buttonStyle(.borderedProminent)
+    .controlSize(.large)
+    .disabled(!model.canStart)
+  }
+
+  @ViewBuilder
+  private func faceStatus(_ model: PreparationModel) -> some View {
     switch model.face {
     case .checking:
       HStack {
@@ -114,6 +149,10 @@ struct PreparationView: View {
     }
   }
 
+  private func showsCamera(_ model: PreparationModel) -> Bool {
+    model.face != .checking && !isUnavailable(model.face)
+  }
+
   private func isUnavailable(_ state: PreparationModel.FaceState) -> Bool {
     if case .skipped = state, model?.isRetryableSkip == false { return true }
     return false
@@ -140,17 +179,4 @@ private struct CheckRow: View {
       }
     }
   }
-}
-
-private struct CameraPreview: UIViewRepresentable {
-  let session: ARSession
-
-  func makeUIView(context: Context) -> ARSCNView {
-    let view = ARSCNView()
-    view.session = session
-    view.automaticallyUpdatesLighting = false
-    return view
-  }
-
-  func updateUIView(_ uiView: ARSCNView, context: Context) {}
 }

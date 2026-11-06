@@ -46,6 +46,10 @@ final class PreparationModel {
     }
   }
 
+  var baseline: FaceBaseline? {
+    if case .calibrated(let value) = face { value } else { nil }
+  }
+
   func runChecks() async {
     speech = SpeechSynthesizer.isAvailable ? .passed : .failed("日本語の読み上げ音声を利用できません。")
     recognition = .checking
@@ -108,8 +112,7 @@ final class PreparationModel {
     isStarting = true
     startError = nil
     defer { isStarting = false }
-    let baseline: FaceBaseline?
-    if case .calibrated(let value) = face { baseline = value } else { baseline = nil }
+    let baseline = baseline
     do {
       let interview = try await api.createInterview(draft.request(faceTracking: baseline != nil))
       if baseline == nil { tracker?.stop() }
