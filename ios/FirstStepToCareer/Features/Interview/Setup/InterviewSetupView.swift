@@ -22,7 +22,7 @@ struct InterviewSetupView: View {
       Section("業界") {
         NavigationLink {
           ChoiceListView(
-            title: "業界", otherPlaceholder: "業界を入力", options: InterviewDraft.industries,
+            title: "業界", otherPlaceholder: "業界を入力", categories: ChoiceCatalog.industries,
             other: Self.other, allowsNone: false, choice: $industryChoice,
             otherText: $otherIndustry)
         } label: {
@@ -32,7 +32,7 @@ struct InterviewSetupView: View {
       Section("職種") {
         NavigationLink {
           ChoiceListView(
-            title: "職種", otherPlaceholder: "職種を入力", options: InterviewDraft.jobTitles,
+            title: "職種", otherPlaceholder: "職種を入力", categories: ChoiceCatalog.jobTitles,
             other: Self.other, allowsNone: false, choice: $jobChoice, otherText: $otherJob)
         } label: {
           ChoiceValue(choice: jobChoice, otherText: otherJob, other: Self.other)

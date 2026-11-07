@@ -2,12 +2,6 @@ import Foundation
 
 // 면접 설정 화면에서 입력한 값. 면접 준비 화면을 거쳐 서버에 보낸다
 struct InterviewDraft: Hashable, Sendable {
-  static let industries = [
-    "金融", "福祉", "美容", "IT", "医療", "教育", "製造", "小売・サービス", "公務員",
-  ]
-  static let jobTitles = [
-    "相談員", "教員", "システムエンジニア", "美容師", "営業", "事務", "介護職", "看護師", "販売",
-  ]
   static let companyNameLimit = 100
   static let choiceLimit = 50
 

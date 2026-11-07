@@ -41,11 +41,11 @@ struct ProfileSetupView: View {
         switch choice {
         case .industry:
           ChoiceListView(
-            title: "業界", otherPlaceholder: "業界を入力", options: InterviewDraft.industries,
+            title: "業界", otherPlaceholder: "業界を入力", categories: ChoiceCatalog.industries,
             other: Self.other, choice: $industryChoice, otherText: $otherIndustry)
         case .jobTitle:
           ChoiceListView(
-            title: "職種", otherPlaceholder: "職種を入力", options: InterviewDraft.jobTitles,
+            title: "職種", otherPlaceholder: "職種を入力", categories: ChoiceCatalog.jobTitles,
             other: Self.other, choice: $jobChoice, otherText: $otherJob)
         }
       }
