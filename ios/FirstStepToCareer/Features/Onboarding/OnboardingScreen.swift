@@ -40,13 +40,7 @@ struct OnboardingScreen<Content: View>: View {
       .padding(.horizontal, 24)
       .padding(.bottom, 12)
     }
-    .background {
-      LinearGradient(
-        colors: [TechPalette.pageTop, TechPalette.pageBottom], startPoint: .top, endPoint: .bottom
-      )
-      .overlay { DotGrid() }
-      .ignoresSafeArea()
-    }
+    .background { OnboardingBackground() }
   }
 
   private var header: some View {
@@ -64,6 +58,17 @@ struct OnboardingScreen<Content: View>: View {
         .foregroundStyle(TechPalette.accent)
         .accessibilityHidden(true)
     }
+  }
+}
+
+// 온보딩 화면 전체의 바탕. 어두운 모드는 검은색에 가깝다
+struct OnboardingBackground: View {
+  var body: some View {
+    LinearGradient(
+      colors: [TechPalette.pageTop, TechPalette.pageBottom], startPoint: .top, endPoint: .bottom
+    )
+    .overlay { DotGrid() }
+    .ignoresSafeArea()
   }
 }
 
