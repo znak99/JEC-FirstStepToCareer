@@ -13,31 +13,17 @@ struct ConsentView: View {
     OnboardingScreen(
       step: 1, title: "ご利用の前に",
       message: "就活一歩を安心してお使いいただくため、利用規約とプライバシーポリシーをご確認ください。",
-      buttonTitle: "同意して次へ", canContinue: agreedAll, onContinue: onAgreed
+      buttonTitle: "すべてに同意して次へ", canContinue: agreedAll, onContinue: onAgreed
     ) {
-      VStack(spacing: 14) {
-        VStack(spacing: 16) {
-          ForEach(LegalDocument.allCases) { document in
-            if document != LegalDocument.allCases.first { Divider() }
-            row(document)
-          }
+      VStack(spacing: 12.8) {
+        ForEach(LegalDocument.allCases) { document in
+          if document != LegalDocument.allCases.first { Divider() }
+          row(document)
         }
-        .padding(18)
-        .background(TechCardBackground())
-        Button {
-          agreed = agreedAll ? [] : Set(LegalDocument.allCases)
-        } label: {
-          HStack(spacing: 12) {
-            OnboardingCheck(isOn: agreedAll)
-            Text("すべてに同意する").font(.headline)
-            Spacer()
-          }
-          .padding(.horizontal, 18)
-          .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(agreedAll ? .isSelected : [])
       }
+      .padding(.horizontal, 18)
+      .padding(.vertical, 14.4)
+      .background(TechCardBackground())
     }
     .sheet(item: $reading) { document in
       NavigationStack {
@@ -72,12 +58,12 @@ struct ConsentView: View {
       Button {
         reading = document
       } label: {
-        HStack(spacing: 2) {
-          Text("読む")
-          Image(systemName: "chevron.right")
-        }
-        .font(.subheadline.weight(.medium))
-        .foregroundStyle(TechPalette.accent)
+        Image(systemName: "chevron.right")
+          .font(.subheadline)
+          .foregroundStyle(TechPalette.accent)
+          // 글자를 없애 작아진 누를 곳을 넓힌다. 높이는 줄 높이를 넘지 않게 한다
+          .frame(minWidth: 44, minHeight: 36, alignment: .trailing)
+          .contentShape(Rectangle())
       }
       .buttonStyle(.plain)
       .accessibilityLabel(Text("\(Text(document.title))を読む"))
