@@ -22,7 +22,7 @@ struct ConsentView: View {
       }
       .padding(.horizontal, 18)
       .padding(.vertical, 14.4)
-      .background(TechCardBackground())
+      .background(TechCardBackground(showsBorder: false))
     }
     .sheet(item: $reading) { document in
       NavigationStack {

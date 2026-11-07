@@ -86,6 +86,9 @@ struct TechCard<Content: View>: View {
 }
 
 struct TechCardBackground: View {
+  // 온보딩 동의 카드처럼 테두리 없이 쓸 때 false
+  var showsBorder = true
+
   var body: some View {
     let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
     shape
@@ -96,10 +99,12 @@ struct TechCardBackground: View {
       )
       .overlay { DotGrid().clipShape(shape) }
       .overlay {
-        shape.strokeBorder(
-          LinearGradient(
-            colors: [TechPalette.accent.opacity(0.55), TechPalette.accent.opacity(0.05)],
-            startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 1)
+        if showsBorder {
+          shape.strokeBorder(
+            LinearGradient(
+              colors: [TechPalette.accent.opacity(0.55), TechPalette.accent.opacity(0.05)],
+              startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 1)
+        }
       }
   }
 }
