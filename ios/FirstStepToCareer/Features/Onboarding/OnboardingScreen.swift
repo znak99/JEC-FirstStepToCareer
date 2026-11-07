@@ -76,7 +76,8 @@ struct OnboardingButtonStyle: ButtonStyle {
       // 어두운 모드의 밝은 청록 버튼에서도 글자가 잘 보이게 한다
       .foregroundStyle(TechPalette.cardBottom)
       .frame(maxWidth: .infinity, minHeight: 50)
-      .background(Capsule().fill(TechPalette.accent))
+      // 기록 화면의 막대와 같은 그라데이션. 밝은 모드는 보라→파랑, 어두운 모드는 파랑→청록
+      .background(Capsule().fill(TechPalette.barFill))
       .shadow(color: TechPalette.accent.opacity(isEnabled ? 0.45 : 0), radius: 10)
       .opacity(isEnabled ? (configuration.isPressed ? 0.8 : 1) : 0.4)
       .contentShape(Capsule())
