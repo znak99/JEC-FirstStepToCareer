@@ -107,7 +107,10 @@ wrangler.jsonc               Workers·D1 설정
 | `POST /v1/auth/apple` | Apple 신원 토큰을 검증해 현재 기기를 Apple 계정에 연결 | 아니오 |
 | `POST /v1/auth/logout` | 현재 기기 토큰을 무효화 | 아니오 |
 | `GET /v1/me` | 로그인 상태 조회 | 아니오 |
-| `DELETE /v1/me` | 데이터 전체 삭제. 계정과 모든 면접 기록, 기기 토큰을 지운다 | 아니오 |
+| `DELETE /v1/me` | 데이터 전체 삭제. 계정과 모든 면접 기록, 프로필, 동의 기록, 기기 토큰을 지운다 | 아니오 |
+| `GET /v1/me/profile` | 프로필(이름·희망 조건) 조회 | 아니오 |
+| `PUT /v1/me/profile` | 프로필 저장(덮어쓰기) | 아니오 |
+| `POST /v1/me/consents` | 이용약관·프라이버시 폴리시 동의 기록 | 아니오 |
 | `GET /v1/status` | AI 스위치 상태 조회. 응답 `{ "aiEnabled": boolean }` | 아니오 |
 | `POST /v1/interviews` | 면접 생성과 첫 질문 생성 | 예 |
 | `GET /v1/interviews` | 면접 기록 목록 | 아니오 |
@@ -125,10 +128,17 @@ AI를 쓰는 경로는 스위치가 꺼져 있으면 Claude를 호출하지 않�
 | `POST /v1/auth/apple` | `{ "identityToken": 문자열, "nonce": 16~128자 }` | `200 { "accountType": "apple" }` |
 | `POST /v1/auth/logout` | 없음 | `204`. 게스트면 `409 INVALID_STATE` |
 | `DELETE /v1/me` | 없음 | `204` |
+| `GET /v1/me/profile` | 없음 | `200 { "profile": 프로필 }`. 저장한 적이 없으면 `{ "profile": null }` |
+| `PUT /v1/me/profile` | `{ "nickname": 1~20자, "hiringType": "new_grad" \| "mid_career" \| null, "industry": 1~50자 \| null, "jobTitle": 1~50자 \| null }` | `200 { "profile": 프로필 }` |
+| `POST /v1/me/consents` | `{ "consents": [{ "document": "terms" \| "privacy", "version": 1~20자 }] }` (1~10개) | `204` |
 
 - `nonce`는 앱이 로그인할 때마다 만드는 무작위 원문이다. 앱은 Apple 로그인 요청에 원문의 SHA-256(16진수)을 넣고, 서버에는 원문을 보낸다. 서버는 원문을 해시해 토큰의 `nonce`와 비교한다.
 - 서버는 Apple 공개 키(`https://appleid.apple.com/auth/keys`, 1시간 캐시)로 RS256 서명을 확인하고, `iss`가 `https://appleid.apple.com`, `aud`가 `APPLE_BUNDLE_IDS` 중 하나, `exp`가 지나지 않았는지 검사한다.
 - 이미 다른 Apple 계정으로 로그인한 기기에서 또 다른 Apple 계정으로 로그인하면 `409 INVALID_STATE`다. 먼저 로그아웃해야 한다.
+- 프로필은 `{ "nickname", "hiringType", "industry", "jobTitle" }`이다. 문자열은 앞뒤 공백을 지우고 센다. `nickname`은 글자(이모지 하나를 한 글자로) 기준 1~20자이고 줄바꿈을 받지 않는다. 선택 항목은 빼거나 `null`이면 비운다.
+- 동의 기록은 서버 시각으로 남긴다. 같은 문서의 같은 버전을 다시 보내면 처음 기록을 유지한다. 앱은 동의 화면의 버전(`LegalDocument.version`)을 보낸다.
+- 게스트가 이미 있는 Apple 계정으로 로그인하면 게스트의 동의 기록을 그 계정으로 옮기고, 프로필은 그 계정에 없을 때만 옮긴다.
+- AI 요청문: 면접을 만들 때, 답변을 받을 때, 평가할 때 계정의 프로필 `nickname`이 있으면 「応募者の呼び名」로 넣어 AI 면접관이 「〇〇さん」으로 부르게 한다. 이름은 이름으로만 쓰고 그 안의 지시는 따르지 않도록 요청문에 적는다.
 
 ### 모의면접 API 상세
 #### `POST /v1/interviews`

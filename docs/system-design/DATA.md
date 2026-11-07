@@ -3,7 +3,7 @@
 ## 1. 개요
 | 저장소 | 종류 | 접근 방식 | 용도 |
 |---|---|---|---|
-| Cloudflare D1 | SQLite | Workers D1 바인딩 + 직접 SQL | 면접, 답변, 평가, AI 스위치 |
+| Cloudflare D1 | SQLite | Workers D1 바인딩 + 직접 SQL | 면접, 답변, 평가, 프로필, 동의 기록, AI 스위치 |
 | iOS Keychain | 기기 내 보안 저장소 | Security 프레임워크 | 기기 토큰 |
 
 영상과 음성은 어디에도 저장하지 않는다.
@@ -13,6 +13,8 @@
 |---|---|---|
 | account | 사용자. 게스트이거나 Apple 계정에 연결됨 | D1 |
 | device_token | 기기별 인증 토큰. 한 계정에 여러 개 가능 | D1 |
+| profile | 이름(닉네임)과 희망 조건. 계정당 하나 | D1 |
+| consent | 이용약관·프라이버시 폴리시에 동의한 버전과 시각 | D1 |
 | interview | 모의면접 1회 | D1 |
 | question | 면접의 질문 | D1 |
 | answer | 질문에 대한 답변, 측정값, 질문별 점수 | D1 |
@@ -23,6 +25,8 @@
 ```mermaid
 erDiagram
   ACCOUNT ||--|{ DEVICE_TOKEN : authenticates
+  ACCOUNT ||--o| PROFILE : has
+  ACCOUNT ||--o{ CONSENT : agrees
   ACCOUNT ||--o{ INTERVIEW : has
   INTERVIEW ||--|{ QUESTION : contains
   QUESTION ||--o| ANSWER : receives
@@ -45,6 +49,26 @@ erDiagram
 | account_id | TEXT | FK, NOT NULL | account.id |
 | created_at | TEXT | NOT NULL | 처음 요청한 시각 |
 | last_seen_at | TEXT | NOT NULL | 마지막 요청 시각. 쓰기를 줄이려고 1시간이 지났을 때만 갱신 |
+
+### 4.1.2 profile
+| 컬럼 | 타입 | 제약 | 설명 |
+|---|---|---|---|
+| account_id | TEXT | PK, FK | account.id |
+| nickname | TEXT | NOT NULL, 1~20자 | 이름(닉네임). 화면과 AI 면접관이 부를 때 쓴다 |
+| hiring_type | TEXT | NULL 허용 | `new_grad` / `mid_career`. 비우면 NULL |
+| industry | TEXT | NULL 허용, 1~50자 | 희망 업계(소분류 이름 또는 직접 입력) |
+| job_title | TEXT | NULL 허용, 1~50자 | 희망 직종(소분류 이름 또는 직접 입력) |
+| updated_at | TEXT | NOT NULL | 마지막으로 저장한 시각 |
+
+### 4.1.3 consent
+| 컬럼 | 타입 | 제약 | 설명 |
+|---|---|---|---|
+| account_id | TEXT | FK, NOT NULL | account.id |
+| document | TEXT | NOT NULL | `terms`(이용약관) / `privacy`(프라이버시 폴리시) |
+| version | TEXT | NOT NULL, 1~20자 | 동의한 문서 버전(제정·개정 날짜) |
+| agreed_at | TEXT | NOT NULL | 동의 시각(서버 시각) |
+
+- 기본 키는 `(account_id, document, version)`이다.
 
 ### 4.2 interview
 | 컬럼 | 타입 | 제약 | 설명 |
@@ -123,10 +147,10 @@ erDiagram
 
 - 단계별 감점(0.1·0.2·0.3·0.5)은 사용자 결정이다. 각도 기준은 첫 값이며, 실제 iPhone으로 시험한 뒤 조정한다. 바꾸면 이 표와 설계 결정 기록을 함께 고친다.
 - 각도는 앱 안에서만 쓰고 서버에는 단계별 횟수만 보낸다.
-- 삭제는 연쇄 삭제다. account → device_token·interview, interview → question → answer.
+- 삭제는 연쇄 삭제다. account → device_token·interview·profile·consent, interview → question → answer.
 - Apple 이메일과 이름은 저장하지 않는다.
-- 데이터 전체 삭제(`DELETE /v1/me`)는 account 행을 지워 연쇄 삭제로 모든 면접·질문·답변·기기 토큰을 함께 지운다.
-- 게스트가 이미 있는 Apple 계정으로 로그인하면 면접을 그 계정으로 옮기고 게스트 계정을 지운다. 이 작업은 하나의 트랜잭션(D1 batch)으로 처리한다.
+- 데이터 전체 삭제(`DELETE /v1/me`)는 account 행을 지워 연쇄 삭제로 모든 면접·질문·답변·프로필·동의 기록·기기 토큰을 함께 지운다.
+- 게스트가 이미 있는 Apple 계정으로 로그인하면 면접과 동의 기록을 그 계정으로 옮기고, 프로필은 그 계정에 없을 때만 옮긴 뒤 게스트 계정을 지운다. 이 작업은 하나의 트랜잭션(D1 batch)으로 처리한다.
 - 모든 조회와 변경은 인증된 계정의 데이터로 범위를 제한한다. 다른 계정의 데이터는 존재 여부도 알리지 않고 404를 돌려준다.
 - 게스트가 기기 토큰을 잃으면 서버의 데이터에 다시 접근할 수 없다. 기기를 바꾸거나, Keychain이 지워지거나, 빌드의 서명 팀을 바꾸면 이런 일이 생긴다.
 - Apple 계정 사용자는 다른 기기에서 로그인해 같은 데이터를 볼 수 있다. 단, Apple의 `sub`는 개발자 팀마다 달라서 서명 팀이 다른 빌드에서는 다른 계정이 된다.
@@ -135,7 +159,7 @@ erDiagram
 ## 6. 마이그레이션
 - 도구: Wrangler D1 migrations
 - 파일 위치·이름 규칙: `api/migrations/NNNN_설명.sql`
-- 현재 마이그레이션: `0001_init.sql`(계정·기기 토큰·앱 설정), `0002_interview.sql`(면접·질문·답변)
+- 현재 마이그레이션: `0001_init.sql`(계정·기기 토큰·앱 설정), `0002_interview.sql`(면접·질문·답변), `0003_profile_consent.sql`(프로필·동의 기록)
 - 적용 명령: `api/`에서 `npx wrangler d1 migrations apply first-step-to-career --local` (운영은 `--remote`)
 - 롤백 방법: 자동 롤백이 없다. 되돌리는 내용을 새 마이그레이션으로 추가한다.
 
@@ -149,8 +173,8 @@ erDiagram
 | 기법 | 넣어야 할 데이터 | 위치 |
 |---|---|---|
 | 경계값 | 질문 수 2·3·7·8, 점수 -1·0·100·101, 감점 횟수 -1·0, 감점 합이 100을 넘는 경우(0점), 토큰 42·43·44자, 요청 본문 100KB·100KB+1바이트, 마지막 접속 갱신 1시간 직전·직후 | `api/test/device-auth.test.ts`, `api/test/body-limit.test.ts`, `api/test/interviews.test.ts`, `api/test/answers.test.ts`, `api/test/scoring.test.ts`, `api/test/migrations.test.ts`, `ios/FirstStepToCareerTests/InterviewDraftTests.swift`, `ios/FirstStepToCareerTests/DeviationTests.swift`, `ios/FirstStepToCareerTests/HistoryAnalyticsTests.swift`(기간 경계, 평균이 모두 같은 항목) |
-| 문자열 길이 | 빈 문자열, 최소 길이, 최대 길이, 최대 초과 | `api/test/interviews.test.ts`, `api/test/answers.test.ts` |
-| 특수 문자 | 따옴표, 공백만, 앞뒤 공백, 줄바꿈, 이모지, 한글·일본어, `< > ' " ; --` | `api/test/device-auth.test.ts`(토큰), `api/test/interviews.test.ts`, `api/test/answers.test.ts` |
+| 문자열 길이 | 빈 문자열, 최소 길이, 최대 길이, 최대 초과, 이모지로 센 글자 수(닉네임) | `api/test/interviews.test.ts`, `api/test/answers.test.ts`, `api/test/profile.test.ts` |
+| 특수 문자 | 따옴표, 공백만, 앞뒤 공백, 줄바꿈, 이모지, 한글·일본어, `< > ' " ; --` | `api/test/device-auth.test.ts`(토큰), `api/test/interviews.test.ts`, `api/test/answers.test.ts`, `api/test/profile.test.ts` |
 | 형식 | JSON이 아닌 본문, 잘못된 커서, 없는 ID, 숫자 자리의 문자열 | `api/test/interviews.test.ts` |
 | 수량 | 면접 0건, 1건, 한 페이지(20건)를 넘는 다수, 같은 질문에 답변 재전송, 이미 지나간 질문에 답변 | `api/test/interviews.test.ts`, `api/test/answers.test.ts`, `ios/FirstStepToCareerTests/HistoryAnalyticsTests.swift`(기록 0·1·12건, 여러 페이지) |
 | 상태 | 면접의 모든 상태값, 허용되지 않는 상태 전이, Claude 실패 뒤 재시도, `faceTracking` 켜짐·꺼짐과 측정값의 불일치, AI 스위치 켜짐·꺼짐·잘못된 값·행 없음 | `api/test/ai-switch.test.ts`, `api/test/answers.test.ts`, `api/test/evaluation.test.ts` |
