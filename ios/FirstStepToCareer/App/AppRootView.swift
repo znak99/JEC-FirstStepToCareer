@@ -14,11 +14,14 @@ struct AppRootView: View {
       hasAgreed: hasAgreed, hasStarted: hasStarted, choseStart: choseStart, hasProfile: hasProfile)
   }
 
-  // 동의한 다음 바로 탭 화면이면 약관이 바뀌어 동의만 다시 받는 경우다
-  private var agreesOnly: Bool {
-    AppStage.of(
-      hasAgreed: true, hasStarted: hasStarted, choseStart: choseStart, hasProfile: hasProfile)
-      == .tabs
+  // 약관 버전이 바뀌었으면 스플래시가 끝난 뒤 탭 화면 위에 동의 모달을 띄운다
+  private var asksAgreement: Binding<Bool> {
+    Binding(
+      get: {
+        !showsSplash
+          && AppStage.asksAgreementOverTabs(
+            hasAgreed: hasAgreed, hasStarted: hasStarted, hasProfile: hasProfile)
+      }, set: { _ in })
   }
 
   var body: some View {
@@ -26,10 +29,7 @@ struct AppRootView: View {
       Group {
         switch stage {
         case .consent:
-          ConsentView(
-            step: agreesOnly ? nil : 1, isUpdate: AppSettings.hasOutdatedAgreement(),
-            recordsOnServer: agreesOnly
-          ) {
+          ConsentView(isUpdate: AppSettings.hasOutdatedAgreement()) {
             AppSettings.saveAgreement()
             hasAgreed = true
           }
@@ -52,6 +52,16 @@ struct AppRootView: View {
           // 로그아웃·데이터 삭제 뒤에는 탭 화면을 버리고 다시 만들어 이전 계정의 화면 상태를 지운다
           RootTabView { reset() }
             .transition(.opacity)
+            .sheet(isPresented: asksAgreement) {
+              // 동의해야만 닫힌다. 동의 기록은 이 모달에서 바로 서버에 남긴다
+              ConsentView(step: nil, isUpdate: true, recordsOnServer: true) {
+                AppSettings.saveAgreement()
+                hasAgreed = true
+              }
+              .presentationDetents([.fraction(0.56)])
+              .presentationDragIndicator(.hidden)
+              .interactiveDismissDisabled()
+            }
         }
       }
       .animation(.easeInOut(duration: 0.3), value: stage)

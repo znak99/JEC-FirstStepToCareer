@@ -154,12 +154,20 @@ struct AppStageTests {
         == .profile)
   }
 
-  @Test func changedTermsAskOnlyForAgreement() {
+  @Test func changedTermsAskAgreementInModalOverTabs() {
+    // 약관 버전만 바뀐 사용자는 탭 화면을 그대로 보여 주고 그 위에서 동의를 받는다
     #expect(
-      AppStage.of(hasAgreed: false, hasStarted: true, choseStart: true, hasProfile: true)
-        == .consent)
+      AppStage.of(hasAgreed: false, hasStarted: true, choseStart: true, hasProfile: true) == .tabs)
+    #expect(AppStage.asksAgreementOverTabs(hasAgreed: false, hasStarted: true, hasProfile: true))
     #expect(
-      AppStage.of(hasAgreed: true, hasStarted: true, choseStart: true, hasProfile: true) == .tabs)
+      AppStage.asksAgreementOverTabs(hasAgreed: true, hasStarted: true, hasProfile: true) == false)
+    // 온보딩 중이거나 프로필이 없으면 모달이 아니라 동의 화면으로 받는다
+    #expect(
+      AppStage.asksAgreementOverTabs(hasAgreed: false, hasStarted: false, hasProfile: true)
+        == false)
+    #expect(
+      AppStage.asksAgreementOverTabs(hasAgreed: false, hasStarted: true, hasProfile: false)
+        == false)
   }
 }
 

@@ -22,7 +22,9 @@ struct ConsentView: View {
       message: isUpdate
         ? "利用規約とプライバシーポリシーを更新しました。内容をご確認のうえ、同意をお願いします。"
         : "就活一歩を安心してお使いいただくため、利用規約とプライバシーポリシーをご確認ください。",
-      buttonTitle: "すべてに同意して次へ", canContinue: model?.isSaving != true,
+      // 모달에서는 다음 화면 없이 닫히므로 「次へ」를 붙이지 않는다
+      buttonTitle: step == nil ? "すべてに同意する" : "すべてに同意して次へ",
+      canContinue: model?.isSaving != true,
       onContinue: agreeAll
     ) {
       VStack(spacing: 12.8) {
