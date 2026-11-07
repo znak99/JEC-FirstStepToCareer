@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct RootTabView: View {
-  // 로그아웃·데이터 삭제가 끝났을 때 부른다. 시작 화면으로 돌아간다
+  // 로그아웃·데이터 삭제가 끝났을 때 부른다. 온보딩부터 다시 한다
   var onReset: () -> Void = {}
 
   @Environment(\.apiClient) private var api

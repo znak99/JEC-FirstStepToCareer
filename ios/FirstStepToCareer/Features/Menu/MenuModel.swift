@@ -43,7 +43,7 @@ final class MenuModel {
     await run(.signIn) { account = .loaded(try await api.signInWithApple(request).accountType) }
   }
 
-  // 성공하면 true. 화면은 시작 화면으로 돌아간다
+  // 성공하면 true. 화면은 온보딩부터 다시 한다
   func signOut() async -> Bool {
     await run(.signOut) { try await api.signOut() }
   }

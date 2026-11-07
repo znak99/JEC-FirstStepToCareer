@@ -1,23 +1,50 @@
 import SwiftUI
 
-// 앱을 켜면 스플래시를 먼저 보여 준다. 그 아래에는 시작 화면을 지나가기 전에는 시작 화면을, 그 뒤에는 탭 화면을 둔다
+// 앱을 켜면 스플래시를 먼저 보여 준다. 그 아래에는 처음이면 온보딩(동의 → 시작 → 정보 입력)을,
+// 그 뒤에는 탭 화면을 둔다
 struct AppRootView: View {
+  private enum Stage {
+    case consent, start, profile, tabs
+  }
+
   @State private var hasStarted = AppSettings.hasStarted()
+  @State private var hasAgreed = AppSettings.hasAgreed()
+  @State private var choseStart = false
   @State private var showsSplash = true
+
+  private var stage: Stage {
+    if hasStarted { return .tabs }
+    if !hasAgreed { return .consent }
+    return choseStart ? .profile : .start
+  }
 
   var body: some View {
     ZStack {
       Group {
-        if hasStarted {
-          // 로그아웃·데이터 삭제 뒤에는 탭 화면을 버리고 다시 만들어 이전 계정의 화면 상태를 지운다
-          RootTabView { setStarted(false) }
+        switch stage {
+        case .consent:
+          ConsentView {
+            AppSettings.saveAgreement()
+            hasAgreed = true
+          }
+          .transition(.opacity)
+        case .start:
+          StartView { choseStart = true }
             .transition(.opacity)
-        } else {
-          StartView { setStarted(true) }
+        case .profile:
+          ProfileSetupView { profile in
+            ProfileStore().save(profile)
+            AppSettings.setHasStarted(true)
+            hasStarted = true
+          }
+          .transition(.opacity)
+        case .tabs:
+          // 로그아웃·데이터 삭제 뒤에는 탭 화면을 버리고 다시 만들어 이전 계정의 화면 상태를 지운다
+          RootTabView { reset() }
             .transition(.opacity)
         }
       }
-      .animation(.easeInOut(duration: 0.3), value: hasStarted)
+      .animation(.easeInOut(duration: 0.3), value: stage)
       if showsSplash {
         SplashView(hasStarted: hasStarted) {
           withAnimation(.easeInOut(duration: 0.45)) { showsSplash = false }
@@ -35,11 +62,15 @@ struct AppRootView: View {
     }
   }
 
-  private func setStarted(_ value: Bool) {
-    // 로그아웃·데이터 삭제 뒤에는 이전 계정의 면접이므로 지울 필요가 없다
-    if !value { ActiveInterviewStore().clear() }
-    AppSettings.setHasStarted(value)
-    hasStarted = value
+  // 로그아웃·데이터 삭제 뒤에는 온보딩부터 다시 한다. 이전 계정의 면접이므로 남은 면접 ID도 지운다
+  private func reset() {
+    ActiveInterviewStore().clear()
+    ProfileStore().clear()
+    AppSettings.clearAgreement()
+    AppSettings.setHasStarted(false)
+    choseStart = false
+    hasAgreed = false
+    hasStarted = false
   }
 }
 
