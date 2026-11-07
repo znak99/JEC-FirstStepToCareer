@@ -18,6 +18,10 @@
       <BuildableProductRunnable runnableDebuggingMode = "0">
          <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "A50000000000000000000001" BuildableName = "FirstStepToCareer.app" BlueprintName = "FirstStepToCareer" ReferencedContainer = "container:FirstStepToCareer.xcodeproj"></BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument argument = "-splashLoop YES" isEnabled = "YES"></CommandLineArgument>
+         <CommandLineArgument argument = "-splashDelay 2" isEnabled = "NO"></CommandLineArgument>
+      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction buildConfiguration = "Release" shouldUseLaunchSchemeArgsEnv = "YES" savedToolIdentifier = "" useCustomWorkingDirectory = "NO" debugDocumentVersioning = "YES">
       <BuildableProductRunnable runnableDebuggingMode = "0">

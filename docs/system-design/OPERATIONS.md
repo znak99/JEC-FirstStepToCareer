@@ -47,6 +47,8 @@
 
 시선·머리 측정은 시뮬레이터에서 동작하지 않으므로 Face ID가 있는 실제 iPhone에서 확인한다. 시뮬레이터의 음성 인식은 Mac 마이크로 동작한다.
 
+스플래시 확인용 실행 인자 (개발 빌드에서만 읽음): `-splashLoop YES`는 스플래시를 무한 반복하고, `-splashDelay 초`는 준비를 일부러 늦춰 로딩 표시를 보여 준다. 공유 스킴(Xcode의 Edit Scheme > Run > Arguments)에 둘 다 들어 있으며, 지금은 `-splashLoop YES`만 켜져 있다. 시뮬레이터에서는 `xcrun simctl launch <기기> cloud.znak99.FirstStepToCareer -splashLoop YES`처럼 넘긴다.
+
 시뮬레이터에서 질문 수를 바꿀 때: `xcrun simctl spawn <기기> defaults write cloud.znak99.FirstStepToCareer questionCount -int 3`
 
 ## 4. 배포

@@ -1,14 +1,10 @@
 import Foundation
 
-// 앱을 처음 켤 때 한 번 실행한다. 실패해도 알리지 않고 다음 실행 때 다시 시도한다
+// 끝나지 않은 면접은 스플래시에서, 평가 대기 면접은 탭 화면이 열릴 때 정리한다.
+// 실패해도 알리지 않고 다음 실행 때 다시 시도한다
 struct LeftoverInterviewCleaner: Sendable {
   let api: APIClient
   var store = ActiveInterviewStore()
-
-  func run() async {
-    await deleteUnfinished()
-    await evaluatePending()
-  }
 
   // 도중에 앱이 꺼진 이 iPhone의 면접을 지운다
   func deleteUnfinished() async {

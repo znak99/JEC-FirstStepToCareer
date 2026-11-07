@@ -15,8 +15,8 @@ struct RootTabView: View {
         }
       }
     }
-    // 탭 화면이 처음 열릴 때 한 번. 백그라운드에서 돌아올 때는 실행하지 않는다
-    .task { await LeftoverInterviewCleaner(api: api).run() }
+    // 탭 화면이 열릴 때 한 번. 평가는 오래 걸릴 수 있어 스플래시가 기다리지 않고 여기서 한다
+    .task { await LeftoverInterviewCleaner(api: api).evaluatePending() }
   }
 
   @ViewBuilder

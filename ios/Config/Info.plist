@@ -12,6 +12,11 @@
 	<string>面接の回答を聞き取るためにマイクを使います。音声は保存も送信もしません。</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>面接の回答を文字に起こすために音声認識を使います。</string>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>LaunchBackground</string>
+	</dict>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsLocalNetworking</key>
