@@ -42,7 +42,7 @@ struct OnboardingScreen<Content: View>: View {
     }
     .background {
       LinearGradient(
-        colors: [TechPalette.cardTop, TechPalette.cardBottom], startPoint: .top, endPoint: .bottom
+        colors: [TechPalette.pageTop, TechPalette.pageBottom], startPoint: .top, endPoint: .bottom
       )
       .overlay { DotGrid() }
       .ignoresSafeArea()

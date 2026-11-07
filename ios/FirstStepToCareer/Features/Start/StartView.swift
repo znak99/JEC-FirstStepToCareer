@@ -30,7 +30,7 @@ struct StartView: View {
 
   private var background: some View {
     LinearGradient(
-      colors: [TechPalette.cardTop, TechPalette.cardBottom], startPoint: .top,
+      colors: [TechPalette.pageTop, TechPalette.pageBottom], startPoint: .top,
       endPoint: .bottom
     )
     .overlay { DotGrid() }
