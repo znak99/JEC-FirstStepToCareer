@@ -47,6 +47,7 @@ AI features work only while the developer has turned them on. Past results remai
 
 ## Privacy
 - Camera video and microphone audio are not stored or sent to the server.
+- Answers are transcribed with Apple's speech recognition. It runs on the iPhone when supported; otherwise Apple may process the audio on its servers under Apple's privacy policy.
 - Transcribed answers and tracking counts are stored on the server under an anonymous device token or an Apple account identifier. The server operator can read them.
 - Your Apple email and name are not stored.
 - Transcribed answers are sent to the Claude API for evaluation.

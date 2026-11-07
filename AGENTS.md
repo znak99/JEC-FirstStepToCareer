@@ -71,7 +71,7 @@ Updating TASK.md and FEEDBACK.md as part of this workflow does not require appro
 - The app must handle `503 AI_DISABLED` by explaining that AI is off and keeping past results usable. Automated tests must mock the server and never spend real API credit.
 - Never turn the production AI switch on or off, deploy, upload a TestFlight build, or apply remote migrations unless the user asks.
 - Sign in with Apple is a build setting that is off by default, because free Apple accounts are expected to lack it. Every feature must work for guests. Send identity tokens only to the server, and never store the Apple email or name.
-- Never send or store camera video or microphone audio. Gaze and head tracking stay on the device; only numeric results and the transcript go to the server. Never log transcripts or device tokens.
+- Never send camera video or microphone audio to our server, and never store them. Gaze and head tracking stay on the device; only numeric results and the transcript go to the server. Speech-to-text uses Apple's Speech framework: on the device when supported, otherwise Apple may process the audio on its servers under Apple's policy. The privacy policy states this. Never log transcripts or device tokens.
 - Face tracking needs a physical iPhone with Face ID. Say so in the report when a change could not be verified on one.
 - User-facing strings are Japanese and go through String Catalogs. AI prompts must request Japanese questions and feedback.
 
