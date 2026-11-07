@@ -32,8 +32,8 @@ struct AppRootView: View {
           StartView { choseStart = true }
             .transition(.opacity)
         case .profile:
-          ProfileSetupView { profile in
-            ProfileStore().save(profile)
+          // 동의 기록과 프로필은 정보 입력 화면이 서버와 이 iPhone에 저장한다
+          ProfileSetupView {
             AppSettings.setHasStarted(true)
             hasStarted = true
           }

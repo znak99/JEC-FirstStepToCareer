@@ -33,3 +33,16 @@ struct Profile: Codable, Hashable, Sendable {
     (trimmed(value)?.count ?? 0) <= limit
   }
 }
+
+struct ProfileResponse: Decodable, Sendable {
+  let profile: Profile?
+}
+
+struct ConsentRecord: Encodable, Sendable {
+  let document: String
+  let version: String
+}
+
+struct ConsentsRequest: Encodable, Sendable {
+  let consents: [ConsentRecord]
+}

@@ -3,13 +3,26 @@ import SwiftUI
 struct InterviewSetupView: View {
   let onNext: (InterviewDraft) -> Void
 
-  @State private var draft = InterviewDraft(questionCount: AppSettings.questionCount())
-  @State private var industryChoice = ""
-  @State private var otherIndustry = ""
-  @State private var jobChoice = ""
-  @State private var otherJob = ""
+  @State private var draft: InterviewDraft
+  @State private var industryChoice: String
+  @State private var otherIndustry: String
+  @State private var jobChoice: String
+  @State private var otherJob: String
 
-  private static let other = "その他"
+  private static let other = ProfileDraft.other
+
+  // 프로필의 희망 조건을 미리 채운다. 이 화면에서 바꾼 값은 프로필에 저장하지 않는다
+  init(profile: Profile? = ProfileStore().profile, onNext: @escaping (InterviewDraft) -> Void) {
+    self.onNext = onNext
+    var draft = InterviewDraft(questionCount: AppSettings.questionCount())
+    draft.hiringType = profile?.hiringType ?? .newGrad
+    let filled = profile.map(ProfileDraft.init) ?? ProfileDraft()
+    _draft = State(initialValue: draft)
+    _industryChoice = State(initialValue: filled.industryChoice)
+    _otherIndustry = State(initialValue: filled.otherIndustry)
+    _jobChoice = State(initialValue: filled.jobChoice)
+    _otherJob = State(initialValue: filled.otherJob)
+  }
 
   var body: some View {
     Form {

@@ -1,6 +1,7 @@
 import SwiftUI
 
 enum MenuRoute: Hashable {
+  case profile
   case terms
   case privacy
   case appInfo
@@ -13,6 +14,8 @@ struct MenuView: View {
   @Environment(\.apiClient) private var api
   @State private var model: MenuModel?
   @State private var confirmsDelete = false
+  // 프로필 줄에 보여 줄 이름. 프로필 화면에서 돌아오면 다시 읽는다
+  @State private var nickname = ProfileStore().profile?.nickname
 
   var body: some View {
     NavigationStack {
@@ -24,8 +27,10 @@ struct MenuView: View {
         }
       }
       .navigationTitle("メニュー")
+      .onAppear { nickname = ProfileStore().profile?.nickname }
       .navigationDestination(for: MenuRoute.self) { route in
         switch route {
+        case .profile: ProfileEditView()
         case .terms: LegalDocumentView(document: .terms)
         case .privacy: LegalDocumentView(document: .privacy)
         case .appInfo: AppInfoView()
@@ -42,6 +47,14 @@ struct MenuView: View {
   private func content(_ model: MenuModel) -> some View {
     @Bindable var model = model
     return List {
+      Section("プロフィール") {
+        NavigationLink(value: MenuRoute.profile) {
+          LabeledContent("お名前（ニックネーム）") {
+            if let nickname { Text(nickname) } else { Text("未設定") }
+          }
+        }
+      }
+
       Section {
         Stepper(value: $model.questionCount, in: AppSettings.questionCountRange) {
           LabeledContent("質問数", value: "\(model.questionCount)問")

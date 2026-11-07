@@ -85,6 +85,25 @@ struct APIClient: Sendable {
     _ = try tokenStore.replaceToken()
   }
 
+  // 저장한 적이 없으면 nil
+  func profile() async throws -> Profile? {
+    let response: ProfileResponse = try await send("GET", "/v1/me/profile")
+    return response.profile
+  }
+
+  func saveProfile(_ profile: Profile) async throws -> Profile? {
+    let response: ProfileResponse = try await send("PUT", "/v1/me/profile", body: profile)
+    return response.profile
+  }
+
+  // 지금 앱에 들어 있는 문서 버전에 동의했다고 기록한다
+  func recordConsents(_ documents: [LegalDocument]) async throws {
+    _ = try await perform(
+      "POST", "/v1/me/consents",
+      body: ConsentsRequest(
+        consents: documents.map { ConsentRecord(document: $0.rawValue, version: $0.version) }))
+  }
+
   private struct Empty: Encodable {}
   private struct ErrorBody: Decodable {
     struct Detail: Decodable { let code: String }

@@ -90,3 +90,35 @@ struct OnboardingStorageTests {
     #expect(store.profile == nil)
   }
 }
+
+struct ProfileDraftTests {
+  @Test func catalogValuesAreChosenAndOthersGoToOtherInput() throws {
+    let profile = try #require(
+      Profile(nickname: "たろう", hiringType: .midCareer, industry: "銀行・信用金庫", jobTitle: "宇宙飛行士"))
+    let draft = ProfileDraft(profile)
+    #expect(draft.nickname == "たろう")
+    #expect(draft.hiringType == .midCareer)
+    #expect(draft.industryChoice == "銀行・信用金庫")
+    #expect(draft.otherIndustry == "")
+    #expect(draft.jobChoice == ProfileDraft.other)
+    #expect(draft.otherJob == "宇宙飛行士")
+    #expect(draft.profile == profile)
+  }
+
+  @Test func emptyValuesStayUnselected() throws {
+    let draft = ProfileDraft(
+      try #require(Profile(nickname: "a", hiringType: nil, industry: "", jobTitle: "")))
+    #expect(draft.industryChoice == "")
+    #expect(draft.jobChoice == "")
+    #expect(ProfileDraft.split(nil, in: ChoiceCatalog.industries) == ("", ""))
+  }
+
+  @Test func oldListValuesBecomeOtherInput() {
+    // 예전 목록의 값(「IT」 등)은 새 목록에 없으므로 직접 입력한 값으로 보여 준다
+    #expect(ProfileDraft.split("IT", in: ChoiceCatalog.industries) == (ProfileDraft.other, "IT"))
+  }
+
+  @Test func blankDraftHasNoProfile() {
+    #expect(ProfileDraft().profile == nil)
+  }
+}
