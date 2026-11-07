@@ -6,14 +6,13 @@ struct ConsentView: View {
 
   @State private var agreed: Set<LegalDocument> = []
   @State private var reading: LegalDocument?
-
-  private var agreedAll: Bool { agreed.count == LegalDocument.allCases.count }
+  @State private var isContinuing = false
 
   var body: some View {
     OnboardingScreen(
       step: 1, title: "ご利用の前に",
       message: "就活一歩を安心してお使いいただくため、利用規約とプライバシーポリシーをご確認ください。",
-      buttonTitle: "すべてに同意して次へ", canContinue: agreedAll, onContinue: onAgreed
+      buttonTitle: "すべてに同意して次へ", canContinue: true, onContinue: agreeAll
     ) {
       VStack(spacing: 12.8) {
         ForEach(LegalDocument.allCases) { document in
@@ -34,6 +33,17 @@ struct ConsentView: View {
             }
           }
       }
+    }
+  }
+
+  // 버튼은 늘 누를 수 있다. 두 항목이 체크되는 것을 보여 준 뒤 0.2초 후에 넘어간다
+  private func agreeAll() {
+    guard !isContinuing else { return }
+    isContinuing = true
+    withAnimation(.easeOut(duration: 0.15)) { agreed = Set(LegalDocument.allCases) }
+    Task {
+      try? await Task.sleep(for: .milliseconds(200))
+      onAgreed()
     }
   }
 
