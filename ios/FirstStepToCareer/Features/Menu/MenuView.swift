@@ -1,6 +1,7 @@
 import SwiftUI
 
 enum MenuRoute: Hashable {
+  case terms
   case privacy
   case appInfo
 }
@@ -25,7 +26,8 @@ struct MenuView: View {
       .navigationTitle("メニュー")
       .navigationDestination(for: MenuRoute.self) { route in
         switch route {
-        case .privacy: PrivacyView()
+        case .terms: LegalDocumentView(document: .terms)
+        case .privacy: LegalDocumentView(document: .privacy)
         case .appInfo: AppInfoView()
         }
       }
@@ -53,7 +55,8 @@ struct MenuView: View {
       accountSection(model)
 
       Section("情報") {
-        NavigationLink("個人情報の取り扱い", value: MenuRoute.privacy)
+        NavigationLink("利用規約", value: MenuRoute.terms)
+        NavigationLink("プライバシーポリシー", value: MenuRoute.privacy)
         NavigationLink("アプリ情報", value: MenuRoute.appInfo)
       }
 

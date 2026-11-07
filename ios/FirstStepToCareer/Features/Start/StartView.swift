@@ -18,7 +18,7 @@ struct StartView: View {
     .task { if model == nil { model = StartModel(api: api) } }
     .sheet(isPresented: $showsPrivacy) {
       NavigationStack {
-        PrivacyView()
+        LegalDocumentView(document: .privacy)
           .toolbar {
             ToolbarItem(placement: .confirmationAction) {
               Button("閉じる") { showsPrivacy = false }
@@ -123,7 +123,7 @@ struct StartView: View {
           .contentShape(Capsule())
       }
       .buttonStyle(.plain)
-      Button("個人情報の取り扱い") { showsPrivacy = true }
+      Button("プライバシーポリシー") { showsPrivacy = true }
         .font(.footnote)
         .padding(.top, 4)
     }

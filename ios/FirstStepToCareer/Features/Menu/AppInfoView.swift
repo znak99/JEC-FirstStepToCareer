@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AppInfoView: View {
-  private static let repositoryURL = URL(string: "https://github.com/znak99/JEC-FirstStepToCareer")!
+  static let repositoryURL = URL(string: "https://github.com/znak99/JEC-FirstStepToCareer")!
 
   var body: some View {
     List {
