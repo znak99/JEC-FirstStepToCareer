@@ -73,12 +73,16 @@ struct OnboardingButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
       .font(.headline)
-      // 어두운 모드의 밝은 청록 버튼에서도 글자가 잘 보이게 한다
-      .foregroundStyle(TechPalette.cardBottom)
+      .foregroundStyle(.white)
       .frame(maxWidth: .infinity, minHeight: 50)
-      // 기록 화면의 막대와 같은 그라데이션. 밝은 모드는 보라→파랑, 어두운 모드는 파랑→청록
-      .background(Capsule().fill(TechPalette.barFill))
-      .shadow(color: TechPalette.accent.opacity(isEnabled ? 0.45 : 0), radius: 10)
+      // 밝은/어두운 모드 모두 앱 아이콘과 같은 파랑 그라데이션
+      .background(
+        Capsule().fill(
+          LinearGradient(
+            colors: [SplashPalette.top, SplashPalette.bottom], startPoint: .topLeading,
+            endPoint: .bottomTrailing))
+      )
+      .shadow(color: SplashPalette.middle.opacity(isEnabled ? 0.45 : 0), radius: 10)
       .opacity(isEnabled ? (configuration.isPressed ? 0.8 : 1) : 0.4)
       .contentShape(Capsule())
   }
