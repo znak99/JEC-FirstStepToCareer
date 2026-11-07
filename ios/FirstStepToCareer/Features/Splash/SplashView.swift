@@ -8,7 +8,7 @@ enum SplashTimeline {
   static let fillStart = 0.6
   static let fillDuration = 0.35
   static let scanStart = 0.85
-  static let scanDuration = 1.0
+  static let scanDuration = 1.3
   static let typeStart = 1.0
   static let typeStep = 0.13
   static let end = scanStart + scanDuration
@@ -133,14 +133,18 @@ private struct SplashScanLayer: View {
   let t: Double
   private static let spacing: CGFloat = 18
   private static let bandWidth: CGFloat = 145
+  // 띠가 수평에서 기운 각도. 화면 비율과 상관없이 같은 기울기로 보인다
+  private static let tilt = 35.0 * Double.pi / 180
 
   var body: some View {
     Canvas { context, size in
       let diagonal = hypot(size.width, size.height)
-      let direction = CGPoint(x: size.width / diagonal, y: -size.height / diagonal)
+      let direction = CGPoint(x: sin(Self.tilt), y: -cos(Self.tilt))
+      // 왼쪽 아래 모서리(0)부터 오른쪽 위 모서리까지의 거리
+      let span = size.width * direction.x - size.height * direction.y
       let scan = SplashEase.progress(t, SplashTimeline.scanStart, SplashTimeline.scanDuration)
       // 끝나면 모든 도트가 띠를 벗어나 원래 밝기가 된다
-      let front = -80 + (diagonal + 80 + Self.bandWidth) * SplashEase.easeOut(scan)
+      let front = -80 + (span + 80 + Self.bandWidth) * SplashEase.easeOut(scan)
       for x in stride(from: Self.spacing / 2, to: size.width, by: Self.spacing) {
         for y in stride(from: Self.spacing / 2, to: size.height, by: Self.spacing) {
           let along = x * direction.x + (y - size.height) * direction.y
@@ -149,7 +153,7 @@ private struct SplashScanLayer: View {
           // 아이콘처럼 오른쪽 위로 갈수록 도트가 크고 밝다
           let u = ((x / size.width) + (1 - y / size.height)) / 2
           let radius = 0.6 + 3.0 * pow(u, 1.5) + 1.0 * boost
-          let alpha = 0.04 + 0.3 * u + 0.35 * boost
+          let alpha = 0.04 + 0.3 * u + 0.22 * boost
           context.fill(
             Path(
               ellipseIn: CGRect(x: x - radius, y: y - radius, width: radius * 2, height: radius * 2)
@@ -176,8 +180,8 @@ private struct SplashScanLayer: View {
         with: .linearGradient(
           Gradient(stops: [
             .init(color: .clear, location: 0),
-            .init(color: SplashPalette.glow.opacity(0.1), location: frontLocation - 0.04),
-            .init(color: .white.opacity(0.16), location: frontLocation),
+            .init(color: SplashPalette.glow.opacity(0.06), location: frontLocation - 0.04),
+            .init(color: .white.opacity(0.1), location: frontLocation),
             .init(color: .clear, location: 1),
           ]), startPoint: behind, endPoint: ahead))
     }
@@ -224,7 +228,8 @@ private struct SplashName: View {
     let visible =
       t < SplashTimeline.typeStart
       ? 0 : min(Int((t - SplashTimeline.typeStart) / SplashTimeline.typeStep) + 1, characters.count)
-    let cursorOn = t > 0.9 && t < 2.3 && Int(t / 0.25) % 2 == 0
+    // 넘어가며 사라질 때까지 깜박인다
+    let cursorOn = t > 0.9 && t < SplashTimeline.decision + 0.15 && Int(t / 0.25) % 2 == 0
     HStack(spacing: 6) {
       ForEach(characters.indices, id: \.self) { index in
         Text(verbatim: String(characters[index]))
