@@ -134,7 +134,7 @@ private struct SplashScanLayer: View {
   private static let spacing: CGFloat = 18
   private static let bandWidth: CGFloat = 145
   // 띠가 수평에서 기운 각도. 화면 비율과 상관없이 같은 기울기로 보인다
-  private static let tilt = 50.0 * Double.pi / 180
+  private static let tilt = 70.0 * Double.pi / 180
 
   var body: some View {
     Canvas { context, size in
