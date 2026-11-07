@@ -75,11 +75,11 @@ struct OnboardingButtonStyle: ButtonStyle {
       .font(.headline)
       .foregroundStyle(.white)
       .frame(maxWidth: .infinity, minHeight: 50)
-      // 밝은/어두운 모드 모두 앱 아이콘과 같은 파랑 그라데이션
+      // 밝은/어두운 모드 모두 앱 아이콘의 파랑. 색 차이가 크지 않게 가운데 색까지만 쓴다
       .background(
         Capsule().fill(
           LinearGradient(
-            colors: [SplashPalette.top, SplashPalette.bottom], startPoint: .topLeading,
+            colors: [SplashPalette.top, SplashPalette.middle], startPoint: .topLeading,
             endPoint: .bottomTrailing))
       )
       .shadow(color: SplashPalette.middle.opacity(isEnabled ? 0.45 : 0), radius: 10)
