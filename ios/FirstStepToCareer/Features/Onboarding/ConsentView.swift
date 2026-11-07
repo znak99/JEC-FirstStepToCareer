@@ -2,17 +2,28 @@ import SwiftUI
 
 // 온보딩 ①. 이용약관과 개인정보 처리방침에 동의를 받는다 (SITE_MAP S-14)
 struct ConsentView: View {
+  // 단계 표시. 정보 입력 없이 동의만 다시 받을 때는 nil
+  var step: Int? = 1
+  // 예전 버전에 동의한 적이 있으면 약관이 바뀌었다고 안내한다
+  var isUpdate = false
+  // 다음에 정보 입력이 없으면 동의 기록을 여기서 바로 서버에 남긴다
+  var recordsOnServer = false
   var onAgreed: () -> Void = {}
 
+  @Environment(\.apiClient) private var api
   @State private var agreed: Set<LegalDocument> = []
   @State private var reading: LegalDocument?
   @State private var isContinuing = false
+  @State private var model: ProfileModel?
 
   var body: some View {
     OnboardingScreen(
-      step: 1, title: "ご利用の前に",
-      message: "就活一歩を安心してお使いいただくため、利用規約とプライバシーポリシーをご確認ください。",
-      buttonTitle: "すべてに同意して次へ", canContinue: true, onContinue: agreeAll
+      step: step, title: isUpdate ? "規約の更新" : "ご利用の前に",
+      message: isUpdate
+        ? "利用規約とプライバシーポリシーを更新しました。内容をご確認のうえ、同意をお願いします。"
+        : "就活一歩を安心してお使いいただくため、利用規約とプライバシーポリシーをご確認ください。",
+      buttonTitle: "すべてに同意して次へ", canContinue: model?.isSaving != true,
+      onContinue: agreeAll
     ) {
       VStack(spacing: 12.8) {
         ForEach(LegalDocument.allCases) { document in
@@ -23,6 +34,14 @@ struct ConsentView: View {
       .padding(.horizontal, 18)
       .padding(.vertical, 14.4)
       .background(TechCardBackground(showsBorder: false))
+    }
+    .overlay {
+      if model?.isSaving == true { ProgressView().controlSize(.large) }
+    }
+    .alert("保存できませんでした", isPresented: saveFailed) {
+      Button("OK", role: .cancel) {}
+    } message: {
+      Text("しばらくしてから、もう一度お試しください。")
     }
     .sheet(item: $reading) { document in
       NavigationStack {
@@ -36,13 +55,26 @@ struct ConsentView: View {
     }
   }
 
-  // 버튼은 늘 누를 수 있다. 두 항목이 체크되는 것을 보여 준 뒤 0.2초 후에 넘어간다
+  private var saveFailed: Binding<Bool> {
+    Binding(get: { model?.saveFailed ?? false }, set: { model?.saveFailed = $0 })
+  }
+
+  // 버튼은 늘 누를 수 있다. 두 항목이 체크되는 것을 보여 준 뒤 0.2초 후에 넘어간다.
+  // 서버에 바로 기록해야 하면 기록에 성공했을 때만 넘어가고, 실패하면 다시 누를 수 있다
   private func agreeAll() {
     guard !isContinuing else { return }
     isContinuing = true
     withAnimation(.easeOut(duration: 0.15)) { agreed = Set(LegalDocument.allCases) }
     Task {
       try? await Task.sleep(for: .milliseconds(200))
+      if recordsOnServer {
+        let model = model ?? ProfileModel(api: api)
+        self.model = model
+        guard await model.agree(to: LegalDocument.allCases) else {
+          isContinuing = false
+          return
+        }
+      }
       onAgreed()
     }
   }

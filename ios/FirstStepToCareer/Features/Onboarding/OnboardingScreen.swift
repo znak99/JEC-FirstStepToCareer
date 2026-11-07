@@ -2,7 +2,8 @@ import SwiftUI
 
 // 온보딩 두 화면의 공통 틀. 시작 화면과 같은 밝은 테크 느낌이다 (SITE_MAP S-14·S-15)
 struct OnboardingScreen<Content: View>: View {
-  let step: Int
+  // 단계 표시 「1 / 2」. nil이면 보여 주지 않는다
+  let step: Int?
   let title: LocalizedStringKey
   let message: LocalizedStringKey
   let buttonTitle: LocalizedStringKey
@@ -53,10 +54,12 @@ struct OnboardingScreen<Content: View>: View {
         .accessibilityHidden(true)
       Text("就活一歩").font(.headline)
       Spacer()
-      Text(verbatim: "\(step) / \(Self.stepCount)")
-        .font(.caption.monospacedDigit().weight(.semibold))
-        .foregroundStyle(TechPalette.accent)
-        .accessibilityHidden(true)
+      if let step {
+        Text(verbatim: "\(step) / \(Self.stepCount)")
+          .font(.caption.monospacedDigit().weight(.semibold))
+          .foregroundStyle(TechPalette.accent)
+          .accessibilityHidden(true)
+      }
     }
   }
 }

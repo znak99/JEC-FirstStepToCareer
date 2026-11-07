@@ -7,6 +7,7 @@ enum AppSettings {
   private static let questionCountKey = "questionCount"
   private static let hasStartedKey = "hasStarted"
   private static let agreedVersionsKey = "agreedDocumentVersions"
+  private static let hasChosenStartKey = "hasChosenStart"
 
   // 온보딩(동의 → 시작 → 정보 입력)을 마쳤는지. 로그아웃·데이터 삭제 때 false로 돌려 온보딩을 다시 보여 준다
   static func hasStarted(in defaults: UserDefaults = .standard) -> Bool {
@@ -31,6 +32,21 @@ enum AppSettings {
 
   static func clearAgreement(in defaults: UserDefaults = .standard) {
     defaults.removeObject(forKey: agreedVersionsKey)
+  }
+
+  // 예전 버전에 동의한 적이 있는지. 약관이 바뀌어 다시 동의를 받을 때 안내 문구를 바꾼다
+  static func hasOutdatedAgreement(in defaults: UserDefaults = .standard) -> Bool {
+    let agreed = defaults.dictionary(forKey: agreedVersionsKey) as? [String: String] ?? [:]
+    return !agreed.isEmpty && !hasAgreed(in: defaults)
+  }
+
+  // 온보딩에서 시작(로그인 방식)을 골랐는지. 정보 입력 도중 앱이 꺼지면 다음에 정보 입력부터 이어 한다
+  static func hasChosenStart(in defaults: UserDefaults = .standard) -> Bool {
+    defaults.bool(forKey: hasChosenStartKey)
+  }
+
+  static func setHasChosenStart(_ value: Bool, in defaults: UserDefaults = .standard) {
+    defaults.set(value, forKey: hasChosenStartKey)
   }
 
   static func questionCount(in defaults: UserDefaults = .standard) -> Int {

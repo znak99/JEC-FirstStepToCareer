@@ -1,21 +1,24 @@
 import SwiftUI
 
 // 앱을 켜면 스플래시를 먼저 보여 준다. 그 아래에는 처음이면 온보딩(동의 → 시작 → 정보 입력)을,
-// 그 뒤에는 탭 화면을 둔다
+// 그 뒤에는 탭 화면을 둔다. 어느 화면을 보여 줄지는 AppStage가 정한다
 struct AppRootView: View {
-  private enum Stage {
-    case consent, start, profile, tabs
-  }
-
   @State private var hasStarted = AppSettings.hasStarted()
   @State private var hasAgreed = AppSettings.hasAgreed()
-  @State private var choseStart = false
+  @State private var choseStart = AppSettings.hasChosenStart()
+  @State private var hasProfile = ProfileStore().profile != nil
   @State private var showsSplash = true
 
-  private var stage: Stage {
-    if hasStarted { return .tabs }
-    if !hasAgreed { return .consent }
-    return choseStart ? .profile : .start
+  private var stage: AppStage {
+    AppStage.of(
+      hasAgreed: hasAgreed, hasStarted: hasStarted, choseStart: choseStart, hasProfile: hasProfile)
+  }
+
+  // 동의한 다음 바로 탭 화면이면 약관이 바뀌어 동의만 다시 받는 경우다
+  private var agreesOnly: Bool {
+    AppStage.of(
+      hasAgreed: true, hasStarted: hasStarted, choseStart: choseStart, hasProfile: hasProfile)
+      == .tabs
   }
 
   var body: some View {
@@ -23,18 +26,25 @@ struct AppRootView: View {
       Group {
         switch stage {
         case .consent:
-          ConsentView {
+          ConsentView(
+            step: agreesOnly ? nil : 1, isUpdate: AppSettings.hasOutdatedAgreement(),
+            recordsOnServer: agreesOnly
+          ) {
             AppSettings.saveAgreement()
             hasAgreed = true
           }
           .transition(.opacity)
         case .start:
-          StartView { choseStart = true }
-            .transition(.opacity)
+          StartView {
+            AppSettings.setHasChosenStart(true)
+            choseStart = true
+          }
+          .transition(.opacity)
         case .profile:
           // 동의 기록과 프로필은 정보 입력 화면이 서버와 이 iPhone에 저장한다
           ProfileSetupView {
             AppSettings.setHasStarted(true)
+            hasProfile = true
             hasStarted = true
           }
           .transition(.opacity)
@@ -67,8 +77,10 @@ struct AppRootView: View {
     ActiveInterviewStore().clear()
     ProfileStore().clear()
     AppSettings.clearAgreement()
+    AppSettings.setHasChosenStart(false)
     AppSettings.setHasStarted(false)
     choseStart = false
+    hasProfile = false
     hasAgreed = false
     hasStarted = false
   }

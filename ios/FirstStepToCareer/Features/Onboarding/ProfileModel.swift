@@ -23,6 +23,19 @@ final class ProfileModel {
     return profile
   }
 
+  // 약관 버전이 바뀌어 동의만 다시 받을 때 쓴다. 성공하면 true
+  func agree(to documents: [LegalDocument]) async -> Bool {
+    isSaving = true
+    defer { isSaving = false }
+    do {
+      try await api.recordConsents(documents)
+      return true
+    } catch {
+      saveFailed = true
+      return false
+    }
+  }
+
   // 온보딩에서는 동의 기록을 먼저 남긴 뒤 프로필을 저장한다. 성공하면 true
   func save(_ profile: Profile, agreeingTo documents: [LegalDocument] = []) async -> Bool {
     isSaving = true

@@ -95,6 +95,22 @@ extension APIClientTests {
     #expect(store.profile == nil)
   }
 
+  @MainActor @Test func agreeingAgainRecordsOnlyConsents() async throws {
+    let (requests, _) = routed { _, _ in (204, "") }
+    let model = ProfileModel(api: client)
+    #expect(await model.agree(to: LegalDocument.allCases))
+    #expect(requests.items == ["POST /v1/me/consents"])
+    #expect(!model.saveFailed)
+  }
+
+  @MainActor @Test func failedAgreementReportsFailure() async throws {
+    _ = routed { _, _ in (0, "") }
+    let model = ProfileModel(api: client)
+    #expect(await model.agree(to: LegalDocument.allCases) == false)
+    #expect(model.saveFailed)
+    #expect(!model.isSaving)
+  }
+
   @MainActor @Test func loadKeepsServerProfileAndFallsBackToStore() async throws {
     let store = ProfileStore(
       defaults: try #require(UserDefaults(suiteName: "test.\(UUID().uuidString)")))

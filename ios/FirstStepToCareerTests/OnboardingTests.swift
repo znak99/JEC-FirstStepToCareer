@@ -122,3 +122,69 @@ struct ProfileDraftTests {
     #expect(ProfileDraft().profile == nil)
   }
 }
+
+struct AppStageTests {
+  @Test func newUserGoesConsentStartProfileTabs() {
+    #expect(
+      AppStage.of(hasAgreed: false, hasStarted: false, choseStart: false, hasProfile: false)
+        == .consent)
+    #expect(
+      AppStage.of(hasAgreed: true, hasStarted: false, choseStart: false, hasProfile: false)
+        == .start)
+    #expect(
+      AppStage.of(hasAgreed: true, hasStarted: false, choseStart: true, hasProfile: false)
+        == .profile)
+    #expect(
+      AppStage.of(hasAgreed: true, hasStarted: true, choseStart: true, hasProfile: true) == .tabs)
+  }
+
+  @Test func quittingAfterChoosingStartResumesAtProfile() {
+    // 정보 입력 도중 앱이 꺼져도 시작 화면으로 돌아가지 않는다. 이 iPhone에 남은 프로필이 있어도 같다
+    #expect(
+      AppStage.of(hasAgreed: true, hasStarted: false, choseStart: true, hasProfile: true)
+        == .profile)
+  }
+
+  @Test func existingUserWithoutOnboardingAgreesAndEntersProfileOnce() {
+    #expect(
+      AppStage.of(hasAgreed: false, hasStarted: true, choseStart: false, hasProfile: false)
+        == .consent)
+    #expect(
+      AppStage.of(hasAgreed: true, hasStarted: true, choseStart: false, hasProfile: false)
+        == .profile)
+  }
+
+  @Test func changedTermsAskOnlyForAgreement() {
+    #expect(
+      AppStage.of(hasAgreed: false, hasStarted: true, choseStart: true, hasProfile: true)
+        == .consent)
+    #expect(
+      AppStage.of(hasAgreed: true, hasStarted: true, choseStart: true, hasProfile: true) == .tabs)
+  }
+}
+
+struct OnboardingResumeSettingsTests {
+  private func defaults() throws -> UserDefaults {
+    try #require(UserDefaults(suiteName: "test.\(UUID().uuidString)"))
+  }
+
+  @Test func outdatedAgreementIsOnlyForPreviousVersions() throws {
+    let defaults = try defaults()
+    // 동의한 적이 없으면 예전 버전 동의도 아니다
+    #expect(AppSettings.hasOutdatedAgreement(in: defaults) == false)
+    defaults.set(
+      ["terms": "2000-01-01", "privacy": "2000-01-01"], forKey: "agreedDocumentVersions")
+    #expect(AppSettings.hasOutdatedAgreement(in: defaults))
+    AppSettings.saveAgreement(in: defaults)
+    #expect(AppSettings.hasOutdatedAgreement(in: defaults) == false)
+  }
+
+  @Test func chosenStartIsRememberedAndCleared() throws {
+    let defaults = try defaults()
+    #expect(AppSettings.hasChosenStart(in: defaults) == false)
+    AppSettings.setHasChosenStart(true, in: defaults)
+    #expect(AppSettings.hasChosenStart(in: defaults))
+    AppSettings.setHasChosenStart(false, in: defaults)
+    #expect(AppSettings.hasChosenStart(in: defaults) == false)
+  }
+}
