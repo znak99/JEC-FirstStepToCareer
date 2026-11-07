@@ -63,7 +63,7 @@ final class SplashModel {
       step = .checkingInterview
       await LeftoverInterviewCleaner(api: api, store: store).deleteUnfinished()
     }
-    step = nil
+    // step은 비우지 않는다. 사라지는 동안 안내 문구가 다른 문구로 바뀌어 보이지 않게 한다
     isReady = true
   }
 }

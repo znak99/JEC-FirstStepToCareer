@@ -300,6 +300,8 @@ struct APIClientTests {
     let elapsed = await ContinuousClock().measure { await model.run() }
     #expect(model.showsLoading)
     #expect(model.isReady)
+    // 넘어가는 동안 마지막 안내 문구를 유지한다
+    #expect(model.step == .connecting)
     #expect(elapsed < .seconds(2))
   }
 
