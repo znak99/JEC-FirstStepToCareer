@@ -18,20 +18,24 @@ struct InterviewSetupView: View {
           .textInputAutocapitalization(.never)
           .submitLabel(.done)
       }
+      // 업계·직종은 앱 어디서나 새 화면에서 고른다 (SITE_MAP 4절)
       Section("業界") {
-        ChoicePicker(
-          title: "業界", options: InterviewDraft.industries + [Self.other],
-          selection: $industryChoice)
-        if industryChoice == Self.other {
-          TextField("業界を入力", text: $otherIndustry)
+        NavigationLink {
+          ChoiceListView(
+            title: "業界", otherPlaceholder: "業界を入力", options: InterviewDraft.industries,
+            other: Self.other, allowsNone: false, choice: $industryChoice,
+            otherText: $otherIndustry)
+        } label: {
+          ChoiceValue(choice: industryChoice, otherText: otherIndustry, other: Self.other)
         }
       }
       Section("職種") {
-        ChoicePicker(
-          title: "職種", options: InterviewDraft.jobTitles + [Self.other],
-          selection: $jobChoice)
-        if jobChoice == Self.other {
-          TextField("職種を入力", text: $otherJob)
+        NavigationLink {
+          ChoiceListView(
+            title: "職種", otherPlaceholder: "職種を入力", options: InterviewDraft.jobTitles,
+            other: Self.other, allowsNone: false, choice: $jobChoice, otherText: $otherJob)
+        } label: {
+          ChoiceValue(choice: jobChoice, otherText: otherJob, other: Self.other)
         }
       }
       Section("面接の種類") {
@@ -77,15 +81,19 @@ struct InterviewSetupView: View {
   }
 }
 
-private struct ChoicePicker: View {
-  let title: String
-  let options: [String]
-  @Binding var selection: String
+// 고른 값을 보여 준다. 「その他」면 직접 입력한 값을 보여 준다
+private struct ChoiceValue: View {
+  let choice: String
+  let otherText: String
+  let other: String
 
   var body: some View {
-    Picker(title, selection: $selection) {
-      Text("選択してください").tag("")
-      ForEach(options, id: \.self) { Text($0).tag($0) }
+    if choice.isEmpty {
+      Text("選択してください").foregroundStyle(.secondary)
+    } else if choice == other, let typed = Profile.trimmed(otherText) {
+      Text(typed)
+    } else {
+      Text(choice)
     }
   }
 }

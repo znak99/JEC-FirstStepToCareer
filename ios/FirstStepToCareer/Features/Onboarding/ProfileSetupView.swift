@@ -92,7 +92,9 @@ struct ProfileSetupView: View {
       Label {
         Text(type.label)
       } icon: {
+        // 글자보다 작고 가는 선으로 그린다
         Image(systemName: type.symbolName)
+          .font(.footnote.weight(.light))
       }
       .font(.subheadline.weight(.semibold))
       .foregroundStyle(isOn ? TechPalette.cardBottom : .primary)
@@ -144,16 +146,6 @@ extension HiringType {
     case .newGrad: "graduationcap"
     case .midCareer: "briefcase"
     }
-  }
-}
-
-struct LimitWarning: View {
-  let limit: Int
-
-  var body: some View {
-    Text("\(limit)文字以内で入力してください")
-      .font(.caption)
-      .foregroundStyle(TechPalette.negative)
   }
 }
 
