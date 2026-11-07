@@ -3,7 +3,8 @@ import SwiftUI
 
 // 기록·분석 그래프 공통 디자인. 기기의 밝은/어두운 모드를 따르되 남색 바탕과 형광색 선으로 맞춘다
 enum TechPalette {
-  static let accent = adaptive(light: 0x0A7CD8, dark: 0x3FE0FF)
+  // 어두운 모드는 앱 아이콘의 밝은 파랑을 쓴다
+  static let accent = adaptive(light: 0x0A7CD8, dark: 0x2392FF)
   static let accentSoft = adaptive(light: 0x6C5CE7, dark: 0x4D7CFF)
   static let positive = adaptive(light: 0x009E7A, dark: 0x2EF2B5)
   static let negative = adaptive(light: 0xE0445F, dark: 0xFF6B8A)

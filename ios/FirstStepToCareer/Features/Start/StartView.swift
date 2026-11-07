@@ -114,7 +114,7 @@ struct StartView: View {
       } label: {
         Text("ログインなしで始める")
           .font(.headline)
-          // 어두운 모드의 밝은 청록 버튼에서도 글자가 잘 보이게 한다
+          // 어두운 모드의 밝은 파랑 버튼에서도 글자가 잘 보이게 한다
           .foregroundStyle(TechPalette.cardBottom)
           // Apple 로그인 버튼과 높이를 맞춘다
           .frame(maxWidth: .infinity, minHeight: 44)
