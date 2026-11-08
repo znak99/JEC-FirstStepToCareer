@@ -13,14 +13,17 @@ struct MenuView: View {
   var onReset: () -> Void = {}
 
   @Environment(\.apiClient) private var api
+  @Environment(\.tabRootRequest) private var tabRootRequest
   @State private var model: MenuModel?
   @State private var confirmsDelete = false
   @State private var confirmsSignOut = false
   // 프로필 줄에 보여 줄 이름. 프로필 화면에서 돌아오면 다시 읽는다
   @State private var nickname = ProfileStore().profile?.nickname
+  // 프로필 화면에서 업계·직종 목록으로 더 들어가므로 여러 종류의 경로를 담는다
+  @State private var path = NavigationPath()
 
   var body: some View {
-    NavigationStack {
+    NavigationStack(path: $path) {
       Group {
         // 화면 상태를 만드는 한순간에는 바탕만 보여 준다
         if let model {
@@ -34,6 +37,7 @@ struct MenuView: View {
       .reservesTabBarSpace()
       .navigationTitle("メニュー")
       .onAppear { nickname = ProfileStore().profile?.nickname }
+      .onChange(of: tabRootRequest) { path = NavigationPath() }
       .navigationDestination(for: MenuRoute.self) { route in
         switch route {
         case .profile: ProfileEditView()

@@ -4,6 +4,8 @@ import SwiftUI
 // 선택한 탭은 네 모서리 조준 괄호가 감싼다. '동작 줄이기'가 켜져 있으면 괄호가 미끄러지지 않고 바로 옮겨 간다
 struct TechTabBar: View {
   @Binding var selection: AppTab
+  // 이미 고른 탭을 다시 눌렀을 때. 그 탭의 첫 화면으로 돌아간다
+  var onReselect: (AppTab) -> Void = { _ in }
 
   @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -56,7 +58,7 @@ struct TechTabBar: View {
   private func item(_ tab: AppTab, number: Int) -> some View {
     let isOn = tab == selection
     return Button {
-      selection = tab
+      if isOn { onReselect(tab) } else { selection = tab }
     } label: {
       VStack(spacing: 2) {
         Text(verbatim: String(format: "%02d", number))

@@ -9,6 +9,7 @@ struct RootTabView: View {
   @State private var selectedTab = AppTab.interview
   @State private var tabBarVisibility = TabBarVisibility()
   @State private var isKeyboardVisible = false
+  @State private var rootRequests: [AppTab: Int] = [:]
 
   var body: some View {
     // 키보드가 올라오면 탭바는 키보드 뒤로 빠지고, 화면의 아래 버튼이 키보드 바로 위에 붙는다
@@ -19,12 +20,13 @@ struct RootTabView: View {
           screen(for: tab)
             // iOS 기본 탭바 대신 아래의 TechTabBar를 쓴다
             .toolbar(.hidden, for: .tabBar)
+            .environment(\.tabRootRequest, rootRequests[tab, default: 0])
         }
       }
     }
     .overlay(alignment: .bottom) {
       if showsTabBar {
-        TechTabBar(selection: $selectedTab)
+        TechTabBar(selection: $selectedTab) { rootRequests[$0, default: 0] += 1 }
           .padding(.horizontal, 22)
           .padding(.bottom, TechTabBar.bottomGap)
           .transition(.move(edge: .bottom).combined(with: .opacity))

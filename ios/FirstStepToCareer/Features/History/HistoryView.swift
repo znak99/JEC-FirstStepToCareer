@@ -11,6 +11,7 @@ struct HistoryView: View {
   var onStartInterview: () -> Void = {}
 
   @Environment(\.apiClient) private var api
+  @Environment(\.tabRootRequest) private var tabRootRequest
   @State private var model: HistoryModel?
   @State private var path: [HistoryRoute] = []
 
@@ -36,6 +37,7 @@ struct HistoryView: View {
           InterviewResultView(interviewId: id) { path.removeLast() }
         }
       }
+      .onChange(of: tabRootRequest) { path = [] }
       // 탭을 열 때와 결과 화면에서 돌아올 때마다 다시 불러온다
       .task {
         let current = model ?? HistoryModel(api: api)

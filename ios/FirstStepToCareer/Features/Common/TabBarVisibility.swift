@@ -23,6 +23,8 @@ extension EnvironmentValues {
   @Entry var tabBarVisibility: TabBarVisibility?
   // 하단 탭바가 보일 때 화면 아래에 비워 둘 높이. 탭 밖(온보딩 등)에서는 0
   @Entry var tabBarInset: CGFloat = 0
+  // 지금 탭을 다시 누를 때마다 1씩 오른다. 바뀌면 그 탭의 첫 화면으로 돌아간다
+  @Entry var tabRootRequest = 0
 }
 
 extension View {

@@ -3,6 +3,7 @@ import SwiftUI
 // 면접 탭의 첫 화면. 응모처와 면접 조건을 입력하고 바로 면접 준비로 간다 (SITE_MAP S-01)
 struct InterviewHomeView: View {
   @Environment(\.apiClient) private var api
+  @Environment(\.tabRootRequest) private var tabRootRequest
   @State private var path: [InterviewRoute] = []
   @State private var availability = Availability.loading
   @State private var form = InterviewForm(
@@ -54,8 +55,19 @@ struct InterviewHomeView: View {
             onQuit: { path = [] })
         case .result(let id):
           InterviewResultView(interviewId: id) { path = [] }
+        case .choice(.industry):
+          ChoiceListView(
+            title: "業界", otherPlaceholder: "業界を入力", categories: ChoiceCatalog.industries,
+            other: ProfileDraft.other, allowsNone: false, choice: $form.industryChoice,
+            otherText: $form.otherIndustry)
+        case .choice(.jobTitle):
+          ChoiceListView(
+            title: "職種", otherPlaceholder: "職種を入力", categories: ChoiceCatalog.jobTitles,
+            other: ProfileDraft.other, allowsNone: false, choice: $form.jobChoice,
+            otherText: $form.otherJob)
         }
       }
+      .onChange(of: tabRootRequest) { path = [] }
       // 메뉴에서 프로필을 바꾸고 돌아왔을 때 반영한다
       .onAppear { form.sync(profile: ProfileStore().profile) }
       // 마지막으로 고른 질문 수로 다음에도 시작한다
@@ -160,23 +172,13 @@ struct InterviewHomeView: View {
       }
       .frame(minHeight: 48)
       Divider()
-      // 업계·직종은 앱 어디서나 새 화면에서 고른다 (SITE_MAP 4절)
-      NavigationLink {
-        ChoiceListView(
-          title: "業界", otherPlaceholder: "業界を入力", categories: ChoiceCatalog.industries,
-          other: ProfileDraft.other, allowsNone: false, choice: $form.industryChoice,
-          otherText: $form.otherIndustry)
-      } label: {
+      // 업계·직종은 앱 어디서나 새 화면에서 고른다 (SITE_MAP 4절). 탭을 다시 누르면 닫히게 경로에 넣는다
+      NavigationLink(value: InterviewRoute.choice(.industry)) {
         choiceRow("業界", choice: form.industryChoice, otherText: form.otherIndustry)
       }
       .buttonStyle(.plain)
       Divider()
-      NavigationLink {
-        ChoiceListView(
-          title: "職種", otherPlaceholder: "職種を入力", categories: ChoiceCatalog.jobTitles,
-          other: ProfileDraft.other, allowsNone: false, choice: $form.jobChoice,
-          otherText: $form.otherJob)
-      } label: {
+      NavigationLink(value: InterviewRoute.choice(.jobTitle)) {
         choiceRow("職種", choice: form.jobChoice, otherText: form.otherJob)
       }
       .buttonStyle(.plain)

@@ -4,6 +4,7 @@ enum InterviewRoute: Hashable {
   case preparation(InterviewDraft)
   case session(InterviewSessionContext)
   case result(String)
+  case choice(ProfileChoice)
 }
 
 // 면접 준비 화면에서 면접 진행 화면으로 넘기는 값. 준비 화면에서 켠 카메라를 같은 객체로 계속 쓴다
