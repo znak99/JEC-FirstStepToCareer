@@ -22,6 +22,8 @@ final class PreparationModel {
   private static let unstableFace = String(
     localized: "顔を安定して認識できなかったため、視線・頭の動きは評価されません。")
   private static let aiDisabled = String(localized: "現在、AI機能は停止中です。")
+  // 기준점을 잡을 때 화면을 바라보는 시간(초). 준비 화면의 차오르는 고리도 이 시간을 쓴다
+  static let calibrationSeconds: TimeInterval = 3
 
   let draft: InterviewDraft
   private(set) var speech = CheckState.checking
@@ -144,7 +146,7 @@ final class PreparationModel {
   func calibrate() async {
     guard let tracker, canCalibrate else { return }
     face = .calibrating
-    let samples = await tracker.collectSamples(duration: 3)
+    let samples = await tracker.collectSamples(duration: Self.calibrationSeconds)
     if let baseline = FaceBaseline.make(from: samples) {
       face = .calibrated(baseline)
     } else {

@@ -67,7 +67,7 @@ struct InterviewHomeView: View {
       ZStack {
         Circle().fill(statusColor.opacity(0.18)).frame(width: 44, height: 44)
         if availability == .loading {
-          ProgressView()
+          PulseDot()
         } else {
           Circle().fill(statusColor).frame(width: 12, height: 12)
             .shadow(color: statusColor, radius: 6)

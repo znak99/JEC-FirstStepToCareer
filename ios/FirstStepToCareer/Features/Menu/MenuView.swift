@@ -142,7 +142,10 @@ struct MenuView: View {
   private func accountCard(_ model: MenuModel) -> some View {
     MenuRow(icon: "person.badge.key.fill", title: "ログイン状態", showsChevron: false) {
       switch model.account {
-      case .loading: ProgressView()
+      case .loading:
+        DotScanSkeleton(spacing: 4, bandWidth: 30) {
+          SkeletonBox(width: 80, height: 12, cornerRadius: 6)
+        }
       case .failed: Text("確認できませんでした")
       case .loaded(.guest): Text("ゲスト")
       case .loaded(.apple): Text("Appleアカウント")

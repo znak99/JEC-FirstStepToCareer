@@ -128,8 +128,12 @@ struct InterviewSessionView: View {
       }
       TranscriptView(text: model.transcript)
     case .submitting:
-      HStack(spacing: 8) {
-        ProgressView()
+      HStack(spacing: 10) {
+        // 면접관이 말을 준비하는 느낌의 말풍선
+        LoadingDots(size: 6)
+          .padding(.horizontal, 12)
+          .padding(.vertical, 8)
+          .background(TechPalette.accent.opacity(0.1), in: Capsule())
         Text("次の質問を準備しています…")
       }
       .font(.subheadline)

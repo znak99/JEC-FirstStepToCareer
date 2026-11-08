@@ -81,8 +81,8 @@ struct PreparationView: View {
     VStack(alignment: .leading, spacing: 14) {
       HStack(spacing: 8) {
         CheckChip(title: "読み上げ", state: model.speech)
-        CheckChip(title: "聞き取り", state: model.recognition)
-        CheckChip(title: "AI接続", state: model.server)
+        CheckChip(title: "聞き取り", state: model.recognition, blinkDelay: 0.3)
+        CheckChip(title: "AI接続", state: model.server, blinkDelay: 0.6)
       }
       if !model.failureMessages.isEmpty {
         VStack(alignment: .leading, spacing: 6) {
@@ -168,8 +168,10 @@ struct PreparationView: View {
   @ViewBuilder
   private func faceIcon(_ model: PreparationModel) -> some View {
     switch model.face {
-    case .checking, .calibrating:
-      ProgressView()
+    case .checking:
+      Image(systemName: "scope").foregroundStyle(TechPalette.accent).loadingBlink()
+    case .calibrating:
+      CountdownRing(duration: PreparationModel.calibrationSeconds).frame(width: 22, height: 22)
     case .ready:
       Image(systemName: "scope").foregroundStyle(TechPalette.accent)
     case .calibrated:
@@ -189,7 +191,7 @@ struct PreparationView: View {
       }
     } label: {
       if model.isStarting {
-        ProgressView().tint(.white)
+        LoadingDots(color: .white)
       } else {
         Text("面接を始める")
       }
@@ -202,12 +204,18 @@ struct PreparationView: View {
 private struct CheckChip: View {
   let title: LocalizedStringKey
   let state: PreparationModel.CheckState
+  // 확인 중인 칩들이 차례로 깜박이게 한다
+  var blinkDelay = 0.0
 
   var body: some View {
     HStack(spacing: 4) {
       switch state {
       case .checking:
-        ProgressView().controlSize(.mini)
+        Circle()
+          .fill(TechPalette.accent)
+          .frame(width: 8, height: 8)
+          .frame(width: 12, height: 12)
+          .loadingBlink(delay: blinkDelay)
       case .passed:
         Image(systemName: "checkmark.circle.fill").foregroundStyle(TechPalette.positive)
       case .failed:
