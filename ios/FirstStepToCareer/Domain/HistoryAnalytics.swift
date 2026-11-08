@@ -12,21 +12,21 @@ enum ScoreMetric: CaseIterable, Hashable, Sendable {
 
   var shortLabel: String {
     switch self {
-    case .total: "総合"
-    case .structure: "構成"
-    case .logic: "論理"
-    case .gaze: "視線"
-    case .head: "頭"
+    case .total: String(localized: "総合")
+    case .structure: String(localized: "構成")
+    case .logic: String(localized: "論理")
+    case .gaze: String(localized: "視線")
+    case .head: String(localized: "頭")
     }
   }
 
   var label: String {
     switch self {
-    case .total: "総合点"
-    case .structure: "回答の構成"
-    case .logic: "回答の論理"
-    case .gaze: "視線の動き"
-    case .head: "頭の動き"
+    case .total: String(localized: "総合点")
+    case .structure: String(localized: "回答の構成")
+    case .logic: String(localized: "回答の論理")
+    case .gaze: String(localized: "視線の動き")
+    case .head: String(localized: "頭の動き")
     }
   }
 
@@ -48,9 +48,9 @@ enum AnalysisPeriod: CaseIterable, Hashable, Sendable {
 
   var label: String {
     switch self {
-    case .oneMonth: "1か月"
-    case .threeMonths: "3か月"
-    case .all: "全期間"
+    case .oneMonth: String(localized: "1か月")
+    case .threeMonths: String(localized: "3か月")
+    case .all: String(localized: "全期間")
     }
   }
 
@@ -128,6 +128,15 @@ struct CategoryAverage: Identifiable, Equatable, Sendable {
   var id: ScoreMetric { metric }
 }
 
+// 분석 화면 위쪽 숫자 칸. 모두 총점 기준이다
+struct PeriodStats: Equatable, Sendable {
+  let average: Double?
+  let count: Int
+  let best: TrendPoint?
+  // 기간 안의 첫 면접과 최근 면접의 총점 차이. 면접이 1번뿐이면 nil
+  let growth: Double?
+}
+
 struct GroupAverage: Identifiable, Equatable, Sendable {
   let label: String
   let average: Double?
@@ -156,6 +165,15 @@ enum HistoryAnalytics {
         }
       }
       .sorted { $0.date < $1.date }
+  }
+
+  static func periodStats(_ interviews: [CompletedInterview]) -> PeriodStats {
+    let points = trend(interviews, metric: .total)
+    return PeriodStats(
+      average: average(points.map(\.value)),
+      count: interviews.count,
+      best: points.max { $0.value < $1.value },
+      growth: points.count >= 2 ? points[points.count - 1].value - points[0].value : nil)
   }
 
   static func categoryAverages(_ interviews: [CompletedInterview]) -> [CategoryAverage] {

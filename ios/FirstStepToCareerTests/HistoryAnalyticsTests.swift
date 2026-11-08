@@ -121,6 +121,29 @@ struct HistoryAnalyticsTests {
     #expect(HistoryAnalytics.monthGroups([], calendar: calendar).isEmpty)
   }
 
+  @Test func periodStatsUseTotals() {
+    let list = Self.completed([
+      Self.summary("a", daysAgo: 1, total: 80), Self.summary("b", daysAgo: 2, total: 70),
+      Self.summary("c", daysAgo: 3, total: 90),
+    ])
+    let stats = HistoryAnalytics.periodStats(list)
+    #expect(stats.average == 80)
+    #expect(stats.count == 3)
+    #expect(stats.best?.id == "c")
+    // 첫 면접(c, 90점)에서 최근 면접(a, 80점)으로 10점 내려갔다
+    #expect(stats.growth == -10)
+  }
+
+  @Test func periodStatsWithOneOrNoInterview() {
+    let single = HistoryAnalytics.periodStats(Self.completed([Self.summary("a", daysAgo: 1)]))
+    #expect(single.count == 1)
+    #expect(single.growth == nil)
+    let empty = HistoryAnalytics.periodStats([])
+    #expect(empty.average == nil)
+    #expect(empty.best == nil)
+    #expect(empty.count == 0)
+  }
+
   @Test func noStrengthsWhenAllEqualOrSingle() {
     let equal = [
       CategoryAverage(metric: .structure, value: 70), CategoryAverage(metric: .logic, value: 70),

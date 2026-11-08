@@ -273,10 +273,12 @@ struct TechBarChart: View {
     }
     .chartXScale(domain: 0...100)
     .chartXAxis {
-      AxisMarks(values: [0, 25, 50, 75, 100]) {
+      AxisMarks(values: [0, 25, 50, 75, 100]) { value in
         AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5, dash: [2, 3]))
           .foregroundStyle(TechPalette.ink.opacity(0.2))
-        AxisValueLabel().font(.caption2.monospaced())
+        // 오른쪽 끝 「100」은 가운데 맞춤이면 그래프 밖으로 나가 사라지므로 오른쪽에 맞춘다
+        AxisValueLabel(anchor: value.index == value.count - 1 ? .topTrailing : .top)
+          .font(.caption2.monospaced())
       }
     }
     .chartYAxis {

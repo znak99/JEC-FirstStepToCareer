@@ -46,7 +46,7 @@ struct TrendChart: View {
           .foregroundStyle(TechPalette.ink.opacity(0.35))
           .annotation(
             position: .top, spacing: 4,
-            overflowResolution: .init(x: .fit(to: .chart), y: .disabled)
+            overflowResolution: .init(x: .fit(to: .chart), y: .fit(to: .chart))
           ) { readout(selected) }
         PointMark(x: .value("日付", selected.date), y: .value("点", selected.value))
           .foregroundStyle(TechPalette.accent)
@@ -71,9 +71,8 @@ struct TrendChart: View {
           .font(.caption2.monospaced())
       }
     }
-    // 위쪽 여백은 손가락으로 고른 점수 표시가 들어갈 자리다
-    .padding(.top, 56)
-    .frame(height: 280)
+    // 손가락으로 고른 점수 표시는 따로 자리를 비우지 않고 그래프 안에 띄운다
+    .frame(height: 240)
     .reveal($progress, key: points)
   }
 

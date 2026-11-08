@@ -39,8 +39,8 @@ struct InterviewDraft: Hashable, Sendable {
 extension InterviewType {
   var label: String {
     switch self {
-    case .hr: "人事面接"
-    case .job: "職務面接"
+    case .hr: String(localized: "人事面接")
+    case .job: String(localized: "職務面接")
     }
   }
 }
@@ -48,8 +48,8 @@ extension InterviewType {
 extension HiringType {
   var label: String {
     switch self {
-    case .newGrad: "新卒"
-    case .midCareer: "中途"
+    case .newGrad: String(localized: "新卒")
+    case .midCareer: String(localized: "中途")
     }
   }
 }
