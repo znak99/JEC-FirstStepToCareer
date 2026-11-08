@@ -13,10 +13,11 @@ struct InterviewSessionView: View {
 
   var body: some View {
     Group {
+      // 화면 상태를 만드는 한순간에는 바탕만 보여 준다
       if let model {
         content(model)
       } else {
-        ProgressView()
+        Color.clear
       }
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -150,7 +151,8 @@ struct InterviewSessionView: View {
         .font(.subheadline)
         .foregroundStyle(TechPalette.negative)
     case .finished:
-      ProgressView()
+      // 바로 결과 화면으로 넘어가므로 아무것도 보여 주지 않는다
+      EmptyView()
     }
   }
 
