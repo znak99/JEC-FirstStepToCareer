@@ -20,15 +20,10 @@ final class MenuModel {
   private(set) var isWorking = false
   var failure: Failure?
 
-  var questionCount: Int {
-    didSet { AppSettings.setQuestionCount(questionCount) }
-  }
-
   private let api: APIClient
 
   init(api: APIClient) {
     self.api = api
-    questionCount = AppSettings.questionCount()
   }
 
   func loadAccount() async {

@@ -55,16 +55,6 @@ struct MenuView: View {
         }
       }
 
-      Section {
-        Stepper(value: $model.questionCount, in: AppSettings.questionCountRange) {
-          LabeledContent("質問数", value: "\(model.questionCount)問")
-        }
-      } header: {
-        Text("面接")
-      } footer: {
-        Text("次の面接から反映されます。")
-      }
-
       accountSection(model)
 
       Section("情報") {

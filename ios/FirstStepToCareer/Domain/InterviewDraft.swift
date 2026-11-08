@@ -1,6 +1,6 @@
 import Foundation
 
-// 면접 설정 화면에서 입력한 값. 면접 준비 화면을 거쳐 서버에 보낸다
+// 면접 홈에서 입력한 값. 면접 준비 화면을 거쳐 서버에 보낸다
 struct InterviewDraft: Hashable, Sendable {
   static let companyNameLimit = 100
   static let choiceLimit = 50
