@@ -27,7 +27,6 @@ struct RootTabView: View {
     .overlay(alignment: .bottom) {
       if showsTabBar {
         TechTabBar(selection: $selectedTab) { rootRequests[$0, default: 0] += 1 }
-          .padding(.horizontal, 22)
           .padding(.bottom, TechTabBar.bottomGap)
           .transition(.move(edge: .bottom).combined(with: .opacity))
       }
