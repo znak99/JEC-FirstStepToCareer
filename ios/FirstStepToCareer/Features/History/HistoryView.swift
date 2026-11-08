@@ -26,6 +26,7 @@ struct HistoryView: View {
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .background { OnboardingBackground() }
+      .reservesTabBarSpace()
       .navigationTitle("記録")
       .navigationDestination(for: HistoryRoute.self) { route in
         switch route {

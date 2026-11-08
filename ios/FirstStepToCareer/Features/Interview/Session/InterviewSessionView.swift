@@ -25,7 +25,7 @@ struct InterviewSessionView: View {
     .navigationTitle("面接")
     .navigationBarTitleDisplayMode(.inline)
     .navigationBarBackButtonHidden(true)
-    .toolbar(.hidden, for: .tabBar)
+    .hidesTabBar()
     .toolbar {
       ToolbarItem(placement: .topBarLeading) {
         Button {

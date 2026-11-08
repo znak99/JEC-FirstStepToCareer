@@ -53,6 +53,7 @@ struct LegalDocumentView: View {
       }
     }
     .background { OnboardingBackground() }
+    .reservesTabBarSpace()
     .navigationTitle(document.title)
     .navigationBarTitleDisplayMode(.inline)
   }

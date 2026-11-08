@@ -45,6 +45,7 @@ struct AnalysisView: View {
       .padding(.bottom, 24)
     }
     .background { OnboardingBackground() }
+    .reservesTabBarSpace()
     .navigationTitle("分析")
     .navigationBarTitleDisplayMode(.inline)
   }

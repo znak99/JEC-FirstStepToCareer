@@ -34,6 +34,7 @@ struct ChoiceListView: View {
     }
     .scrollDismissesKeyboard(.interactively)
     .background { OnboardingBackground() }
+    .reservesTabBarSpace()
     .navigationTitle(title)
     .navigationBarTitleDisplayMode(.inline)
     // 기본 뒤로 가기 버튼은 강조색을 따르지 않아 포인트 색 버튼으로 바꾼다

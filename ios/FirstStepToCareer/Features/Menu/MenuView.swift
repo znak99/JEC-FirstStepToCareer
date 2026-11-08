@@ -31,6 +31,7 @@ struct MenuView: View {
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .background { OnboardingBackground() }
+      .reservesTabBarSpace()
       .navigationTitle("メニュー")
       .onAppear { nickname = ProfileStore().profile?.nickname }
       .navigationDestination(for: MenuRoute.self) { route in

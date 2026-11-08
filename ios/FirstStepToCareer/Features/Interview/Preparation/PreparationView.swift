@@ -19,7 +19,7 @@ struct PreparationView: View {
     .navigationBarTitleDisplayMode(.inline)
     // 카메라 영상 위라 제목과 뒤로 가기는 밝은/어두운 모드 모두 흰색으로 둔다
     .toolbarColorScheme(.dark, for: .navigationBar)
-    .toolbar(.hidden, for: .tabBar)
+    .hidesTabBar()
     .task {
       if model == nil {
         let created = PreparationModel(draft: draft, api: api)

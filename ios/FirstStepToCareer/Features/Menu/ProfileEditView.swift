@@ -29,6 +29,7 @@ struct ProfileEditView: View {
         .padding(.bottom, 12)
     }
     .loadingOverlay(model?.isSaving == true, message: "保存しています…")
+    .reservesTabBarSpace()
     .navigationTitle("プロフィール")
     .navigationBarTitleDisplayMode(.inline)
     .profileChoiceDestinations($draft)

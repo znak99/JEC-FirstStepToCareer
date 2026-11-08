@@ -44,6 +44,7 @@ struct AppInfoView: View {
     .padding(.bottom, 24)
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background { OnboardingBackground() }
+    .reservesTabBarSpace()
     .navigationTitle("アプリ情報")
     .navigationBarTitleDisplayMode(.inline)
   }

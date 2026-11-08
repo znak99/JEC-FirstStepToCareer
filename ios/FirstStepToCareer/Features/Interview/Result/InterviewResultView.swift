@@ -28,6 +28,7 @@ struct InterviewResultView: View {
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background { OnboardingBackground() }
+    .reservesTabBarSpace()
     .navigationTitle("面接結果")
     .navigationBarTitleDisplayMode(.inline)
     .task {

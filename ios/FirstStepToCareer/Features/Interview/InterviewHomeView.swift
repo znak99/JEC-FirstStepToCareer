@@ -40,6 +40,7 @@ struct InterviewHomeView: View {
           .padding(.bottom, 12)
       }
       .background { OnboardingBackground() }
+      .reservesTabBarSpace()
       .navigationTitle("面接")
       .navigationDestination(for: InterviewRoute.self) { route in
         switch route {
