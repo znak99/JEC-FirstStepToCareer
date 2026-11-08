@@ -14,7 +14,7 @@ struct InterviewResultView: View {
     Group {
       switch model?.state ?? .loading {
       case .loading:
-        ProgressView()
+        ResultSkeleton()
       case .evaluating:
         VStack(spacing: 16) {
           InterviewerAvatar(isActive: true)
@@ -124,6 +124,47 @@ struct InterviewResultView: View {
     .buttonStyle(.plain)
     .foregroundStyle(TechPalette.negative)
     .padding(.top, 4)
+  }
+}
+
+// 불러오는 동안 총점 카드와 피드백 자리에 빈 상자를 둔다
+private struct ResultSkeleton: View {
+  var body: some View {
+    ScrollView {
+      DotScanSkeleton {
+        VStack(alignment: .leading, spacing: 20) {
+          VStack(spacing: 10) {
+            SkeletonBox(width: 64, height: 14)
+            SkeletonBox(width: 160, height: 52, cornerRadius: 12)
+            SkeletonBox(width: 220, height: 12)
+            SkeletonBox(width: 210, height: 210, cornerRadius: 105)
+              .padding(.vertical, 8)
+            HStack(spacing: 10) {
+              SkeletonBox(height: 58, cornerRadius: 12)
+              SkeletonBox(height: 58, cornerRadius: 12)
+            }
+          }
+          .padding(18)
+          .frame(maxWidth: .infinity)
+          HStack(spacing: 10) {
+            SkeletonBox(width: 22, height: 12)
+            SkeletonBox(width: 120, height: 16)
+          }
+          .padding(.horizontal, 4)
+          VStack(alignment: .leading, spacing: 9) {
+            SkeletonBox(height: 12)
+            SkeletonBox(height: 12)
+            SkeletonBox(height: 12)
+            SkeletonBox(width: 180, height: 12)
+          }
+          .padding(18)
+        }
+      }
+      .padding(.horizontal, 20)
+      .padding(.top, 8)
+      .padding(.bottom, 24)
+    }
+    .scrollDisabled(true)
   }
 }
 

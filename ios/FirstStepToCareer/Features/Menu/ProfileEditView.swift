@@ -14,10 +14,11 @@ struct ProfileEditView: View {
         ProfileFormCard(draft: $draft)
           .padding(24)
       } else {
-        ProgressView()
-          .padding(.top, 80)
+        ProfileFormSkeleton()
+          .padding(24)
       }
     }
+    .scrollDisabled(!isLoaded)
     .scrollDismissesKeyboard(.interactively)
     .background { OnboardingBackground() }
     .safeAreaInset(edge: .bottom) {
@@ -57,6 +58,35 @@ struct ProfileEditView: View {
     guard let profile = draft.profile, let model else { return }
     Task {
       if await model.save(profile) { dismiss() }
+    }
+  }
+}
+
+// 프로필을 불러오는 동안 입력 카드의 칸 자리에 빈 상자를 둔다
+private struct ProfileFormSkeleton: View {
+  var body: some View {
+    DotScanSkeleton {
+      VStack(alignment: .leading, spacing: 18) {
+        VStack(alignment: .leading, spacing: 8) {
+          SkeletonBox(width: 150, height: 14)
+          SkeletonBox(height: 46, cornerRadius: 12)
+          SkeletonBox(width: 200, height: 11)
+        }
+        VStack(alignment: .leading, spacing: 8) {
+          SkeletonBox(width: 90, height: 14)
+          HStack(spacing: 10) {
+            SkeletonBox(height: 40, cornerRadius: 20)
+            SkeletonBox(height: 40, cornerRadius: 20)
+          }
+        }
+        ForEach(0..<2, id: \.self) { _ in
+          VStack(alignment: .leading, spacing: 8) {
+            SkeletonBox(width: 60, height: 14)
+            SkeletonBox(height: 46, cornerRadius: 12)
+          }
+        }
+      }
+      .padding(18)
     }
   }
 }

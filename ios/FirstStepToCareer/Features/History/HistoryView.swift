@@ -49,7 +49,7 @@ struct HistoryView: View {
       if model.loadFailed {
         failure(model)
       } else {
-        ProgressView()
+        HistorySkeleton()
       }
     } else if model.interviews.isEmpty {
       empty(model)
@@ -149,6 +149,45 @@ struct HistoryView: View {
       }
       .background(TechCardBackground(showsBorder: false))
     }
+  }
+}
+
+// 처음 불러오는 동안 요약 카드와 목록 자리에 빈 상자를 둔다
+private struct HistorySkeleton: View {
+  var body: some View {
+    ScrollView {
+      DotScanSkeleton {
+        VStack(alignment: .leading, spacing: 20) {
+          VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top, spacing: 16) {
+              SkeletonBox(width: 132, height: 132, cornerRadius: 66)
+              VStack(alignment: .leading, spacing: 10) {
+                SkeletonBox(width: 96, height: 14)
+                SkeletonBox(width: 76, height: 20, cornerRadius: 10)
+                SkeletonBox(height: 72, cornerRadius: 10)
+              }
+            }
+            SkeletonBox(height: 44, cornerRadius: 22)
+          }
+          .padding(16)
+          HStack(spacing: 10) {
+            SkeletonBox(width: 22, height: 12)
+            SkeletonBox(width: 96, height: 16)
+          }
+          .padding(.horizontal, 4)
+          VStack(alignment: .leading, spacing: 8) {
+            SkeletonBox(width: 84, height: 11)
+              .padding(.horizontal, 4)
+            ForEach(0..<4, id: \.self) { _ in
+              SkeletonBox(height: 64, cornerRadius: 16)
+            }
+          }
+        }
+      }
+      .padding(.horizontal, 20)
+      .padding(.bottom, 24)
+    }
+    .scrollDisabled(true)
   }
 }
 
