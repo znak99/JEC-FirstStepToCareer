@@ -86,7 +86,7 @@ struct StartView: View {
     }
     .padding(20)
     .frame(maxWidth: .infinity, alignment: .leading)
-    .background(TechCardBackground())
+    .background(TechCardBackground(showsBorder: false))
   }
 
   private func feature(_ text: LocalizedStringKey, systemImage: String) -> some View {
@@ -102,27 +102,16 @@ struct StartView: View {
   private func actions(_ model: StartModel) -> some View {
     VStack(spacing: 12) {
       if BuildConfig.appleSignInEnabled {
-        AppleSignInButton { request in
+        // 아래 온보딩 버튼과 높이를 맞춘다
+        AppleSignInButton(height: 50) { request in
           Task { if await model.signIn(request) { onStarted() } }
         } onFailed: {
           model.reportSignInFailure()
         }
         .clipShape(Capsule())
       }
-      Button {
-        onStarted()
-      } label: {
-        Text("ログインなしで始める")
-          .font(.headline)
-          // 어두운 모드의 밝은 파랑 버튼에서도 글자가 잘 보이게 한다
-          .foregroundStyle(TechPalette.cardBottom)
-          // Apple 로그인 버튼과 높이를 맞춘다
-          .frame(maxWidth: .infinity, minHeight: 44)
-          .background(Capsule().fill(TechPalette.accent))
-          .shadow(color: TechPalette.accent.opacity(0.5), radius: 8)
-          .contentShape(Capsule())
-      }
-      .buttonStyle(.plain)
+      Button("ログインなしで始める") { onStarted() }
+        .buttonStyle(OnboardingButtonStyle())
       Button("プライバシーポリシー") { showsPrivacy = true }
         .font(.footnote)
         .padding(.top, 4)

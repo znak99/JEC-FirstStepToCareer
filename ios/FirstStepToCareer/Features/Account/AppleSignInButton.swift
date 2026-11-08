@@ -3,6 +3,7 @@ import SwiftUI
 
 // 메뉴와 시작 화면에서 함께 쓰는 Apple 로그인 버튼. 이메일과 이름은 요청하지 않는다
 struct AppleSignInButton: View {
+  var height: CGFloat = 44
   let onSignedIn: (AppleSignInRequest) -> Void
   let onFailed: () -> Void
 
@@ -35,6 +36,6 @@ struct AppleSignInButton: View {
     .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
     // 앱을 켠 채로 밝은/어두운 모드를 바꾸면 버튼 색이 그대로라 새로 만든다
     .id(colorScheme)
-    .frame(height: 44)
+    .frame(height: height)
   }
 }
