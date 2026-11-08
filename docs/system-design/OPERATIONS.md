@@ -91,6 +91,13 @@
 - Claude Console에서 월 사용 한도를 설정한다.
 - 서버는 입력 길이와 질문 수를 제한해 요청 한 건의 비용을 묶어 둔다.
 
+### 문의 메일 (support@znak99.cloud)
+- 프라이버시 폴리시와 앱의 「メールで問い合わせる」가 쓰는 주소다. Cloudflare 이메일 라우팅(znak99.cloud)으로 받아 운영자의 개인 메일함으로 넘긴다. 받기 전용이며, 개인 메일함에서 답장하면 개인 주소로 나간다
+- 설정 위치: Cloudflare 대시보드 → Email Routing → znak99.cloud. 라우팅 규칙 `support@znak99.cloud` → 인증된 목적지 주소(활성). 「전체 수신」(catch-all)은 꺼 둔다
+- DNS: Cloudflare가 MX 3개(`route1·2·3.mx.cloudflare.net`)와 SPF(`v=spf1 include:_spf.mx.cloudflare.net ~all`)를 자동으로 넣고 잠근다. 확인: `dig +short MX znak99.cloud @1.1.1.1`
+- 목적지 주소는 개인 정보라 이 저장소에 적지 않는다
+- 2026-11-08 다른 메일 계정에서 보낸 시험 메일 수신 확인
+
 ## 5. 로그
 - 콘솔 출력. 운영 서버는 `npx wrangler tail`로 확인한다.
 - 답변 원문과 기기 토큰은 로그에 남기지 않는다.
