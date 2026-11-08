@@ -257,7 +257,7 @@ private struct LoadingOverlay: ViewModifier {
 
   @State private var isVisible = false
   // 사라지는 동안 문구가 바뀌지 않게 나타날 때의 문구를 붙잡아 둔다
-  @State private var shownMessage: LocalizedStringKey = ""
+  @State private var shownMessage: LocalizedStringKey?
 
   func body(content: Content) -> some View {
     content
@@ -269,8 +269,10 @@ private struct LoadingOverlay: ViewModifier {
               .contentShape(Rectangle())
             VStack(spacing: 12) {
               LoadingRing()
-              Text(shownMessage)
-                .font(.subheadline.weight(.semibold))
+              if let shownMessage {
+                Text(shownMessage)
+                  .font(.subheadline.weight(.semibold))
+              }
             }
             .padding(.horizontal, 28)
             .padding(.vertical, 22)
