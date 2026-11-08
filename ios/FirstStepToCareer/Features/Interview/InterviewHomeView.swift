@@ -41,7 +41,8 @@ struct InterviewHomeView: View {
       .navigationDestination(for: InterviewRoute.self) { route in
         switch route {
         case .preparation(let draft):
-          PreparationView(draft: draft) { context in path.append(.session(context)) }
+          // 준비 화면은 경로에서 빼, 같은 카메라 영상을 두 화면이 함께 그리지 않게 한다
+          PreparationView(draft: draft) { context in path = [.session(context)] }
         case .session(let context):
           InterviewSessionView(
             context: context,

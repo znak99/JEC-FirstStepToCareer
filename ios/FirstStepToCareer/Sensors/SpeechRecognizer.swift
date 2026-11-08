@@ -8,6 +8,8 @@ import Speech
 final class SpeechRecognizer {
   private(set) var transcript = ""
   private(set) var isListening = false
+  // 마이크 소리 크기(0~1). 듣는 동안 목소리 막대에 쓴다
+  private(set) var level: Float = 0
 
   @ObservationIgnored private let recognizer = SFSpeechRecognizer(
     locale: Locale(identifier: "ja-JP"))
@@ -35,11 +37,28 @@ final class SpeechRecognizer {
     { continuation.resume(returning: $0) }
   }
 
-  nonisolated private static func tapBlock(for request: SFSpeechAudioBufferRecognitionRequest)
-    -> AVAudioNodeTapBlock
-  {
+  nonisolated private static func tapBlock(
+    for request: SFSpeechAudioBufferRecognitionRequest, owner: SpeechRecognizer
+  ) -> AVAudioNodeTapBlock {
     nonisolated(unsafe) let target = request
-    return { buffer, _ in target.append(buffer) }
+    return { [weak owner] buffer, _ in
+      target.append(buffer)
+      guard let owner else { return }
+      let level = Self.level(of: buffer)
+      Task { @MainActor in owner.updateLevel(level) }
+    }
+  }
+
+  nonisolated private static func level(of buffer: AVAudioPCMBuffer) -> Float {
+    guard let channel = buffer.floatChannelData?[0] else { return 0 }
+    let samples = UnsafeBufferPointer(start: channel, count: Int(buffer.frameLength))
+    return AudioLevel.normalized(rms: AudioLevel.rms(samples))
+  }
+
+  // 막대가 튀지 않도록 커질 때는 바로, 작아질 때는 천천히 따라간다
+  private func updateLevel(_ value: Float) {
+    guard isListening else { return }
+    level = value > level ? value : level * 0.6 + value * 0.4
   }
 
   func reset() {
@@ -63,7 +82,7 @@ final class SpeechRecognizer {
     input.removeTap(onBus: 0)
     input.installTap(
       onBus: 0, bufferSize: 1024, format: input.outputFormat(forBus: 0),
-      block: Self.tapBlock(for: request))
+      block: Self.tapBlock(for: request, owner: self))
     audioEngine.prepare()
     try audioEngine.start()
     isListening = true
@@ -74,6 +93,7 @@ final class SpeechRecognizer {
   func stop() {
     guard isListening else { return }
     isListening = false
+    level = 0
     audioEngine.stop()
     audioEngine.inputNode.removeTap(onBus: 0)
     request?.endAudio()
@@ -123,7 +143,7 @@ final class SpeechRecognizer {
       input.removeTap(onBus: 0)
       input.installTap(
         onBus: 0, bufferSize: 1024, format: input.outputFormat(forBus: 0),
-        block: Self.tapBlock(for: next))
+        block: Self.tapBlock(for: next, owner: self))
       startTask(recognizer: recognizer, request: next)
     }
   }

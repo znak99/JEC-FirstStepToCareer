@@ -20,6 +20,7 @@ final class InterviewSessionModel {
   private(set) var notice: String?
 
   var transcript: String { recognizer.transcript }
+  var level: Float { recognizer.level }
   var canPause: Bool { phase == .speaking || phase == .listening }
 
   @ObservationIgnored private let api: APIClient
@@ -28,6 +29,7 @@ final class InterviewSessionModel {
   @ObservationIgnored private let recognizer = SpeechRecognizer()
   @ObservationIgnored private let tracker: FaceTracker?
   @ObservationIgnored private let baseline: FaceBaseline?
+  @ObservationIgnored private let frontCamera: FrontCamera?
   @ObservationIgnored private var gaze = DeductionCounts()
   @ObservationIgnored private var head = DeductionCounts()
   @ObservationIgnored private var listeningSince: Date?
@@ -44,10 +46,9 @@ final class InterviewSessionModel {
       ?? context.interview.questions[context.interview.questions.count - 1]
     tracker = context.tracker
     baseline = context.baseline
+    frontCamera = context.frontCamera
     self.api = api
   }
-
-  var questionNumberText: String { "質問 \(question.position) / \(interview.questionCount)" }
 
   func start() async {
     guard !started else { return }
@@ -55,7 +56,7 @@ final class InterviewSessionModel {
     do {
       try AudioSessionConfigurator.activate()
     } catch {
-      phase = .failed("音声を利用できませんでした。")
+      phase = .failed(String(localized: "音声を利用できませんでした。"))
       return
     }
     await ask(question)
@@ -82,7 +83,7 @@ final class InterviewSessionModel {
     do {
       try recognizer.start()
     } catch {
-      phase = .failed("音声認識を開始できませんでした。")
+      phase = .failed(String(localized: "音声認識を開始できませんでした。"))
       return
     }
     listeningSince = Date()
@@ -120,7 +121,7 @@ final class InterviewSessionModel {
     stopListening()
     let text = transcript.trimmingCharacters(in: .whitespacesAndNewlines)
     guard !text.isEmpty else {
-      notice = "回答を聞き取れませんでした。もう一度お話しください。"
+      notice = String(localized: "回答を聞き取れませんでした。もう一度お話しください。")
       beginListening(resetAnswer: false)
       return
     }
@@ -204,14 +205,16 @@ final class InterviewSessionModel {
     synthesizer.stop()
     stopListening()
     tracker?.stop()
+    frontCamera?.stop()
     AudioSessionConfigurator.deactivate()
   }
 
   static func message(for error: Error) -> String {
     switch error {
-    case APIError.server(_, "AI_DISABLED"): "現在、AI機能は停止中です。"
-    case APIError.network: "サーバーに接続できませんでした。通信環境を確認してください。"
-    default: "応答を取得できませんでした。もう一度お試しください。"
+    case APIError.server(_, "AI_DISABLED"): String(localized: "現在、AI機能は停止中です。")
+    case APIError.network:
+      String(localized: "サーバーに接続できませんでした。通信環境を確認してください。")
+    default: String(localized: "応答を取得できませんでした。もう一度お試しください。")
     }
   }
 }

@@ -7,13 +7,15 @@ import Synchronization
 // 영상은 화면에 보여 주기만 하고 저장하거나 보내지 않는다
 struct FaceCameraView: UIViewRepresentable {
   let session: ARSession
+  // 면접 진행 화면의 작은 내 화면처럼 영상만 보여 줄 때 false
+  var showsFaceOverlay = true
 
   func makeCoordinator() -> FaceOverlayRenderer { FaceOverlayRenderer() }
 
   func makeUIView(context: Context) -> ARSCNView {
     let view = ARSCNView()
     view.session = session
-    view.delegate = context.coordinator
+    if showsFaceOverlay { view.delegate = context.coordinator }
     view.automaticallyUpdatesLighting = false
     return view
   }

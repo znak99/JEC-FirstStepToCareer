@@ -161,10 +161,10 @@ final class PreparationModel {
     do {
       let interview = try await api.createInterview(draft.request(faceTracking: baseline != nil))
       ActiveInterviewStore().save(interview.id)
-      if baseline == nil { tracker?.stop() }
-      frontCamera?.stop()
+      // 카메라는 끄지 않고 면접 진행 화면의 작은 내 화면으로 넘긴다
       return InterviewSessionContext(
-        interview: interview, tracker: baseline == nil ? nil : tracker, baseline: baseline)
+        interview: interview, tracker: camera == .faceTracking ? tracker : nil, baseline: baseline,
+        frontCamera: camera == .mirror ? frontCamera : nil)
     } catch let error as APIError where error.code == "AI_DISABLED" {
       // 점검 뒤에 AI가 꺼진 경우. 점검 표시도 실패로 맞춰 다시 점검할 수 있게 한다
       server = .failed(Self.aiDisabled)
