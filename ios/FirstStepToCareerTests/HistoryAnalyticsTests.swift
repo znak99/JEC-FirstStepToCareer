@@ -107,6 +107,20 @@ struct HistoryAnalyticsTests {
     #expect(HistoryAnalytics.categoryScores(nil).isEmpty)
   }
 
+  @Test func groupsByMonthNewestFirst() {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = TimeZone(identifier: "UTC")!
+    // 11/4, 10/30, 10/2, 9/19
+    let list = Self.completed([
+      Self.summary("a", daysAgo: 2), Self.summary("b", daysAgo: 7),
+      Self.summary("c", daysAgo: 35), Self.summary("d", daysAgo: 48),
+    ])
+    let groups = HistoryAnalytics.monthGroups(list, calendar: calendar)
+    #expect(groups.map { $0.interviews.map(\.id) } == [["a"], ["b", "c"], ["d"]])
+    #expect(groups.map { calendar.component(.month, from: $0.month) } == [11, 10, 9])
+    #expect(HistoryAnalytics.monthGroups([], calendar: calendar).isEmpty)
+  }
+
   @Test func noStrengthsWhenAllEqualOrSingle() {
     let equal = [
       CategoryAverage(metric: .structure, value: 70), CategoryAverage(metric: .logic, value: 70),

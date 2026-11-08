@@ -114,6 +114,14 @@ struct HistorySummary: Equatable, Sendable {
   }
 }
 
+// 기록 화면에서 한 달에 끝난 면접들
+struct MonthGroup: Identifiable, Equatable, Sendable {
+  // 그 달의 첫날 0시
+  let month: Date
+  let interviews: [CompletedInterview]
+  var id: Date { month }
+}
+
 struct CategoryAverage: Identifiable, Equatable, Sendable {
   let metric: ScoreMetric
   let value: Double
@@ -156,6 +164,23 @@ enum HistoryAnalytics {
         CategoryAverage(metric: metric, value: $0)
       }
     }
+  }
+
+  // 최신순 목록을 달별로 묶는다. 묶음과 묶음 안의 순서는 그대로 둔다
+  static func monthGroups(_ interviews: [CompletedInterview], calendar: Calendar = .current)
+    -> [MonthGroup]
+  {
+    var groups: [MonthGroup] = []
+    for interview in interviews {
+      let month = calendar.dateInterval(of: .month, for: interview.date)?.start ?? interview.date
+      if let last = groups.last, last.month == month {
+        groups[groups.count - 1] = MonthGroup(
+          month: month, interviews: last.interviews + [interview])
+      } else {
+        groups.append(MonthGroup(month: month, interviews: [interview]))
+      }
+    }
+    return groups
   }
 
   // 면접 하나의 항목별 점수. 재지 않은 항목(시선·머리)은 뺀다

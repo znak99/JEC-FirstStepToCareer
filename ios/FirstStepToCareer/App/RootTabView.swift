@@ -23,7 +23,7 @@ struct RootTabView: View {
   private func screen(for tab: AppTab) -> some View {
     switch tab {
     case .interview: InterviewHomeView()
-    case .history: HistoryView()
+    case .history: HistoryView { selectedTab = .interview }
     case .menu: MenuView(onReset: onReset)
     }
   }

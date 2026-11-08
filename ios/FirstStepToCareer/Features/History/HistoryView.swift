@@ -5,7 +5,11 @@ enum HistoryRoute: Hashable {
   case result(String)
 }
 
+// 요약 카드와 달별 면접 목록 (SITE_MAP S-08, 시안 A)
 struct HistoryView: View {
+  // 기록이 없을 때 「面接を始める」를 누르면 면접 탭으로 옮긴다
+  var onStartInterview: () -> Void = {}
+
   @Environment(\.apiClient) private var api
   @State private var model: HistoryModel?
   @State private var path: [HistoryRoute] = []
@@ -19,6 +23,8 @@ struct HistoryView: View {
           ProgressView()
         }
       }
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
+      .background { OnboardingBackground() }
       .navigationTitle("記録")
       .navigationDestination(for: HistoryRoute.self) { route in
         switch route {
@@ -41,45 +47,107 @@ struct HistoryView: View {
   private func content(_ model: HistoryModel) -> some View {
     if !model.hasLoaded {
       if model.loadFailed {
-        ContentUnavailableView {
-          Label("サーバーに接続できませんでした。", systemImage: "wifi.exclamationmark")
-        } actions: {
-          Button("再試行") { Task { await model.load() } }
-        }
+        failure(model)
       } else {
         ProgressView()
       }
     } else if model.interviews.isEmpty {
-      ContentUnavailableView(
-        "まだ記録がありません", systemImage: "chart.xyaxis.line",
-        description: Text("面接を最後まで終えると、ここに記録が表示されます。")
-      )
-      .refreshable { await model.load() }
+      empty(model)
     } else {
-      // 요약 카드는 화면 높이의 약 1/3을 차지한다
-      GeometryReader { proxy in
-        List {
-          Section {
-            Button {
-              path.append(.analysis)
-            } label: {
-              SummaryCard(summary: model.summary)
-                .frame(height: proxy.size.height * 0.3)
-            }
-            .buttonStyle(.plain)
-            .listRowInsets(EdgeInsets())
-            .listRowBackground(Color.clear)
+      list(model)
+    }
+  }
+
+  private func failure(_ model: HistoryModel) -> some View {
+    VStack(spacing: 16) {
+      Image(systemName: "wifi.exclamationmark")
+        .font(.system(size: 40, weight: .light))
+        .foregroundStyle(TechPalette.negative)
+        .accessibilityHidden(true)
+      Text("サーバーに接続できませんでした。")
+        .font(.subheadline)
+        .multilineTextAlignment(.center)
+      Button("再試行") {
+        Task { await model.load() }
+      }
+      .buttonStyle(OnboardingButtonStyle())
+      .frame(maxWidth: 240)
+      .padding(.top, 4)
+    }
+    .padding(.horizontal, 32)
+  }
+
+  // 아래로 당겨 다시 불러올 수 있게 스크롤 안에 둔다
+  private func empty(_ model: HistoryModel) -> some View {
+    ScrollView {
+      VStack(spacing: 14) {
+        Image(systemName: "chart.xyaxis.line")
+          .font(.system(size: 44, weight: .light))
+          .foregroundStyle(TechPalette.accent)
+          .accessibilityHidden(true)
+        Text("まだ記録がありません").font(.headline)
+        Text("面接を最後まで終えると、ここに記録が表示されます。")
+          .font(.subheadline)
+          .foregroundStyle(.secondary)
+          .multilineTextAlignment(.center)
+        Button("面接を始める", action: onStartInterview)
+          .buttonStyle(OnboardingButtonStyle())
+          .frame(maxWidth: 240)
+          .padding(.top, 6)
+      }
+      .padding(.horizontal, 32)
+      .frame(maxWidth: .infinity)
+      .containerRelativeFrame(.vertical)
+    }
+    .refreshable { await model.load() }
+  }
+
+  private func list(_ model: HistoryModel) -> some View {
+    ScrollView {
+      VStack(alignment: .leading, spacing: 20) {
+        Button {
+          path.append(.analysis)
+        } label: {
+          SummaryCard(summary: model.summary)
+        }
+        .buttonStyle(.plain)
+        HStack(spacing: 10) {
+          Text(verbatim: "01")
+            .font(.caption.monospacedDigit().weight(.bold))
+            .foregroundStyle(TechPalette.accent)
+          Text("過去の面接").font(.headline)
+        }
+        .padding(.horizontal, 4)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isHeader)
+        ForEach(HistoryAnalytics.monthGroups(model.interviews)) { group in
+          monthSection(group)
+        }
+      }
+      .padding(.horizontal, 20)
+      .padding(.bottom, 24)
+    }
+    .refreshable { await model.load() }
+  }
+
+  private func monthSection(_ group: MonthGroup) -> some View {
+    VStack(alignment: .leading, spacing: 8) {
+      Text(group.month, format: .dateTime.year().month())
+        .font(.caption.weight(.semibold))
+        .foregroundStyle(.secondary)
+        .padding(.horizontal, 4)
+      VStack(spacing: 0) {
+        ForEach(group.interviews) { interview in
+          NavigationLink(value: HistoryRoute.result(interview.id)) {
+            InterviewRow(interview: interview)
           }
-          Section("過去の面接") {
-            ForEach(model.interviews) { interview in
-              NavigationLink(value: HistoryRoute.result(interview.id)) {
-                InterviewRow(interview: interview)
-              }
-            }
+          .buttonStyle(.plain)
+          if interview.id != group.interviews.last?.id {
+            Divider().padding(.leading, 16)
           }
         }
-        .refreshable { await model.load() }
       }
+      .background(TechCardBackground(showsBorder: false))
     }
   }
 }
@@ -88,25 +156,27 @@ private struct SummaryCard: View {
   let summary: HistorySummary
 
   var body: some View {
-    VStack(alignment: .leading, spacing: 10) {
+    VStack(alignment: .leading, spacing: 14) {
       HStack(alignment: .top, spacing: 16) {
-        ScoreGauge(value: summary.latest)
+        ScoreGauge(value: summary.latest).frame(width: 132)
         VStack(alignment: .leading, spacing: 6) {
           Text("最新の総合点").font(.subheadline.weight(.semibold))
           if let difference = summary.difference {
             DifferenceBadge(difference: difference)
           }
-          MiniTrendChart(points: summary.recentTotals)
+          MiniTrendChart(points: summary.recentTotals).frame(height: 80)
         }
       }
-      .frame(maxHeight: .infinity)
       HStack {
-        Text("直近\(summary.recentTotals.count)回の総合点・タップで分析を見る")
+        Label("分析を見る", systemImage: "chart.xyaxis.line")
         Spacer()
         Image(systemName: "chevron.right")
       }
-      .font(.caption)
-      .foregroundStyle(.secondary)
+      .font(.subheadline.weight(.semibold))
+      .foregroundStyle(TechPalette.accent)
+      .padding(.horizontal, 16)
+      .frame(minHeight: 44)
+      .background(Capsule().fill(TechPalette.accent.opacity(0.1)))
     }
     .padding(16)
     .background(TechCardBackground())
@@ -136,19 +206,61 @@ private struct InterviewRow: View {
   let interview: CompletedInterview
 
   var body: some View {
-    HStack {
-      VStack(alignment: .leading, spacing: 4) {
-        Text(interview.summary.companyName).font(.headline)
-        Text(
-          "\(interview.summary.jobTitle)・\(interview.date.formatted(date: .abbreviated, time: .omitted))"
-        )
-        .font(.caption)
-        .foregroundStyle(.secondary)
+    HStack(spacing: 12) {
+      VStack(alignment: .leading, spacing: 6) {
+        Text(interview.summary.companyName)
+          .font(.headline)
+          .lineLimit(1)
+        HStack(spacing: 6) {
+          LabelChip(text: interview.summary.interviewType.label)
+          LabelChip(text: interview.summary.hiringType.label)
+          Text(
+            verbatim:
+              "\(interview.summary.jobTitle)・\(interview.date.formatted(.dateTime.month().day()))"
+          )
+          .font(.caption)
+          .foregroundStyle(.secondary)
+          .lineLimit(1)
+        }
       }
-      Spacer()
-      Text(ScoreFormat.text(interview.scores?.total))
-        .font(.headline.monospacedDigit())
+      Spacer(minLength: 8)
+      score
+      Image(systemName: "chevron.right")
+        .font(.caption.weight(.semibold))
+        .foregroundStyle(.tertiary)
+        .accessibilityHidden(true)
     }
+    .padding(.horizontal, 16)
+    .padding(.vertical, 12)
+    .contentShape(Rectangle())
+  }
+
+  @ViewBuilder
+  private var score: some View {
+    if let total = interview.scores?.total {
+      HStack(alignment: .firstTextBaseline, spacing: 1) {
+        Text(verbatim: String(format: "%.1f", total))
+          .font(.title3.monospacedDigit().weight(.semibold))
+        Text("点").font(.caption)
+      }
+    } else {
+      Text("評価なし").font(.subheadline).foregroundStyle(.secondary)
+    }
+  }
+}
+
+private struct LabelChip: View {
+  let text: String
+
+  var body: some View {
+    Text(text)
+      .font(.caption2.weight(.semibold))
+      .foregroundStyle(TechPalette.accent)
+      .padding(.horizontal, 6)
+      .padding(.vertical, 2)
+      .background(Capsule().fill(TechPalette.accent.opacity(0.1)))
+      .lineLimit(1)
+      .fixedSize()
   }
 }
 
