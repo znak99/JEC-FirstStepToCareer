@@ -217,7 +217,7 @@ private struct SelfView: View {
       let shape = RoundedRectangle(cornerRadius: 14, style: .continuous)
       Group {
         if let tracker {
-          FaceCameraView(session: tracker.session, showsFaceOverlay: false)
+          TrackerPreview(tracker: tracker)
         } else if let frontCamera {
           FrontCameraView(session: frontCamera.session)
         }
@@ -228,6 +228,26 @@ private struct SelfView: View {
       .shadow(color: .black.opacity(0.25), radius: 8, y: 3)
       .accessibilityHidden(true)
     }
+  }
+}
+
+// Face ID iPhone의 작은 내 화면. ARKit 카메라는 화면 하나에만 연결할 수 있어서
+// 카메라 화면을 새로 연결하지 않고, 추적기가 줄여 둔 영상을 그림으로 보여 준다
+private struct TrackerPreview: View {
+  let tracker: FaceTracker
+
+  var body: some View {
+    ZStack {
+      Color.black
+      if let image = tracker.previewImage {
+        Image(decorative: image, scale: 1)
+          .resizable()
+          .scaledToFill()
+      }
+    }
+    .clipped()
+    .onAppear { tracker.isPreviewing = true }
+    .onDisappear { tracker.isPreviewing = false }
   }
 }
 
