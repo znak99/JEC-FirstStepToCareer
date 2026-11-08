@@ -40,7 +40,7 @@ final class InterviewResultModel {
       try await api.deleteInterview(id: interviewId)
       return true
     } catch {
-      state = .failed("削除できませんでした。もう一度お試しください。")
+      state = .failed(String(localized: "削除できませんでした。もう一度お試しください。"))
       return false
     }
   }
@@ -48,7 +48,7 @@ final class InterviewResultModel {
 
 enum ScoreFormat {
   static func text(_ value: Double?) -> String {
-    guard let value else { return "評価なし" }
-    return String(format: "%.1f点", value)
+    guard let value else { return String(localized: "評価なし") }
+    return String(localized: "\(String(format: "%.1f", value))点")
   }
 }

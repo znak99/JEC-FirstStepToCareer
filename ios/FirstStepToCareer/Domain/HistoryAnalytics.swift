@@ -158,6 +158,13 @@ enum HistoryAnalytics {
     }
   }
 
+  // 면접 하나의 항목별 점수. 재지 않은 항목(시선·머리)은 뺀다
+  static func categoryScores(_ scores: InterviewScores?) -> [CategoryAverage] {
+    ScoreMetric.categories.compactMap { metric in
+      metric.value(in: scores).map { CategoryAverage(metric: metric, value: $0) }
+    }
+  }
+
   // 항목이 둘 이상이고 평균이 모두 같지 않을 때만 강점·약점을 정한다
   static func strengths(_ averages: [CategoryAverage]) -> (
     strongest: ScoreMetric, weakest: ScoreMetric

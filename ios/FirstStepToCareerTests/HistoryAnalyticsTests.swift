@@ -97,6 +97,16 @@ struct HistoryAnalyticsTests {
     #expect(strengths?.strongest == .structure)
   }
 
+  @Test func categoryScoresOfOneInterviewSkipUnmeasured() {
+    let measured = InterviewScores(total: 86, structure: 84, logic: 80, gaze: 97, head: 84)
+    #expect(HistoryAnalytics.categoryScores(measured).map(\.metric) == ScoreMetric.categories)
+    let unmeasured = InterviewScores(total: 81, structure: 85, logic: 78, gaze: nil, head: nil)
+    let scores = HistoryAnalytics.categoryScores(unmeasured)
+    #expect(scores.map(\.metric) == [.structure, .logic])
+    #expect(scores.map(\.value) == [85, 78])
+    #expect(HistoryAnalytics.categoryScores(nil).isEmpty)
+  }
+
   @Test func noStrengthsWhenAllEqualOrSingle() {
     let equal = [
       CategoryAverage(metric: .structure, value: 70), CategoryAverage(metric: .logic, value: 70),
