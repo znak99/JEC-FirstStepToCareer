@@ -28,7 +28,10 @@ struct InterviewHomeView: View {
         .padding(.bottom, 24)
       }
       .scrollDismissesKeyboard(.interactively)
-      .refreshable { await refresh() }
+      .scanRefreshable {
+        await refresh()
+        return availability != .failed
+      }
       .safeAreaInset(edge: .bottom) {
         Button("面接を始める") { path.append(.preparation(form.draft)) }
           .buttonStyle(OnboardingButtonStyle())

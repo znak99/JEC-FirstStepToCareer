@@ -100,7 +100,10 @@ struct HistoryView: View {
       .frame(maxWidth: .infinity)
       .containerRelativeFrame(.vertical)
     }
-    .refreshable { await model.load() }
+    .scanRefreshable {
+      await model.load()
+      return !model.loadFailed
+    }
   }
 
   private func list(_ model: HistoryModel) -> some View {
@@ -128,7 +131,10 @@ struct HistoryView: View {
       .padding(.horizontal, 20)
       .padding(.bottom, 24)
     }
-    .refreshable { await model.load() }
+    .scanRefreshable {
+      await model.load()
+      return !model.loadFailed
+    }
   }
 
   private func monthSection(_ group: MonthGroup) -> some View {
