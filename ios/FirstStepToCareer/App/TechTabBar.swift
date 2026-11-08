@@ -78,16 +78,100 @@ struct TechTabBar: View {
 
   @ViewBuilder
   private func icon(_ tab: AppTab, isOn: Bool) -> some View {
-    let image = Image(systemName: tab.systemImage)
-      .font(.system(size: 19, weight: .medium))
-      .frame(width: 24, height: 22)
+    let icon = TabIcon(tab: tab).frame(width: 24, height: 22)
     if isOn {
-      image
+      icon
         .foregroundStyle(Self.selectedFill)
         .shadow(color: TechPalette.accent.opacity(0.7), radius: 4)
     } else {
-      image
+      icon
     }
+  }
+}
+
+// 탭 아이콘 (SITE_MAP 4절). 24×24 칸에 선으로 그리고, 점은 채운다
+// 面接: 네 모서리 괄호 안의 사람(얼굴 조준), 記録: 점을 이은 추이선, メニュー: 세 줄
+private struct TabIcon: View {
+  let tab: AppTab
+
+  var body: some View {
+    ZStack {
+      TabIconShape(tab: tab, part: .line)
+        .stroke(style: StrokeStyle(lineWidth: 1.8, lineCap: .round, lineJoin: .round))
+      TabIconShape(tab: tab, part: .dots)
+    }
+    .accessibilityHidden(true)
+  }
+}
+
+private struct TabIconShape: Shape {
+  enum Part {
+    case line
+    case dots
+  }
+
+  let tab: AppTab
+  let part: Part
+
+  func path(in rect: CGRect) -> Path {
+    var path = Path()
+    switch (tab, part) {
+    case (.interview, .line):
+      // 네 모서리 괄호
+      path.move(to: CGPoint(x: 3, y: 7.5))
+      path.addLine(to: CGPoint(x: 3, y: 4.5))
+      path.addQuadCurve(to: CGPoint(x: 4.5, y: 3), control: CGPoint(x: 3, y: 3))
+      path.addLine(to: CGPoint(x: 7.5, y: 3))
+      path.move(to: CGPoint(x: 16.5, y: 3))
+      path.addLine(to: CGPoint(x: 19.5, y: 3))
+      path.addQuadCurve(to: CGPoint(x: 21, y: 4.5), control: CGPoint(x: 21, y: 3))
+      path.addLine(to: CGPoint(x: 21, y: 7.5))
+      path.move(to: CGPoint(x: 21, y: 16.5))
+      path.addLine(to: CGPoint(x: 21, y: 19.5))
+      path.addQuadCurve(to: CGPoint(x: 19.5, y: 21), control: CGPoint(x: 21, y: 21))
+      path.addLine(to: CGPoint(x: 16.5, y: 21))
+      path.move(to: CGPoint(x: 7.5, y: 21))
+      path.addLine(to: CGPoint(x: 4.5, y: 21))
+      path.addQuadCurve(to: CGPoint(x: 3, y: 19.5), control: CGPoint(x: 3, y: 21))
+      path.addLine(to: CGPoint(x: 3, y: 16.5))
+      // 머리와 어깨
+      path.addEllipse(in: CGRect(x: 9, y: 7, width: 6, height: 6))
+      path.move(to: CGPoint(x: 7.3, y: 17.8))
+      path.addCurve(
+        to: CGPoint(x: 12, y: 14.2), control1: CGPoint(x: 8, y: 15.5),
+        control2: CGPoint(x: 9.8, y: 14.2))
+      path.addCurve(
+        to: CGPoint(x: 16.7, y: 17.8), control1: CGPoint(x: 14.2, y: 14.2),
+        control2: CGPoint(x: 16, y: 15.5))
+    case (.history, .line):
+      // 점선 바닥선과 추이선
+      for start in stride(from: 3.5, through: 19.5, by: 4) {
+        path.move(to: CGPoint(x: start, y: 20.5))
+        path.addLine(to: CGPoint(x: min(start + 1.5, 20.5), y: 20.5))
+      }
+      path.move(to: CGPoint(x: 4.5, y: 16))
+      path.addLine(to: CGPoint(x: 9.5, y: 10.8))
+      path.addLine(to: CGPoint(x: 13.5, y: 14))
+      path.addLine(to: CGPoint(x: 19.5, y: 7))
+    case (.history, .dots):
+      for (x, y, radius) in [(4.5, 16, 1.6), (9.5, 10.8, 1.6), (13.5, 14, 1.6), (19.5, 7, 2.0)] {
+        path.addEllipse(
+          in: CGRect(x: x - radius, y: y - radius, width: radius * 2, height: radius * 2))
+      }
+    case (.menu, .line):
+      for y in [7.0, 12.0, 17.0] {
+        path.move(to: CGPoint(x: 4, y: y))
+        path.addLine(to: CGPoint(x: 20, y: y))
+      }
+    case (.interview, .dots), (.menu, .dots):
+      break
+    }
+    // 24×24 칸을 주어진 크기에 맞춰 가운데에 둔다
+    let scale = min(rect.width, rect.height) / 24
+    let offset = CGPoint(
+      x: rect.minX + (rect.width - 24 * scale) / 2, y: rect.minY + (rect.height - 24 * scale) / 2)
+    return path.applying(
+      CGAffineTransform(translationX: offset.x, y: offset.y).scaledBy(x: scale, y: scale))
   }
 }
 
