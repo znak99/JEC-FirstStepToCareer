@@ -28,9 +28,7 @@ struct ProfileEditView: View {
         .padding(.horizontal, 24)
         .padding(.bottom, 12)
     }
-    .overlay {
-      if model?.isSaving == true { ProgressView().controlSize(.large) }
-    }
+    .loadingOverlay(model?.isSaving == true, message: "保存しています…")
     .navigationTitle("プロフィール")
     .navigationBarTitleDisplayMode(.inline)
     .profileChoiceDestinations($draft)

@@ -10,15 +10,19 @@ final class MenuModel {
     case failed
   }
 
-  enum Failure: Equatable {
+  // 진행 중인 작업과 실패한 작업을 나타낸다
+  enum Action: Equatable {
     case signIn
     case signOut
     case delete
   }
 
   private(set) var account = AccountState.loading
-  private(set) var isWorking = false
-  var failure: Failure?
+  // 진행 중인 작업. 처리 중 덮개의 문구를 고른다
+  private(set) var working: Action?
+  var failure: Action?
+
+  var isWorking: Bool { working != nil }
 
   private let api: APIClient
 
@@ -52,10 +56,10 @@ final class MenuModel {
   }
 
   @discardableResult
-  private func run(_ kind: Failure, _ work: () async throws -> Void) async -> Bool {
+  private func run(_ kind: Action, _ work: () async throws -> Void) async -> Bool {
     guard !isWorking else { return false }
-    isWorking = true
-    defer { isWorking = false }
+    working = kind
+    defer { working = nil }
     do {
       try await work()
       return true

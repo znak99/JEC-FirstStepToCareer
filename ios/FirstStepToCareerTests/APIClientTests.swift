@@ -166,6 +166,24 @@ struct APIClientTests {
     #expect(model.signInFailed)
   }
 
+  @MainActor @Test func menuDeleteFailureNamesTheAction() async {
+    StubURLProtocol.handler = { _ in
+      (500, Data(#"{"error":{"code":"INTERNAL","message":"x"}}"#.utf8))
+    }
+    let model = MenuModel(api: client)
+    #expect(await model.deleteAllData() == false)
+    #expect(model.failure == .delete)
+    #expect(model.working == nil)
+  }
+
+  @MainActor @Test func menuSignOutClearsWorkingWhenDone() async {
+    StubURLProtocol.handler = { _ in (204, Data()) }
+    let model = MenuModel(api: client)
+    #expect(await model.signOut())
+    #expect(model.failure == nil)
+    #expect(!model.isWorking)
+  }
+
   // 남은 면접 정리 테스트용. 요청을 "메서드 경로"로 기록하고 경로별로 응답한다
   private func cleaner(
     storedId: String?, routes: @escaping (String, String) -> (Int, String)

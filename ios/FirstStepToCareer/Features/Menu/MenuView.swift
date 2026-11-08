@@ -91,9 +91,7 @@ struct MenuView: View {
       .padding(.bottom, 24)
     }
     .disabled(model.isWorking)
-    .overlay {
-      if model.isWorking { ProgressView().controlSize(.large) }
-    }
+    .loadingOverlay(model.isWorking, message: workingMessage(model.working))
     .alert("すべてのデータを削除しますか？", isPresented: $confirmsDelete) {
       Button("削除する", role: .destructive) {
         Task { if await model.deleteAllData() { onReset() } }
@@ -187,7 +185,15 @@ struct MenuView: View {
     }
   }
 
-  private func failureTitle(_ failure: MenuModel.Failure?) -> LocalizedStringKey {
+  private func workingMessage(_ action: MenuModel.Action?) -> LocalizedStringKey {
+    switch action {
+    case .signIn: "ログインしています…"
+    case .signOut: "ログアウトしています…"
+    case .delete, nil: "削除しています…"
+    }
+  }
+
+  private func failureTitle(_ failure: MenuModel.Action?) -> LocalizedStringKey {
     switch failure {
     case .signIn: "ログインできませんでした"
     case .signOut: "ログアウトできませんでした"

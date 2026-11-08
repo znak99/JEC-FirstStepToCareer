@@ -37,9 +37,7 @@ struct ConsentView: View {
       .padding(.vertical, 14.4)
       .background(TechCardBackground(showsBorder: false))
     }
-    .overlay {
-      if model?.isSaving == true { ProgressView().controlSize(.large) }
-    }
+    .loadingOverlay(model?.isSaving == true, message: "保存しています…")
     .alert("保存できませんでした", isPresented: saveFailed) {
       Button("OK", role: .cancel) {}
     } message: {

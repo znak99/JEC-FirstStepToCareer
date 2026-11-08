@@ -15,6 +15,7 @@ struct StartView: View {
         content(model)
       }
     }
+    .loadingOverlay(model?.isSigningIn == true, message: "ログインしています…")
     .task { if model == nil { model = StartModel(api: api) } }
     .sheet(isPresented: $showsPrivacy) {
       NavigationStack {
@@ -50,9 +51,6 @@ struct StartView: View {
     .padding(.horizontal, 24)
     .padding(.bottom, 12)
     .disabled(model.isSigningIn)
-    .overlay {
-      if model.isSigningIn { ProgressView().controlSize(.large) }
-    }
     .alert("ログインできませんでした", isPresented: $model.signInFailed) {
       Button("OK", role: .cancel) {}
     } message: {
