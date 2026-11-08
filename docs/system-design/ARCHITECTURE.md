@@ -69,7 +69,7 @@ wrangler.jsonc               Workers·D1 설정
 | 레이어·모듈 | 책임 | 의존 가능 대상 |
 |---|---|---|
 | Features | 화면과 화면 상태 | Domain, Sensors, Data |
-| Sensors | 카메라 추적, STT, TTS | Domain |
+| Sensors | 카메라 추적(ARKit), 앞쪽 카메라 미리보기(AVFoundation), STT, TTS | Domain |
 | Data | API 호출, Keychain | Domain |
 | Domain | 모델과 계산 규칙 | 없음 |
 
