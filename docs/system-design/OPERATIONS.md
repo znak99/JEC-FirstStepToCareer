@@ -49,6 +49,8 @@
 
 스플래시 확인용 실행 인자 (개발 빌드에서만 읽음): `-splashLoop YES`는 스플래시를 무한 반복하고, `-splashDelay 초`는 준비를 일부러 늦춰 로딩 표시를 보여 준다. 공유 스킴(Xcode의 Edit Scheme > Run > Arguments)에 둘 다 꺼진 채로 들어 있어, 필요할 때 체크해서 쓴다. 시뮬레이터에서는 `xcrun simctl launch <기기> cloud.znak99.FirstStepToCareer -splashLoop YES`처럼 넘긴다.
 
+로딩 표시 확인용 실행 인자 (개발 빌드에서만 읽음): `-apiDelay 초`는 모든 서버 요청을 그만큼 늦춰 스켈레톤·처리 중 덮개·당겨서 새로고침 표시를 볼 수 있게 한다. 공유 스킴에 꺼진 채(`-apiDelay 3`)로 들어 있다. 스플래시의 서버 확인도 같이 늦어진다.
+
 시뮬레이터에서 질문 수를 바꿀 때: `xcrun simctl spawn <기기> defaults write cloud.znak99.FirstStepToCareer questionCount -int 3`
 
 ## 4. 배포

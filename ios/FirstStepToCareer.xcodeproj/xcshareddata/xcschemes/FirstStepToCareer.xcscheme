@@ -21,6 +21,7 @@
       <CommandLineArguments>
          <CommandLineArgument argument = "-splashLoop YES" isEnabled = "NO"></CommandLineArgument>
          <CommandLineArgument argument = "-splashDelay 2" isEnabled = "NO"></CommandLineArgument>
+         <CommandLineArgument argument = "-apiDelay 3" isEnabled = "NO"></CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
    <ProfileAction buildConfiguration = "Release" shouldUseLaunchSchemeArgsEnv = "YES" savedToolIdentifier = "" useCustomWorkingDirectory = "NO" debugDocumentVersioning = "YES">

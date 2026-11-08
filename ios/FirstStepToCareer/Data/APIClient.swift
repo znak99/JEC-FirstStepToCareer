@@ -143,6 +143,11 @@ struct APIClient: Sendable {
       request.httpBody = try JSONEncoder().encode(body)
     }
 
+    #if DEBUG
+      // -apiDelay 초: 로딩 표시를 확인하려고 응답을 일부러 늦춘다
+      let delay = UserDefaults.standard.double(forKey: "apiDelay")
+      if delay > 0 { try? await Task.sleep(for: .seconds(delay)) }
+    #endif
     let data: Data
     let response: URLResponse
     do {
