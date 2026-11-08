@@ -102,8 +102,7 @@ private struct ScanRefresh: ViewModifier {
       }
       withAnimation(.easeInOut(duration: 0.35)) { isRefreshing = false }
       guard succeeded, !reduceMotion else { return }
-      // 접히는 움직임이 끝난 뒤 빛을 보낸다
-      try? await Task.sleep(for: .milliseconds(350))
+      // 접히기 시작할 때 바로 빛을 보낸다
       waveStart = .now
     }
   }
@@ -200,7 +199,8 @@ private struct RefreshWave: View {
     let center = CGPoint(x: size.width / 2, y: 0)
     let band = size.height * Self.bandRatio
     let farthest = hypot(size.width / 2, size.height)
-    let radius = (farthest + band) * SplashEase.easeInOut(progress)
+    // 처음부터 빠르게 퍼지고 끝에서 천천히 사라진다
+    let radius = (farthest + band) * SplashEase.easeOut(progress)
     switch layer {
     case .light:
       context.fill(
