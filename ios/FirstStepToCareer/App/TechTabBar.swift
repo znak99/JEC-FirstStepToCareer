@@ -44,6 +44,9 @@ struct TechTabBar: View {
         )
         .opacity(Self.backgroundOpacity)
       }
+      // 그림자는 바탕에만 둔다. 탭바 전체에 주면 아이콘과 글씨에도 파란 그림자가 생긴다
+      .compositingGroup()
+      .shadow(color: TechPalette.accent.opacity(0.1), radius: 8)
     }
     .overlay {
       shape.strokeBorder(
@@ -51,7 +54,6 @@ struct TechTabBar: View {
           colors: [TechPalette.accent.opacity(0.7), TechPalette.accent.opacity(0.2)],
           startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 1)
     }
-    .shadow(color: TechPalette.accent.opacity(0.22), radius: 14)
     .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: selection)
   }
 
@@ -79,9 +81,7 @@ struct TechTabBar: View {
   private func icon(_ tab: AppTab, isOn: Bool) -> some View {
     let icon = TabIcon(tab: tab).frame(width: 30, height: 28)
     if isOn {
-      icon
-        .foregroundStyle(Self.selectedFill)
-        .shadow(color: TechPalette.accent.opacity(0.7), radius: 4)
+      icon.foregroundStyle(Self.selectedFill)
     } else {
       icon
     }
