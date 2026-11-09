@@ -33,16 +33,20 @@ final class PreparationViewModel {
   private(set) var camera: PreparationCamera?
   private(set) var isStarting = false
   private(set) var startError: String?
-  let tracker: FaceTracker? = FaceTracker.isSupported ? FaceTracker() : nil
+  // Face ID 카메라를 지원하는 iPhone에서만 있다
+  let tracker: (any FaceTrackingPreview)?
   // Face ID 카메라가 없는 iPhone에서 거울처럼 보여 줄 앞쪽 카메라
-  let frontCamera: FrontCamera? =
-    !FaceTracker.isSupported && FrontCamera.isAvailable ? FrontCamera() : nil
+  let frontCamera: (any FrontCameraPreview)?
 
   private let api: APIClient
+  private let devices: any InterviewDevices
 
-  init(draft: InterviewDraft, api: APIClient) {
+  init(draft: InterviewDraft, api: APIClient, devices: any InterviewDevices) {
     self.draft = draft
     self.api = api
+    self.devices = devices
+    tracker = devices.makeFaceTracker()
+    frontCamera = tracker == nil ? devices.makeFrontCamera() : nil
   }
 
   var requiredChecksPassed: Bool {
@@ -94,7 +98,7 @@ final class PreparationViewModel {
 
   private func checkRequired() async {
     speech =
-      SpeechSynthesizer.isAvailable
+      devices.capabilities.hasJapaneseVoice
       ? .passed : .failed(String(localized: "日本語の読み上げ音声を利用できません。"))
     recognition = .checking
     server = .checking
@@ -105,10 +109,10 @@ final class PreparationViewModel {
   }
 
   private func checkRecognition() async -> CheckState {
-    guard await SpeechRecognizer.requestAuthorization() else {
+    guard await devices.capabilities.requestSpeechAccess() else {
       return .failed(String(localized: "マイクと音声認識の許可が必要です。設定アプリで許可してください。"))
     }
-    return SpeechRecognizer().isAvailable
+    return devices.makeSpeechRecognizer().isAvailable
       ? .passed : .failed(String(localized: "日本語の音声認識を利用できません。"))
   }
 
@@ -122,11 +126,11 @@ final class PreparationViewModel {
 
   private func prepareCamera() async {
     let trackingSupported = tracker != nil
-    let hasFrontCamera = FrontCamera.isAvailable
+    let hasFrontCamera = devices.capabilities.hasFrontCamera
     let granted =
       PreparationCamera.needsAccess(
         trackingSupported: trackingSupported, hasFrontCamera: hasFrontCamera)
-      ? await FaceTracker.requestCameraAccess() : false
+      ? await devices.capabilities.requestCameraAccess() : false
     let mode = PreparationCamera.of(
       trackingSupported: trackingSupported, hasFrontCamera: hasFrontCamera, accessGranted: granted)
     camera = mode

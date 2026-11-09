@@ -7,6 +7,7 @@ struct InterviewSessionView: View {
   let onQuit: () -> Void
 
   @Environment(\.apiClient) private var api
+  @Environment(\.interviewDevices) private var devices
   @Environment(\.scenePhase) private var scenePhase
   @State private var model: InterviewSessionViewModel?
   @State private var confirmingQuit = false
@@ -49,7 +50,8 @@ struct InterviewSessionView: View {
     }
     .task {
       if model == nil {
-        let created = InterviewSessionViewModel(context: context, api: api)
+        guard let devices else { return }
+        let created = InterviewSessionViewModel(context: context, api: api, devices: devices)
         model = created
         await created.start()
       }
@@ -215,8 +217,8 @@ private struct QuestionProgress: View {
 // 오른쪽 위 작은 내 화면. 카메라를 쓸 수 없으면 보이지 않는다.
 // 영상은 화면에 보여 주기만 하고 저장하거나 보내지 않는다
 private struct SelfView: View {
-  let tracker: FaceTracker?
-  let frontCamera: FrontCamera?
+  let tracker: (any FaceTrackingPreview)?
+  let frontCamera: (any FrontCameraPreview)?
 
   var body: some View {
     if tracker != nil || frontCamera != nil {
@@ -240,7 +242,7 @@ private struct SelfView: View {
 // Face ID iPhone의 작은 내 화면. ARKit 카메라는 화면 하나에만 연결할 수 있어서
 // 카메라 화면을 새로 연결하지 않고, 추적기가 줄여 둔 영상을 그림으로 보여 준다
 private struct TrackerPreview: View {
-  let tracker: FaceTracker
+  let tracker: any FaceTrackingPreview
 
   var body: some View {
     ZStack {

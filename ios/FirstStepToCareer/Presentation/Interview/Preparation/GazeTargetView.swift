@@ -2,7 +2,7 @@ import SwiftUI
 
 // 시선과 머리가 기준점에서 몇 도 벗어났는지 과녁 모양으로 보여 준다. 원은 감점 기준 각도다
 struct GazeTargetView: View {
-  let tracker: FaceTracker
+  let tracker: any FaceTracking
   let baseline: FaceBaseline?
 
   var body: some View {

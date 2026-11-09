@@ -12,14 +12,14 @@ enum InterviewRoute: Hashable {
 final class InterviewSessionContext: Hashable {
   let interview: InterviewDetail
   // Face ID 카메라를 쓸 때. 기준점이 없으면 작은 내 화면에 보여 주기만 하고 재지 않는다
-  let tracker: FaceTracker?
+  let tracker: (any FaceTrackingPreview)?
   let baseline: FaceBaseline?
   // Face ID 카메라가 없는 iPhone에서 작은 내 화면에 보여 줄 앞쪽 카메라
-  let frontCamera: FrontCamera?
+  let frontCamera: (any FrontCameraPreview)?
 
   init(
-    interview: InterviewDetail, tracker: FaceTracker?, baseline: FaceBaseline?,
-    frontCamera: FrontCamera?
+    interview: InterviewDetail, tracker: (any FaceTrackingPreview)?, baseline: FaceBaseline?,
+    frontCamera: (any FrontCameraPreview)?
   ) {
     self.interview = interview
     self.tracker = tracker

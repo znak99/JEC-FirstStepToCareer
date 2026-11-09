@@ -25,11 +25,12 @@ final class InterviewSessionViewModel {
 
   @ObservationIgnored private let api: APIClient
   @ObservationIgnored private let activeStore = ActiveInterviewStore()
-  @ObservationIgnored private let synthesizer = SpeechSynthesizer()
-  @ObservationIgnored private let recognizer = SpeechRecognizer()
-  @ObservationIgnored private let tracker: FaceTracker?
+  @ObservationIgnored private let synthesizer: any SpeechSynthesizing
+  @ObservationIgnored private let recognizer: any SpeechRecognizing
+  @ObservationIgnored private let audioSession: any AudioSessionControlling
+  @ObservationIgnored private let tracker: (any FaceTracking)?
   @ObservationIgnored private let baseline: FaceBaseline?
-  @ObservationIgnored private let frontCamera: FrontCamera?
+  @ObservationIgnored private let frontCamera: (any FrontCameraCapturing)?
   @ObservationIgnored private var gaze = DeductionCounts()
   @ObservationIgnored private var head = DeductionCounts()
   @ObservationIgnored private var listeningSince: Date?
@@ -39,7 +40,7 @@ final class InterviewSessionViewModel {
   @ObservationIgnored private var pendingSubmission: AnswerSubmission?
   @ObservationIgnored private var started = false
 
-  init(context: InterviewSessionContext, api: APIClient) {
+  init(context: InterviewSessionContext, api: APIClient, devices: any InterviewDevices) {
     interview = context.interview
     question =
       context.interview.questions.last(where: { $0.answer == nil })
@@ -48,13 +49,16 @@ final class InterviewSessionViewModel {
     baseline = context.baseline
     frontCamera = context.frontCamera
     self.api = api
+    synthesizer = devices.makeSpeechSynthesizer()
+    recognizer = devices.makeSpeechRecognizer()
+    audioSession = devices.audioSession
   }
 
   func start() async {
     guard !started else { return }
     started = true
     do {
-      try AudioSessionConfigurator.activate()
+      try audioSession.activate()
     } catch {
       phase = .failed(String(localized: "音声を利用できませんでした。"))
       return
@@ -206,6 +210,6 @@ final class InterviewSessionViewModel {
     stopListening()
     tracker?.stop()
     frontCamera?.stop()
-    AudioSessionConfigurator.deactivate()
+    audioSession.deactivate()
   }
 }
