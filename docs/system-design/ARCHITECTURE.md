@@ -53,7 +53,7 @@ ios/
     Presentation/              화면(View)과 화면 상태(ViewModel). 기능별 폴더
       Root/                    앱 시작 흐름(스플래시·온보딩·탭 전환)과 하단 탭바
       Common/                  여러 화면이 함께 쓰는 부품. Design: 색·바탕·큰 버튼·움직임 곡선, Charts: 점수 그래프
-    Domain/                    Entities: 형식, Rules: 계산·판단 규칙, Repositories: 서버·이 iPhone 저장값의 약속(프로토콜), Devices: 카메라·음성·권한·로그인 일회용 값의 약속
+    Domain/                    Entities: 형식, Rules: 계산·판단 규칙, Repositories: 서버·이 iPhone 저장값의 약속(프로토콜), Devices: 카메라·음성·권한·로그인 일회용 값의 약속, UseCases: 서버·저장값을 쓰는 한 가지 일(26개)
     Data/                      Network: 서버 호출과 서버 JSON 형식(DTO), Local: 이 iPhone 저장값, Repositories·Sensors·Auth: 약속의 실제 구현(서버·저장값, 카메라·음성, 로그인 일회용 값)
   FirstStepToCareerTests/      앱 테스트
   Config/                      xcconfig. Local.xcconfig는 커밋하지 않음
@@ -78,7 +78,7 @@ MVVM + Clean 아키텍처를 따른다. 화면은 그리기만 하고(View), 화
 |---|---|---|
 | App | 앱 시작. Data의 실제 부품을 만들어 ViewModel에 넘긴다(조립). 실제 카메라 부품이 화면 쪽 미리보기 약속도 따르게 잇는다 | 모두 |
 | Presentation | View(그리기)와 ViewModel(화면 상태·판단). 카메라 영상을 화면에 그리는 데 필요한 미리보기 약속(`FaceTrackingPreview`, `FrontCameraPreview`)과 기기 부품을 만드는 약속(`InterviewDevices`)도 여기 둔다 | Domain |
-| Domain | Entities(형식. JSON을 모른다), Rules(계산·판단 규칙), 저장소·기기 약속(프로토콜), UseCase(서버·저장값을 쓰는 한 가지 일) | 없음 |
+| Domain | Entities(형식. JSON을 모른다), Rules(계산·판단 규칙), 저장소·기기 약속(프로토콜), 저장소 오류 중 구분할 종류(`RepositoryError`: 거절·AI 꺼짐·연결 실패), UseCase(서버·저장값을 쓰는 한 가지 일) | 없음 |
 | Data | Network(서버 호출, 서버 JSON 그대로의 형식인 DTO와 Domain 형식으로의 변환, Keychain의 기기 토큰), Local(이 iPhone 저장값), Sensors(카메라 추적 ARKit, 앞쪽 카메라 AVFoundation, STT와 마이크 소리 크기, TTS). Domain 약속의 실제 구현 | Domain |
 
 전환 중 (2026-11-09~, TASK.md): 위 구조로 옮기는 동안 Presentation이 Data의 서버 호출(`APIClient`)·저장값·센서를 직접 쓰는 곳이 남아 있다. 약속과 UseCase를 만든 뒤 모두 없앤다.

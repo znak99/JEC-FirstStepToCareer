@@ -15,6 +15,15 @@ enum APIError: Error, Equatable {
   var isAIDisabled: Bool { code == "AI_DISABLED" }
 }
 
+extension APIError: RepositoryError {
+  var isRejected: Bool {
+    if case .server(let status, _) = self { return (400..<500).contains(status) }
+    return false
+  }
+
+  var isConnectionFailure: Bool { self == .network }
+}
+
 struct APIClient: Sendable {
   let baseURL: URL
   let tokenStore: DeviceTokenStore
