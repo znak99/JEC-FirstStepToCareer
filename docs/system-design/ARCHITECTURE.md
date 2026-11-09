@@ -53,8 +53,8 @@ ios/
     Presentation/              화면(View)과 화면 상태(ViewModel). 기능별 폴더
       Root/                    앱 시작 흐름(스플래시·온보딩·탭 전환)과 하단 탭바
       Common/                  여러 화면이 함께 쓰는 부품. Design: 색·바탕·큰 버튼·움직임 곡선, Charts: 점수 그래프
-    Domain/                    Entities: 형식, Rules: 계산·판단 규칙
-    Data/                      Network: 서버 호출과 서버 JSON 형식(DTO), Local: 이 iPhone 저장값, Sensors: 카메라·음성
+    Domain/                    Entities: 형식, Rules: 계산·판단 규칙, Repositories: 서버·이 iPhone 저장값의 약속(프로토콜)
+    Data/                      Network: 서버 호출과 서버 JSON 형식(DTO), Local: 이 iPhone 저장값, Repositories: 약속의 실제 구현, Sensors: 카메라·음성
   FirstStepToCareerTests/      앱 테스트
   Config/                      xcconfig. Local.xcconfig는 커밋하지 않음
 docs/                          프로젝트 문서

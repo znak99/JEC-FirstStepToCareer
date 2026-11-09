@@ -2,8 +2,8 @@ import Foundation
 
 // 기기에 저장하는 앱 설정. 메뉴 화면에서 바꾼다
 enum AppSettings {
-  static let questionCountRange = 3...7
-  static let defaultQuestionCount = 5
+  static let questionCountRange = InterviewDraft.questionCountRange
+  static let defaultQuestionCount = InterviewDraft.defaultQuestionCount
   private static let questionCountKey = "questionCount"
   private static let hasStartedKey = "hasStarted"
   private static let agreedVersionsKey = "agreedDocumentVersions"

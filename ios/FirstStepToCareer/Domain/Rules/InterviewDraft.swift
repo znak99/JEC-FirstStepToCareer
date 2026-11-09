@@ -4,19 +4,22 @@ import Foundation
 struct InterviewDraft: Hashable, Sendable {
   static let companyNameLimit = 100
   static let choiceLimit = 50
+  // 질문 수. 서버가 받는 범위(ARCHITECTURE.md 5절)와 처음 고른 값
+  static let questionCountRange = 3...7
+  static let defaultQuestionCount = 5
 
   var companyName = ""
   var industry = ""
   var jobTitle = ""
   var interviewType = InterviewType.hr
   var hiringType = HiringType.newGrad
-  var questionCount = AppSettings.defaultQuestionCount
+  var questionCount = Self.defaultQuestionCount
 
   var isValid: Bool {
     Self.isFilled(companyName, limit: Self.companyNameLimit)
       && Self.isFilled(industry, limit: Self.choiceLimit)
       && Self.isFilled(jobTitle, limit: Self.choiceLimit)
-      && AppSettings.questionCountRange.contains(questionCount)
+      && Self.questionCountRange.contains(questionCount)
   }
 
   func request(faceTracking: Bool) -> NewInterview {
