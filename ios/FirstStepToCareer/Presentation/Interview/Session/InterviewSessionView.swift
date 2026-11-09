@@ -6,7 +6,7 @@ struct InterviewSessionView: View {
   let onFinished: (String) -> Void
   let onQuit: () -> Void
 
-  @Environment(\.apiClient) private var api
+  @Environment(\.useCases) private var useCases
   @Environment(\.interviewDevices) private var devices
   @Environment(\.scenePhase) private var scenePhase
   @State private var model: InterviewSessionViewModel?
@@ -50,8 +50,9 @@ struct InterviewSessionView: View {
     }
     .task {
       if model == nil {
-        guard let devices else { return }
-        let created = InterviewSessionViewModel(context: context, api: api, devices: devices)
+        guard let useCases, let devices else { return }
+        let created = InterviewSessionViewModel(
+          context: context, useCases: useCases, devices: devices)
         model = created
         await created.start()
       }

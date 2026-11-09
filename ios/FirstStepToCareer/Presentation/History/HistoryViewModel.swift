@@ -9,10 +9,10 @@ final class HistoryViewModel {
   private(set) var isLoading = false
   private(set) var loadFailed = false
 
-  private let api: APIClient
+  private let loadCompletedInterviews: LoadCompletedInterviewsUseCase
 
-  init(api: APIClient) {
-    self.api = api
+  init(loadCompletedInterviews: LoadCompletedInterviewsUseCase) {
+    self.loadCompletedInterviews = loadCompletedInterviews
   }
 
   var summary: HistorySummary { HistorySummary(interviews: interviews) }
@@ -23,7 +23,7 @@ final class HistoryViewModel {
     isLoading = true
     defer { isLoading = false }
     do {
-      interviews = CompletedInterview.list(from: try await api.allInterviews())
+      interviews = try await loadCompletedInterviews.execute()
       loadFailed = false
       hasLoaded = true
     } catch {

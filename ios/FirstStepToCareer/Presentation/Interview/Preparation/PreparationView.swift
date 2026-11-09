@@ -5,7 +5,7 @@ struct PreparationView: View {
   let draft: InterviewDraft
   let onStart: (InterviewSessionContext) -> Void
 
-  @Environment(\.apiClient) private var api
+  @Environment(\.useCases) private var useCases
   @Environment(\.interviewDevices) private var devices
   @Environment(\.openURL) private var openURL
   @State private var model: PreparationViewModel?
@@ -22,8 +22,8 @@ struct PreparationView: View {
     .toolbarColorScheme(.dark, for: .navigationBar)
     .hidesTabBar()
     .task {
-      if model == nil, let devices {
-        let created = PreparationViewModel(draft: draft, api: api, devices: devices)
+      if model == nil, let useCases, let devices {
+        let created = PreparationViewModel(draft: draft, useCases: useCases, devices: devices)
         model = created
         await created.runChecks()
       }

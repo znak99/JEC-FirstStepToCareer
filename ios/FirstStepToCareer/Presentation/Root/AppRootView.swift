@@ -3,9 +3,11 @@ import SwiftUI
 // 앱을 켜면 스플래시를 먼저 보여 준다. 그 아래에는 처음이면 온보딩(동의 → 시작 → 정보 입력)을,
 // 그 뒤에는 탭 화면을 둔다. 어느 화면을 보여 줄지는 AppStage가 정한다
 struct AppRootView: View {
+  private let useCases: UseCases
   @State private var model: AppRootViewModel
 
   init(useCases: UseCases) {
+    self.useCases = useCases
     _model = State(initialValue: AppRootViewModel(useCases))
   }
 
@@ -29,7 +31,7 @@ struct AppRootView: View {
             .transition(.opacity)
         case .tabs:
           // 로그아웃·데이터 삭제 뒤에는 탭 화면을 버리고 다시 만들어 이전 계정의 화면 상태를 지운다
-          RootTabView { model.reset() }
+          RootTabView(useCases: useCases) { model.reset() }
             .transition(.opacity)
             .sheet(isPresented: asksAgreement) {
               // 동의해야만 닫힌다. 동의 기록은 이 모달에서 바로 서버에 남긴다

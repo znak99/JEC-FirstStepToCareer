@@ -5,7 +5,7 @@ struct InterviewResultView: View {
   let interviewId: String
   let onDeleted: () -> Void
 
-  @Environment(\.apiClient) private var api
+  @Environment(\.useCases) private var useCases
   @State private var model: InterviewResultViewModel?
   @State private var confirmingDelete = false
   @State private var selectedQuestion = 0
@@ -32,8 +32,8 @@ struct InterviewResultView: View {
     .navigationTitle("面接結果")
     .navigationBarTitleDisplayMode(.inline)
     .task {
-      if model == nil {
-        let created = InterviewResultViewModel(interviewId: interviewId, api: api)
+      if model == nil, let useCases {
+        let created = InterviewResultViewModel(interviewId: interviewId, useCases: useCases)
         model = created
         await created.load()
       }

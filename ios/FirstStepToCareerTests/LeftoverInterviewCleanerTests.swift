@@ -3,14 +3,28 @@ import Testing
 
 @testable import FirstStepToCareer
 
+// 남은 면접 정리 UseCase를 실제 저장소와 가짜 서버로 확인한다
+private struct Cleaner {
+  let unfinished: DeleteUnfinishedInterviewUseCase
+  let pending: EvaluatePendingInterviewsUseCase
+
+  func deleteUnfinished() async { await unfinished.execute() }
+  func evaluatePending() async { await pending.execute() }
+}
+
 // StubURLProtocol을 함께 쓰므로 APIClientTests(.serialized) 안에서 돈다
 extension APIClientTests {
   private func cleaner(
     storedId: String?, routes: @escaping (String, String) -> (Int, String)
-  ) throws -> (LeftoverInterviewCleaner, ActiveInterviewStore, Recorder) {
+  ) throws -> (Cleaner, ActiveInterviewStore, Recorder) {
     let store = try activeStore(storedId: storedId)
     let recorder = stubRoutes(routes)
-    return (LeftoverInterviewCleaner(api: client, store: store), store, recorder)
+    let interviews = APIInterviewRepository(api: client)
+    let cleaner = Cleaner(
+      unfinished: DeleteUnfinishedInterviewUseCase(interviews: interviews, activeInterview: store),
+      pending: EvaluatePendingInterviewsUseCase(
+        status: APIServiceStatusRepository(api: client), interviews: interviews))
+    return (cleaner, store, recorder)
   }
 
   @Test func deletesUnfinishedInterviewStartedOnThisDevice() async throws {

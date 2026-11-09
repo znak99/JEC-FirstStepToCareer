@@ -1,3 +1,5 @@
+import ARKit
+import AVFoundation
 import Foundation
 
 @testable import FirstStepToCareer
@@ -170,7 +172,7 @@ struct FakeNonces: SignInNonceGenerating {
 }
 
 @MainActor
-final class FakeFaceTracker: FaceTracking {
+class FakeFaceTracker: FaceTracking {
   var currentSample: FaceSample?
   var samples: [FaceSample?] = []
   var calls: [String] = []
@@ -182,6 +184,98 @@ final class FakeFaceTracker: FaceTracking {
     calls.append("collect \(Int(duration))")
     return samples
   }
+}
+
+// 화면 쪽 미리보기 약속도 따르는 얼굴 추적기. 세션은 만들기만 하고 켜지 않는다
+@MainActor
+final class FakePreviewTracker: FakeFaceTracker, FaceTrackingPreview {
+  let session = ARSession()
+  var previewImage: CGImage?
+  var isPreviewing = false
+}
+
+final class FakeFrontCamera: FrontCameraPreview, @unchecked Sendable {
+  let session = AVCaptureSession()
+  var calls: [String] = []
+
+  func start() { calls.append("start") }
+  func stop() { calls.append("stop") }
+}
+
+@MainActor
+final class FakeSpeechRecognizer: SpeechRecognizing {
+  var transcript = ""
+  var isListening = false
+  var level: Float = 0
+  var isAvailable = true
+  var failsToStart = false
+  var calls: [String] = []
+
+  func reset() {
+    calls.append("reset")
+    transcript = ""
+  }
+
+  func start() throws {
+    calls.append("start")
+    if failsToStart { throw FakeError.other }
+    isListening = true
+  }
+
+  func stop() {
+    calls.append("stop")
+    isListening = false
+  }
+}
+
+@MainActor
+final class FakeSpeechSynthesizer: SpeechSynthesizing {
+  var spoken: [String] = []
+  var stops = 0
+
+  func speak(_ text: String) async { spoken.append(text) }
+  func stop() { stops += 1 }
+}
+
+final class FakeAudioSession: AudioSessionControlling, @unchecked Sendable {
+  var calls: [String] = []
+  var fails = false
+
+  func activate() throws {
+    calls.append("activate")
+    if fails { throw FakeError.other }
+  }
+
+  func deactivate() { calls.append("deactivate") }
+}
+
+@MainActor
+final class FakeDeviceCapabilities: DeviceCapabilities {
+  var hasFrontCamera = false
+  var hasJapaneseVoice = true
+  var cameraAllowed = true
+  var speechAllowed = true
+
+  func requestCameraAccess() async -> Bool { cameraAllowed }
+  func requestSpeechAccess() async -> Bool { speechAllowed }
+}
+
+// 기기 부품을 모두 가짜로 만든다. 카메라는 넣어 준 것만 돌려준다
+@MainActor
+final class FakeInterviewDevices: InterviewDevices {
+  let caps = FakeDeviceCapabilities()
+  let audio = FakeAudioSession()
+  let recognizer = FakeSpeechRecognizer()
+  let synthesizer = FakeSpeechSynthesizer()
+  var faceTracker: FakePreviewTracker?
+  var frontCamera: FakeFrontCamera?
+
+  var capabilities: any DeviceCapabilities { caps }
+  var audioSession: any AudioSessionControlling { audio }
+  func makeFaceTracker() -> (any FaceTrackingPreview)? { faceTracker }
+  func makeFrontCamera() -> (any FrontCameraPreview)? { frontCamera }
+  func makeSpeechRecognizer() -> any SpeechRecognizing { recognizer }
+  func makeSpeechSynthesizer() -> any SpeechSynthesizing { synthesizer }
 }
 
 enum FakeData {

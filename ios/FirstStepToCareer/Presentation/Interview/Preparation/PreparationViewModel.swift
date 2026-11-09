@@ -22,7 +22,7 @@ final class PreparationViewModel {
   private static let unstableFace = String(
     localized: "顔を安定して認識できなかったため、視線・頭の動きは評価されません。")
   // 기준점을 잡을 때 화면을 바라보는 시간(초). 준비 화면의 차오르는 고리도 이 시간을 쓴다
-  static let calibrationSeconds: TimeInterval = 3
+  static let calibrationSeconds = CalibrateFaceUseCase.seconds
 
   let draft: InterviewDraft
   private(set) var speech = CheckState.checking
@@ -38,12 +38,20 @@ final class PreparationViewModel {
   // Face ID 카메라가 없는 iPhone에서 거울처럼 보여 줄 앞쪽 카메라
   let frontCamera: (any FrontCameraPreview)?
 
-  private let api: APIClient
+  private let checkServiceStatus: CheckServiceStatusUseCase
+  private let calibrateFace: CalibrateFaceUseCase
+  private let startInterview: StartInterviewUseCase
   private let devices: any InterviewDevices
 
-  init(draft: InterviewDraft, api: APIClient, devices: any InterviewDevices) {
+  init(
+    draft: InterviewDraft, checkServiceStatus: CheckServiceStatusUseCase,
+    calibrateFace: CalibrateFaceUseCase, startInterview: StartInterviewUseCase,
+    devices: any InterviewDevices
+  ) {
     self.draft = draft
-    self.api = api
+    self.checkServiceStatus = checkServiceStatus
+    self.calibrateFace = calibrateFace
+    self.startInterview = startInterview
     self.devices = devices
     tracker = devices.makeFaceTracker()
     frontCamera = tracker == nil ? devices.makeFrontCamera() : nil
@@ -118,7 +126,7 @@ final class PreparationViewModel {
 
   private func checkServer() async -> CheckState {
     do {
-      return try await api.status().aiEnabled ? .passed : .failed(ErrorMessage.aiDisabled)
+      return try await checkServiceStatus.execute() ? .passed : .failed(ErrorMessage.aiDisabled)
     } catch {
       return .failed(String(localized: "サーバーに接続できませんでした。"))
     }
@@ -149,8 +157,7 @@ final class PreparationViewModel {
   func calibrate() async {
     guard let tracker, canCalibrate else { return }
     face = .calibrating
-    let samples = await tracker.collectSamples(duration: Self.calibrationSeconds)
-    if let baseline = FaceBaseline.make(from: samples) {
+    if let baseline = await calibrateFace.execute(with: tracker) {
       face = .calibrated(baseline)
     } else {
       face = .skipped(Self.unstableFace)
@@ -164,13 +171,12 @@ final class PreparationViewModel {
     defer { isStarting = false }
     let baseline = baseline
     do {
-      let interview = try await api.createInterview(draft.request(faceTracking: baseline != nil))
-      ActiveInterviewStore().save(interview.id)
+      let interview = try await startInterview.execute(draft, faceTracking: baseline != nil)
       // 카메라는 끄지 않고 면접 진행 화면의 작은 내 화면으로 넘긴다
       return InterviewSessionContext(
         interview: interview, tracker: camera == .faceTracking ? tracker : nil, baseline: baseline,
         frontCamera: camera == .mirror ? frontCamera : nil)
-    } catch let error as APIError where error.isAIDisabled {
+    } catch let error as any RepositoryError where error.isAIDisabled {
       // 점검 뒤에 AI가 꺼진 경우. 점검 표시도 실패로 맞춰 다시 점검할 수 있게 한다
       server = .failed(ErrorMessage.aiDisabled)
     } catch {
@@ -182,5 +188,14 @@ final class PreparationViewModel {
   func leave() {
     tracker?.stop()
     frontCamera?.stop()
+  }
+}
+
+extension PreparationViewModel {
+  convenience init(draft: InterviewDraft, useCases: UseCases, devices: any InterviewDevices) {
+    self.init(
+      draft: draft, checkServiceStatus: useCases.checkServiceStatus,
+      calibrateFace: useCases.calibrateFace, startInterview: useCases.startInterview,
+      devices: devices)
   }
 }

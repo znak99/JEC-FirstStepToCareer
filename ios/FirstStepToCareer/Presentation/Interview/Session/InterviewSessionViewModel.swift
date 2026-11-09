@@ -23,8 +23,8 @@ final class InterviewSessionViewModel {
   var level: Float { recognizer.level }
   var canPause: Bool { phase == .speaking || phase == .listening }
 
-  @ObservationIgnored private let api: APIClient
-  @ObservationIgnored private let activeStore = ActiveInterviewStore()
+  @ObservationIgnored private let submitAnswer: SubmitAnswerUseCase
+  @ObservationIgnored private let quitInterview: QuitInterviewUseCase
   @ObservationIgnored private let synthesizer: any SpeechSynthesizing
   @ObservationIgnored private let recognizer: any SpeechRecognizing
   @ObservationIgnored private let audioSession: any AudioSessionControlling
@@ -40,7 +40,10 @@ final class InterviewSessionViewModel {
   @ObservationIgnored private var pendingSubmission: AnswerSubmission?
   @ObservationIgnored private var started = false
 
-  init(context: InterviewSessionContext, api: APIClient, devices: any InterviewDevices) {
+  init(
+    context: InterviewSessionContext, submitAnswer: SubmitAnswerUseCase,
+    quitInterview: QuitInterviewUseCase, devices: any InterviewDevices
+  ) {
     interview = context.interview
     question =
       context.interview.questions.last(where: { $0.answer == nil })
@@ -48,7 +51,8 @@ final class InterviewSessionViewModel {
     tracker = context.tracker
     baseline = context.baseline
     frontCamera = context.frontCamera
-    self.api = api
+    self.submitAnswer = submitAnswer
+    self.quitInterview = quitInterview
     synthesizer = devices.makeSpeechSynthesizer()
     recognizer = devices.makeSpeechRecognizer()
     audioSession = devices.audioSession
@@ -151,14 +155,13 @@ final class InterviewSessionViewModel {
     guard let submission = pendingSubmission else { return }
     phase = .submitting
     do {
-      let result = try await api.submitAnswer(
-        interviewId: interview.id, questionId: question.id, submission)
+      let result = try await submitAnswer.execute(
+        submission, interviewId: interview.id, questionId: question.id)
       pendingSubmission = nil
       if let next = result.nextQuestion {
         await ask(next)
       } else {
-        // 마지막 답변이 저장되어 평가 대기가 됐으므로 다음 실행 때 지우지 않게 한다
-        activeStore.clear()
+        // 마지막 답변이 저장되면 평가 대기가 되어, UseCase가 다음 실행 때 지우지 않게 ID를 지웠다
         phase = .closing
         await synthesizer.speak(result.closingMessage ?? "")
         finish()
@@ -195,9 +198,7 @@ final class InterviewSessionViewModel {
   // 그만두면 면접을 지운다. 지우지 못해도 화면은 닫고, 다음 실행 때 다시 지운다
   func quit() async {
     tearDown()
-    if (try? await api.deleteInterview(id: interview.id)) != nil {
-      activeStore.clear()
-    }
+    await quitInterview.execute(interviewId: interview.id)
   }
 
   private func finish() {
@@ -211,5 +212,15 @@ final class InterviewSessionViewModel {
     tracker?.stop()
     frontCamera?.stop()
     audioSession.deactivate()
+  }
+}
+
+extension InterviewSessionViewModel {
+  convenience init(
+    context: InterviewSessionContext, useCases: UseCases, devices: any InterviewDevices
+  ) {
+    self.init(
+      context: context, submitAnswer: useCases.submitAnswer,
+      quitInterview: useCases.quitInterview, devices: devices)
   }
 }

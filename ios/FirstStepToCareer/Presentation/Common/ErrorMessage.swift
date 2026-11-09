@@ -5,11 +5,11 @@ enum ErrorMessage {
   static var aiDisabled: String { String(localized: "現在、AI機能は停止中です。") }
 
   static func text(for error: Error) -> String {
-    switch error as? APIError {
-    case let error? where error.isAIDisabled: aiDisabled
-    case .network?:
-      String(localized: "サーバーに接続できませんでした。通信環境を確認してください。")
-    default: String(localized: "応答を取得できませんでした。もう一度お試しください。")
+    let error = error as? any RepositoryError
+    if error?.isAIDisabled == true { return aiDisabled }
+    if error?.isConnectionFailure == true {
+      return String(localized: "サーバーに接続できませんでした。通信環境を確認してください。")
     }
+    return String(localized: "応答を取得できませんでした。もう一度お試しください。")
   }
 }

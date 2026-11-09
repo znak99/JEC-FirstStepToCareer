@@ -10,7 +10,7 @@ struct HistoryView: View {
   // 기록이 없을 때 「面接を始める」를 누르면 면접 탭으로 옮긴다
   var onStartInterview: () -> Void = {}
 
-  @Environment(\.apiClient) private var api
+  @Environment(\.useCases) private var useCases
   @Environment(\.tabRootRequest) private var tabRootRequest
   @State private var model: HistoryViewModel?
   @State private var path: [HistoryRoute] = []
@@ -40,7 +40,9 @@ struct HistoryView: View {
       .onChange(of: tabRootRequest) { path = [] }
       // 탭을 열 때와 결과 화면에서 돌아올 때마다 다시 불러온다
       .task {
-        let current = model ?? HistoryViewModel(api: api)
+        guard let useCases else { return }
+        let current =
+          model ?? HistoryViewModel(loadCompletedInterviews: useCases.loadCompletedInterviews)
         model = current
         await current.load()
       }
