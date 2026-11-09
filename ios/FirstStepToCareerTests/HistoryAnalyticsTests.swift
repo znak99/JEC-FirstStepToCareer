@@ -184,7 +184,7 @@ extension APIClientTests {
     StubURLProtocol.handler = { request in
       request.url?.query?.contains("cursor=next") == true ? (200, secondData) : (200, firstData)
     }
-    let model = HistoryModel(api: client)
+    let model = HistoryViewModel(api: client)
     await model.load()
     #expect(model.hasLoaded)
     #expect(!model.loadFailed)
@@ -197,7 +197,7 @@ extension APIClientTests {
       items: [HistoryAnalyticsTests.summary("a", daysAgo: 1)], nextCursor: nil)
     let data = try JSONEncoder().encode(page)
     StubURLProtocol.handler = { _ in (200, data) }
-    let model = HistoryModel(api: client)
+    let model = HistoryViewModel(api: client)
     await model.load()
     StubURLProtocol.handler = { _ in (500, Data(#"{"error":{"code":"INTERNAL_ERROR"}}"#.utf8)) }
     await model.load()

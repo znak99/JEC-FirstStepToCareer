@@ -48,8 +48,13 @@ flowchart LR
 ```
 ios/
   FirstStepToCareer.xcodeproj  Xcode 프로젝트
-  FirstStepToCareer/           앱 소스 (App, Features, Domain, Data, Sensors)
-    Features/Common/           여러 화면이 함께 쓰는 화면 부품. Design: 색·바탕·큰 버튼·움직임 곡선, Charts: 점수 그래프
+  FirstStepToCareer/           앱 소스. MVVM + Clean 아키텍처 (5절)
+    App/                       앱 시작과 부품 조립
+    Presentation/              화면(View)과 화면 상태(ViewModel). 기능별 폴더
+      Root/                    앱 시작 흐름(스플래시·온보딩·탭 전환)과 하단 탭바
+      Common/                  여러 화면이 함께 쓰는 부품. Design: 색·바탕·큰 버튼·움직임 곡선, Charts: 점수 그래프
+    Domain/                    Entities: 형식, Rules: 계산·판단 규칙
+    Data/                      Network: 서버 호출, Local: 이 iPhone 저장값, Sensors: 카메라·음성
   FirstStepToCareerTests/      앱 테스트
   Config/                      xcconfig. Local.xcconfig는 커밋하지 않음
 docs/                          프로젝트 문서
@@ -67,12 +72,16 @@ wrangler.jsonc               Workers·D1 설정
 
 ## 5. 모듈·레이어와 의존 방향
 ### 앱
+MVVM + Clean 아키텍처를 따른다. 화면은 그리기만 하고(View), 화면의 상태와 판단은 ViewModel이 맡는다. 바깥 층(Presentation, Data)은 안쪽 층(Domain)만 바라본다.
+
 | 레이어·모듈 | 책임 | 의존 가능 대상 |
 |---|---|---|
-| Features | 화면과 화면 상태 | Domain, Sensors, Data |
-| Sensors | 카메라 추적(ARKit), 앞쪽 카메라 미리보기(AVFoundation), STT(마이크 소리 크기 포함), TTS | Domain |
-| Data | API 호출, Keychain | Domain |
-| Domain | 모델과 계산 규칙 | 없음 |
+| App | 앱 시작. Data의 실제 부품을 만들어 ViewModel에 넘긴다(조립) | 모두 |
+| Presentation | View(그리기)와 ViewModel(화면 상태·판단) | Domain |
+| Domain | Entities(형식), Rules(계산·판단 규칙), 저장소·기기 약속(프로토콜), UseCase(서버·저장값을 쓰는 한 가지 일) | 없음 |
+| Data | Network(서버 호출, Keychain의 기기 토큰), Local(이 iPhone 저장값), Sensors(카메라 추적 ARKit, 앞쪽 카메라 AVFoundation, STT와 마이크 소리 크기, TTS). Domain 약속의 실제 구현 | Domain |
+
+전환 중 (2026-11-09~, TASK.md): 위 구조로 옮기는 동안 Presentation이 Data의 서버 호출(`APIClient`)·저장값·센서를 직접 쓰는 곳이 남아 있다. 약속과 UseCase를 만든 뒤 모두 없앤다.
 
 ### 서버 (`api/`)
 | 레이어·모듈 | 책임 | 의존 가능 대상 |
@@ -261,6 +270,7 @@ AI를 쓰는 경로는 스위치가 꺼져 있으면 Claude를 호출하지 않�
 ## 7. 설계 결정 기록
 | 날짜 | 결정 | 이유 | 버린 대안 |
 |---|---|---|---|
+| 2026-11-09 | 앱 구조를 MVVM + Clean 아키텍처 완전형으로 바꾼다. Presentation(View·ViewModel) → Domain(형식·규칙·약속·UseCase) ← Data(서버·저장값·센서 구현), App이 조립한다. 서버·저장값을 쓰는 동작은 모두 UseCase로 두고, 카메라·음성도 약속 뒤로 둔다(미리보기는 화면 쪽 약속) | 사용자 결정. 화면과 서버·기기를 떼어 바꾸기 쉽게 하고, 가짜 부품으로 ViewModel과 UseCase를 테스트할 수 있게 한다 | 폴더·이름만 정리(A안), 저장소 약속과 여러 단계가 묶인 일만 UseCase로(B안) |
 | 2026-11-08 | Face ID iPhone의 작은 내 화면은 ARKit 카메라 화면(ARSCNView)을 새로 연결하지 않고, 얼굴 추적기가 받은 카메라 영상을 1초 15장까지 작게 줄여 그림으로 보여 준다 | ARKit 세션 하나를 두 번째 카메라 화면에 연결하면 ARKit 내부 잠금 오류로 앱이 종료됐다(iPhone 14 Plus, iOS 27.0.1에서 면접 시작 시). 영상은 화면에만 보여 주고 저장·전송하지 않는다 | 준비 화면과 같은 ARSCNView를 작은 화면에 연결, 별도 카메라 세션 |
 | 2026-11-08 | 면접 진행 중에도 카메라를 쓸 수 있으면 시선·머리 측정 여부와 관계없이 켜 두고 작은 내 화면에 영상만 보여 준다. 준비 화면의 카메라 객체를 그대로 넘기고, 준비 화면은 화면 경로에서 뺀다 | 사용자 결정(면접 진행 시안 B). 실제 화상 면접처럼 자기 모습을 확인한다. 같은 영상을 두 화면이 함께 그리지 않게 한다. 배터리를 조금 더 쓴다 | 측정할 때만 카메라 켜기, 면접 중 카메라 숨기기 |
 | 2026-11-07 | 온보딩을 넣기 전 빌드부터 쓰던 사용자는 다음 실행 때 동의와 정보 입력을 한 번 거치고, 약관 버전이 바뀌면 탭 화면 위 모달에서 동의만 다시 받는다. 정보 입력 도중 앱이 꺼지면 정보 입력부터 이어 한다 | 모든 사용자에게서 지금 약관에 대한 동의를 받고, 이름을 AI 면접관이 쓸 수 있게 한다. 약관 변경은 사용자 결정으로 쓰던 화면을 떠나지 않고 동의하게 한다 | 기존 사용자는 온보딩 생략, 약관 변경 때 전체 화면 동의나 온보딩 전체 반복 |
