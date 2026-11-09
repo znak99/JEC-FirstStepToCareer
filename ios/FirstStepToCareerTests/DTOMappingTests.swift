@@ -16,20 +16,6 @@ struct DTOMappingTests {
 
   private static let measured = DeductionCounts(minor: 6, moderate: 2, major: 1, outside: 0)
 
-  private static let fullDetail = InterviewDetail(
-    id: "i", companyName: "株式会社テスト", industry: "商社", jobTitle: "営業", interviewType: .job,
-    hiringType: .midCareer, questionCount: 3, faceTracking: true, status: .completed,
-    startedAt: "2026-11-06T00:00:00.000Z", completedAt: "2026-11-06T00:10:00.000Z",
-    scores: InterviewScores(total: 78.4, structure: 80, logic: 75.5, gaze: 82.3, head: 75.8),
-    feedback: "良い", closingMessage: "ありがとうございました",
-    questions: [
-      Question(
-        id: "q1", position: 1, preface: "本日は", text: "自己紹介を",
-        answer: Answer(transcript: "はい", durationMs: 52000, gaze: measured, head: measured),
-        scores: QuestionScores(structure: 80, logic: 70, gaze: 98.7, head: 99.7)),
-      Question(id: "q2", position: 2, preface: nil, text: "志望動機を"),
-    ])
-
   // ARCHITECTURE.md 5절의 면접 상세 예시
   @Test func decodesDocumentedInterviewDetail() throws {
     let json = #"""
@@ -46,28 +32,68 @@ struct DTOMappingTests {
     #expect(question.scores?.logic == 70)
   }
 
-  @Test func roundTripsInterviewShapes() throws {
-    #expect(try Self.roundTrip(InterviewDetailDTO(Self.fullDetail)).domain == Self.fullDetail)
-    let unevaluated = InterviewDetail(
-      id: "j", companyName: "A", industry: "IT", jobTitle: "SE", interviewType: .hr,
-      hiringType: .newGrad, questionCount: 3, faceTracking: false, status: .inProgress,
-      startedAt: "2026-11-06T00:00:00.000Z", completedAt: nil, scores: nil, feedback: nil,
-      closingMessage: nil, questions: [Question(id: "q1", position: 1, preface: "p", text: "t")])
-    #expect(try Self.roundTrip(InterviewDetailDTO(unevaluated)).domain == unevaluated)
-    let summary = InterviewSummary(
-      id: "s", companyName: "A", industry: "IT", jobTitle: "SE", interviewType: .job,
-      hiringType: .midCareer, status: .awaitingEvaluation, startedAt: "2026-11-06T00:00:00.000Z",
-      completedAt: nil,
-      scores: InterviewScores(total: nil, structure: 1, logic: 2, gaze: nil, head: nil))
-    #expect(try Self.roundTrip(InterviewSummaryDTO(summary)).domain == summary)
-    let next = AnswerResult(
-      status: .inProgress,
-      nextQuestion: Question(id: "q2", position: 2, preface: "なるほど", text: "次"),
-      closingMessage: nil)
-    let closing = AnswerResult(
-      status: .awaitingEvaluation, nextQuestion: nil, closingMessage: "以上です")
-    #expect(try Self.roundTrip(AnswerResultDTO(next)).domain == next)
-    #expect(try Self.roundTrip(AnswerResultDTO(closing)).domain == closing)
+  private static func decode<DTO: Decodable>(_: DTO.Type, _ json: String) throws -> DTO {
+    try JSONDecoder().decode(DTO.self, from: Data(json.utf8))
+  }
+
+  // 평가 전 면접 상세. 점수·피드백·답하지 않은 질문의 답변이 null이다 (ARCHITECTURE.md 5절)
+  @Test func decodesUnevaluatedInterviewDetail() throws {
+    let json = #"""
+      {"id":"j","companyName":"A","industry":"IT","jobTitle":"SE","interviewType":"job","hiringType":"mid_career","questionCount":3,"faceTracking":false,"status":"in_progress","startedAt":"2026-11-06T00:00:00.000Z","completedAt":null,"scores":null,"feedback":null,"closingMessage":null,"questions":[{"id":"q1","position":1,"preface":null,"text":"t","answer":null,"scores":null}]}
+      """#
+    let detail = try Self.decode(InterviewDetailDTO.self, json).domain
+    #expect(
+      detail
+        == InterviewDetail(
+          id: "j", companyName: "A", industry: "IT", jobTitle: "SE", interviewType: .job,
+          hiringType: .midCareer, questionCount: 3, faceTracking: false, status: .inProgress,
+          startedAt: "2026-11-06T00:00:00.000Z", completedAt: nil, scores: nil, feedback: nil,
+          closingMessage: nil,
+          questions: [Question(id: "q1", position: 1, preface: nil, text: "t")]))
+  }
+
+  // ARCHITECTURE.md 5절의 기록 목록 예시
+  @Test func decodesDocumentedInterviewPage() throws {
+    let json = #"""
+      {"items":[{"id":"a","companyName":"A","industry":"IT","jobTitle":"SE","interviewType":"hr","hiringType":"new_grad","status":"completed","startedAt":"2026-11-06T00:00:00.000Z","completedAt":"2026-11-06T00:10:00.000Z","scores":{"total":78.4,"structure":80.0,"logic":75.5,"gaze":82.3,"head":75.8}},{"id":"b","companyName":"B","industry":"商社","jobTitle":"営業","interviewType":"job","hiringType":"mid_career","status":"awaiting_evaluation","startedAt":"2026-11-07T00:00:00.000Z","completedAt":null,"scores":null}],"nextCursor":"c1"}
+      """#
+    let page = try Self.decode(InterviewPageDTO.self, json)
+    #expect(page.nextCursor == "c1")
+    #expect(
+      page.items.map(\.domain) == [
+        InterviewSummary(
+          id: "a", companyName: "A", industry: "IT", jobTitle: "SE", interviewType: .hr,
+          hiringType: .newGrad, status: .completed, startedAt: "2026-11-06T00:00:00.000Z",
+          completedAt: "2026-11-06T00:10:00.000Z",
+          scores: InterviewScores(total: 78.4, structure: 80, logic: 75.5, gaze: 82.3, head: 75.8)),
+        InterviewSummary(
+          id: "b", companyName: "B", industry: "商社", jobTitle: "営業", interviewType: .job,
+          hiringType: .midCareer, status: .awaitingEvaluation,
+          startedAt: "2026-11-07T00:00:00.000Z", completedAt: nil, scores: nil),
+      ])
+    #expect(
+      try Self.decode(InterviewPageDTO.self, #"{"items":[],"nextCursor":null}"#).nextCursor == nil)
+  }
+
+  // ARCHITECTURE.md 5절의 답변 저장 응답. 마지막 질문이면 다음 질문 대신 마무리 인사가 온다
+  @Test func decodesDocumentedAnswerResults() throws {
+    let next = try Self.decode(
+      AnswerResultDTO.self,
+      #"{"status":"in_progress","nextQuestion":{"id":"q2","position":2,"preface":"なるほど","text":"次"},"closingMessage":null}"#
+    ).domain
+    #expect(
+      next
+        == AnswerResult(
+          status: .inProgress,
+          nextQuestion: Question(id: "q2", position: 2, preface: "なるほど", text: "次"),
+          closingMessage: nil))
+    let closing = try Self.decode(
+      AnswerResultDTO.self,
+      #"{"status":"awaiting_evaluation","nextQuestion":null,"closingMessage":"以上です"}"#
+    ).domain
+    #expect(
+      closing
+        == AnswerResult(status: .awaitingEvaluation, nextQuestion: nil, closingMessage: "以上です"))
   }
 
   @Test func answerSubmissionSendsNullWhenNotMeasured() throws {

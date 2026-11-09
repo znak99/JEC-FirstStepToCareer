@@ -207,3 +207,17 @@ extension APIClientTests {
     #expect(model.interviews.map(\.id) == ["a"])
   }
 }
+
+// 기록 테스트가 Domain 형식으로 만든 목록을 가짜 서버 응답으로 보낸다
+extension InterviewSummaryDTO {
+  init(_ value: InterviewSummary) {
+    self.init(
+      id: value.id, companyName: value.companyName, industry: value.industry,
+      jobTitle: value.jobTitle, interviewType: value.interviewType, hiringType: value.hiringType,
+      status: value.status, startedAt: value.startedAt, completedAt: value.completedAt,
+      scores: value.scores.map {
+        InterviewScoresDTO(
+          total: $0.total, structure: $0.structure, logic: $0.logic, gaze: $0.gaze, head: $0.head)
+      })
+  }
+}

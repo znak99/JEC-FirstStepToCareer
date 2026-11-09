@@ -31,14 +31,6 @@ struct InterviewScoresDTO: Codable, Equatable {
   let gaze: Double?
   let head: Double?
 
-  init(_ value: InterviewScores) {
-    total = value.total
-    structure = value.structure
-    logic = value.logic
-    gaze = value.gaze
-    head = value.head
-  }
-
   var domain: InterviewScores {
     InterviewScores(total: total, structure: structure, logic: logic, gaze: gaze, head: head)
   }
@@ -50,13 +42,6 @@ struct QuestionScoresDTO: Codable, Equatable {
   let gaze: Double?
   let head: Double?
 
-  init(_ value: QuestionScores) {
-    structure = value.structure
-    logic = value.logic
-    gaze = value.gaze
-    head = value.head
-  }
-
   var domain: QuestionScores {
     QuestionScores(structure: structure, logic: logic, gaze: gaze, head: head)
   }
@@ -67,13 +52,6 @@ struct AnswerDTO: Codable, Equatable {
   let durationMs: Int
   let gaze: DeductionCountsDTO?
   let head: DeductionCountsDTO?
-
-  init(_ value: Answer) {
-    transcript = value.transcript
-    durationMs = value.durationMs
-    gaze = value.gaze.map(DeductionCountsDTO.init)
-    head = value.head.map(DeductionCountsDTO.init)
-  }
 
   var domain: Answer {
     Answer(transcript: transcript, durationMs: durationMs, gaze: gaze?.domain, head: head?.domain)
@@ -87,15 +65,6 @@ struct QuestionDTO: Codable, Equatable {
   let text: String
   let answer: AnswerDTO?
   let scores: QuestionScoresDTO?
-
-  init(_ value: Question) {
-    id = value.id
-    position = value.position
-    preface = value.preface
-    text = value.text
-    answer = value.answer.map(AnswerDTO.init)
-    scores = value.scores.map(QuestionScoresDTO.init)
-  }
 
   var domain: Question {
     Question(
@@ -121,24 +90,6 @@ struct InterviewDetailDTO: Codable, Equatable {
   let closingMessage: String?
   let questions: [QuestionDTO]
 
-  init(_ value: InterviewDetail) {
-    id = value.id
-    companyName = value.companyName
-    industry = value.industry
-    jobTitle = value.jobTitle
-    interviewType = value.interviewType
-    hiringType = value.hiringType
-    questionCount = value.questionCount
-    faceTracking = value.faceTracking
-    status = value.status
-    startedAt = value.startedAt
-    completedAt = value.completedAt
-    scores = value.scores.map(InterviewScoresDTO.init)
-    feedback = value.feedback
-    closingMessage = value.closingMessage
-    questions = value.questions.map(QuestionDTO.init)
-  }
-
   var domain: InterviewDetail {
     InterviewDetail(
       id: id, companyName: companyName, industry: industry, jobTitle: jobTitle,
@@ -160,19 +111,6 @@ struct InterviewSummaryDTO: Codable, Equatable {
   let startedAt: String
   let completedAt: String?
   let scores: InterviewScoresDTO?
-
-  init(_ value: InterviewSummary) {
-    id = value.id
-    companyName = value.companyName
-    industry = value.industry
-    jobTitle = value.jobTitle
-    interviewType = value.interviewType
-    hiringType = value.hiringType
-    status = value.status
-    startedAt = value.startedAt
-    completedAt = value.completedAt
-    scores = value.scores.map(InterviewScoresDTO.init)
-  }
 
   var domain: InterviewSummary {
     InterviewSummary(
@@ -235,12 +173,6 @@ struct AnswerResultDTO: Codable, Equatable {
   let status: InterviewStatus
   let nextQuestion: QuestionDTO?
   let closingMessage: String?
-
-  init(_ value: AnswerResult) {
-    status = value.status
-    nextQuestion = value.nextQuestion.map(QuestionDTO.init)
-    closingMessage = value.closingMessage
-  }
 
   var domain: AnswerResult {
     AnswerResult(status: status, nextQuestion: nextQuestion?.domain, closingMessage: closingMessage)
