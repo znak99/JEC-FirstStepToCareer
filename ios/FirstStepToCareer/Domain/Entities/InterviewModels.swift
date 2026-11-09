@@ -72,6 +72,11 @@ struct InterviewDetail: Equatable, Identifiable, Sendable {
   let questions: [Question]
 }
 
+extension InterviewDetail {
+  // 답변을 모두 마쳤지만 아직 평가하지 않았다
+  var needsEvaluation: Bool { status == .awaitingEvaluation }
+}
+
 struct InterviewSummary: Equatable, Identifiable, Sendable {
   let id: String
   let companyName: String

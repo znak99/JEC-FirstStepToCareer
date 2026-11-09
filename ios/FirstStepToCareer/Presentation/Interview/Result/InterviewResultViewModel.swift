@@ -13,15 +13,17 @@ final class InterviewResultViewModel {
 
   let interviewId: String
   private(set) var state = State.loading
-  private let loadInterviewResult: LoadInterviewResultUseCase
+  private let loadInterview: LoadInterviewUseCase
+  private let evaluateInterview: EvaluateInterviewUseCase
   private let deleteInterview: DeleteInterviewUseCase
 
   init(
-    interviewId: String, loadInterviewResult: LoadInterviewResultUseCase,
-    deleteInterview: DeleteInterviewUseCase
+    interviewId: String, loadInterview: LoadInterviewUseCase,
+    evaluateInterview: EvaluateInterviewUseCase, deleteInterview: DeleteInterviewUseCase
   ) {
     self.interviewId = interviewId
-    self.loadInterviewResult = loadInterviewResult
+    self.loadInterview = loadInterview
+    self.evaluateInterview = evaluateInterview
     self.deleteInterview = deleteInterview
   }
 
@@ -29,8 +31,10 @@ final class InterviewResultViewModel {
   func load() async {
     state = .loading
     do {
-      let detail = try await loadInterviewResult.execute(id: interviewId) {
+      var detail = try await loadInterview.execute(id: interviewId)
+      if detail.needsEvaluation {
         state = .evaluating
+        detail = try await evaluateInterview.execute(id: interviewId)
       }
       state = .loaded(detail)
     } catch {
@@ -52,7 +56,7 @@ final class InterviewResultViewModel {
 extension InterviewResultViewModel {
   convenience init(interviewId: String, useCases: UseCases) {
     self.init(
-      interviewId: interviewId, loadInterviewResult: useCases.loadInterviewResult,
-      deleteInterview: useCases.deleteInterview)
+      interviewId: interviewId, loadInterview: useCases.loadInterview,
+      evaluateInterview: useCases.evaluateInterview, deleteInterview: useCases.deleteInterview)
   }
 }

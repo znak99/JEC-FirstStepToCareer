@@ -277,6 +277,13 @@ struct InterviewHomeAndResultViewModelTests {
       saveQuestionCount: SaveQuestionCountUseCase(settings: settings))
   }
 
+  private func result(id: String) -> InterviewResultViewModel {
+    InterviewResultViewModel(
+      interviewId: id, loadInterview: LoadInterviewUseCase(interviews: interviews),
+      evaluateInterview: EvaluateInterviewUseCase(interviews: interviews),
+      deleteInterview: DeleteInterviewUseCase(interviews: interviews))
+  }
+
   @Test func homeShowsAIStatus() async {
     let model = home()
     #expect(model.availability == .loading)
@@ -307,19 +314,23 @@ struct InterviewHomeAndResultViewModelTests {
 
   @Test func resultEvaluatesAwaitingInterview() async {
     interviews.details["wait"] = FakeData.detail(id: "wait", status: .awaitingEvaluation)
-    let model = InterviewResultViewModel(
-      interviewId: "wait", loadInterviewResult: LoadInterviewResultUseCase(interviews: interviews),
-      deleteInterview: DeleteInterviewUseCase(interviews: interviews))
+    let model = result(id: "wait")
     await model.load()
     #expect(model.state == .loaded(FakeData.detail(id: "wait", status: .completed)))
     #expect(interviews.calls == ["detail wait", "evaluate wait"])
   }
 
+  @Test func resultDoesNotEvaluateFinishedInterview() async {
+    interviews.details["done"] = FakeData.detail(id: "done", status: .completed)
+    let model = result(id: "done")
+    await model.load()
+    #expect(model.state == .loaded(FakeData.detail(id: "done", status: .completed)))
+    #expect(interviews.calls == ["detail done"])
+  }
+
   @Test func resultShowsFailuresAndDeletes() async {
     interviews.failures["detail"] = .offline
-    let model = InterviewResultViewModel(
-      interviewId: "x", loadInterviewResult: LoadInterviewResultUseCase(interviews: interviews),
-      deleteInterview: DeleteInterviewUseCase(interviews: interviews))
+    let model = result(id: "x")
     await model.load()
     #expect(model.state == .failed("サーバーに接続できませんでした。通信環境を確認してください。"))
     interviews.failures = ["delete": .other]

@@ -65,16 +65,17 @@ struct QuitInterviewUseCase: Sendable {
   }
 }
 
-// 면접 결과. 평가 대기면 평가를 요청한 뒤 돌려준다. 평가를 시작할 때 onEvaluating을 부른다
-struct LoadInterviewResultUseCase: Sendable {
+struct LoadInterviewUseCase: Sendable {
   let interviews: any InterviewRepository
 
-  func execute(id: String, onEvaluating: @MainActor () -> Void) async throws -> InterviewDetail {
-    let detail = try await interviews.detail(id: id)
-    guard detail.status == .awaitingEvaluation else { return detail }
-    await onEvaluating()
-    return try await interviews.evaluate(id: id)
-  }
+  func execute(id: String) async throws -> InterviewDetail { try await interviews.detail(id: id) }
+}
+
+// 평가 대기인 면접을 평가해, 평가가 끝난 면접을 돌려준다
+struct EvaluateInterviewUseCase: Sendable {
+  let interviews: any InterviewRepository
+
+  func execute(id: String) async throws -> InterviewDetail { try await interviews.evaluate(id: id) }
 }
 
 struct DeleteInterviewUseCase: Sendable {

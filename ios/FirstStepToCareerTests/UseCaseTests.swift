@@ -273,16 +273,13 @@ struct InterviewUseCaseTests {
     #expect(await CalibrateFaceUseCase().execute(with: tracker) == nil)
   }
 
-  @MainActor @Test func resultEvaluatesOnlyWhenAwaiting() async throws {
-    let load = LoadInterviewResultUseCase(interviews: interviews)
-    var evaluating = 0
-    interviews.details["done"] = FakeData.detail(id: "done", status: .completed)
-    #expect(try await load.execute(id: "done") { evaluating += 1 }.status == .completed)
-    #expect(evaluating == 0)
+  @Test func resultLoadsAndEvaluates() async throws {
     interviews.details["wait"] = FakeData.detail(id: "wait", status: .awaitingEvaluation)
-    #expect(try await load.execute(id: "wait") { evaluating += 1 }.status == .completed)
-    #expect(evaluating == 1)
-    #expect(interviews.calls == ["detail done", "detail wait", "evaluate wait"])
+    let detail = try await LoadInterviewUseCase(interviews: interviews).execute(id: "wait")
+    #expect(detail.needsEvaluation)
+    let evaluated = try await EvaluateInterviewUseCase(interviews: interviews).execute(id: "wait")
+    #expect(!evaluated.needsEvaluation)
+    #expect(interviews.calls == ["detail wait", "evaluate wait"])
   }
 
   @Test func deleteAndCompletedList() async throws {

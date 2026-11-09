@@ -29,7 +29,8 @@ struct UseCases: Sendable {
   let startInterview: StartInterviewUseCase
   let submitAnswer: SubmitAnswerUseCase
   let quitInterview: QuitInterviewUseCase
-  let loadInterviewResult: LoadInterviewResultUseCase
+  let loadInterview: LoadInterviewUseCase
+  let evaluateInterview: EvaluateInterviewUseCase
   let deleteInterview: DeleteInterviewUseCase
   let loadCompletedInterviews: LoadCompletedInterviewsUseCase
 
@@ -65,7 +66,8 @@ struct UseCases: Sendable {
     startInterview = StartInterviewUseCase(interviews: interviews, activeInterview: activeInterview)
     submitAnswer = SubmitAnswerUseCase(interviews: interviews, activeInterview: activeInterview)
     quitInterview = QuitInterviewUseCase(interviews: interviews, activeInterview: activeInterview)
-    loadInterviewResult = LoadInterviewResultUseCase(interviews: interviews)
+    loadInterview = LoadInterviewUseCase(interviews: interviews)
+    evaluateInterview = EvaluateInterviewUseCase(interviews: interviews)
     deleteInterview = DeleteInterviewUseCase(interviews: interviews)
     loadCompletedInterviews = LoadCompletedInterviewsUseCase(interviews: interviews)
   }
