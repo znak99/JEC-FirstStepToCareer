@@ -31,7 +31,7 @@ final class InterviewResultModel {
       }
       state = .loaded(detail)
     } catch {
-      state = .failed(InterviewSessionModel.message(for: error))
+      state = .failed(ErrorMessage.text(for: error))
     }
   }
 
@@ -43,12 +43,5 @@ final class InterviewResultModel {
       state = .failed(String(localized: "削除できませんでした。もう一度お試しください。"))
       return false
     }
-  }
-}
-
-enum ScoreFormat {
-  static func text(_ value: Double?) -> String {
-    guard let value else { return String(localized: "評価なし") }
-    return String(localized: "\(String(format: "%.1f", value))点")
   }
 }

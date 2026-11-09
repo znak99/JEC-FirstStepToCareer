@@ -21,7 +21,6 @@ final class PreparationModel {
   // 인식이 불안정해 건너뛴 경우. 이때만 기준점을 다시 잡을 수 있다
   private static let unstableFace = String(
     localized: "顔を安定して認識できなかったため、視線・頭の動きは評価されません。")
-  private static let aiDisabled = String(localized: "現在、AI機能は停止中です。")
   // 기준점을 잡을 때 화면을 바라보는 시간(초). 준비 화면의 차오르는 고리도 이 시간을 쓴다
   static let calibrationSeconds: TimeInterval = 3
 
@@ -115,7 +114,7 @@ final class PreparationModel {
 
   private func checkServer() async -> CheckState {
     do {
-      return try await api.status().aiEnabled ? .passed : .failed(Self.aiDisabled)
+      return try await api.status().aiEnabled ? .passed : .failed(ErrorMessage.aiDisabled)
     } catch {
       return .failed(String(localized: "サーバーに接続できませんでした。"))
     }
@@ -167,9 +166,9 @@ final class PreparationModel {
       return InterviewSessionContext(
         interview: interview, tracker: camera == .faceTracking ? tracker : nil, baseline: baseline,
         frontCamera: camera == .mirror ? frontCamera : nil)
-    } catch let error as APIError where error.code == "AI_DISABLED" {
+    } catch let error as APIError where error.isAIDisabled {
       // 점검 뒤에 AI가 꺼진 경우. 점검 표시도 실패로 맞춰 다시 점검할 수 있게 한다
-      server = .failed(Self.aiDisabled)
+      server = .failed(ErrorMessage.aiDisabled)
     } catch {
       startError = String(localized: "面接を開始できませんでした。もう一度お試しください。")
     }

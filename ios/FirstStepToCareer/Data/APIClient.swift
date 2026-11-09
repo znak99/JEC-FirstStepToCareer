@@ -10,6 +10,9 @@ enum APIError: Error, Equatable {
     if case .server(_, let code) = self { return code }
     return nil
   }
+
+  // 서버의 AI 스위치가 꺼져 있어 AI를 쓰는 요청을 거절한 경우(503 AI_DISABLED)
+  var isAIDisabled: Bool { code == "AI_DISABLED" }
 }
 
 struct APIClient: Sendable {

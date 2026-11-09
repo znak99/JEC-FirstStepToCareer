@@ -160,7 +160,7 @@ final class InterviewSessionModel {
         finish()
       }
     } catch {
-      phase = .failed(Self.message(for: error))
+      phase = .failed(ErrorMessage.text(for: error))
     }
   }
 
@@ -207,14 +207,5 @@ final class InterviewSessionModel {
     tracker?.stop()
     frontCamera?.stop()
     AudioSessionConfigurator.deactivate()
-  }
-
-  static func message(for error: Error) -> String {
-    switch error {
-    case APIError.server(_, "AI_DISABLED"): String(localized: "現在、AI機能は停止中です。")
-    case APIError.network:
-      String(localized: "サーバーに接続できませんでした。通信環境を確認してください。")
-    default: String(localized: "応答を取得できませんでした。もう一度お試しください。")
-    }
   }
 }
