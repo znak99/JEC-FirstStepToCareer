@@ -1,14 +1,5 @@
 import SwiftUI
 
-// 앱 아이콘과 같은 파란 그라데이션. 밝은/어두운 모드와 관계없이 같다
-enum SplashPalette {
-  static let top = Color(red: 0x23 / 255, green: 0x92 / 255, blue: 0xFF / 255)
-  // 실행 화면 색(Assets의 LaunchBackground)과 같아야 한다
-  static let middle = Color(red: 0x17 / 255, green: 0x6D / 255, blue: 0xDC / 255)
-  static let bottom = Color(red: 0x07 / 255, green: 0x45 / 255, blue: 0xB6 / 255)
-  static let glow = Color(red: 0.55, green: 0.9, blue: 1)
-}
-
 // 앱 아이콘의 흰 그림(머리·몸·책상·다리 4개). 아이콘 1024 좌표를 그대로 옮겨 온다
 enum SplashLogo {
   static let box = CGRect(x: 164, y: 185, width: 697, height: 679)

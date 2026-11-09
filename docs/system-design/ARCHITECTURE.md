@@ -49,6 +49,7 @@ flowchart LR
 ios/
   FirstStepToCareer.xcodeproj  Xcode 프로젝트
   FirstStepToCareer/           앱 소스 (App, Features, Domain, Data, Sensors)
+    Features/Common/           여러 화면이 함께 쓰는 화면 부품. Design: 색·바탕·큰 버튼·움직임 곡선, Charts: 점수 그래프
   FirstStepToCareerTests/      앱 테스트
   Config/                      xcconfig. Local.xcconfig는 커밋하지 않음
 docs/                          프로젝트 문서

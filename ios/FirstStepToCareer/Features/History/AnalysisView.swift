@@ -44,7 +44,7 @@ struct AnalysisView: View {
       .padding(.top, 8)
       .padding(.bottom, 24)
     }
-    .background { OnboardingBackground() }
+    .background { TechPageBackground() }
     .reservesTabBarSpace()
     .navigationTitle("分析")
     .navigationBarTitleDisplayMode(.inline)
@@ -226,7 +226,7 @@ private struct PillPicker<Item: Hashable>: View {
                 isOn
                   ? AnyShapeStyle(
                     LinearGradient(
-                      colors: [SplashPalette.top, SplashPalette.middle], startPoint: .topLeading,
+                      colors: [BrandPalette.top, BrandPalette.middle], startPoint: .topLeading,
                       endPoint: .bottomTrailing))
                   : AnyShapeStyle(TechPalette.cardTop))
             )

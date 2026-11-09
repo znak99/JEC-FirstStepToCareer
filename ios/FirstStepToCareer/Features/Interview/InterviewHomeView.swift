@@ -35,12 +35,12 @@ struct InterviewHomeView: View {
       }
       .safeAreaInset(edge: .bottom) {
         Button("面接を始める") { path.append(.preparation(form.draft)) }
-          .buttonStyle(OnboardingButtonStyle())
+          .buttonStyle(PrimaryButtonStyle())
           .disabled(availability != .available || !form.draft.isValid)
           .padding(.horizontal, 24)
           .padding(.bottom, 12)
       }
-      .background { OnboardingBackground() }
+      .background { TechPageBackground() }
       .reservesTabBarSpace()
       .navigationTitle("面接")
       .navigationDestination(for: InterviewRoute.self) { route in

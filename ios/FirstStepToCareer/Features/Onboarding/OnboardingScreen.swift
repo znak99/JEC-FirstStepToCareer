@@ -36,12 +36,12 @@ struct OnboardingScreen<Content: View>: View {
       Button(action: onContinue) {
         Text(buttonTitle)
       }
-      .buttonStyle(OnboardingButtonStyle())
+      .buttonStyle(PrimaryButtonStyle())
       .disabled(!canContinue)
       .padding(.horizontal, 24)
       .padding(.bottom, 12)
     }
-    .background { OnboardingBackground() }
+    .background { TechPageBackground() }
   }
 
   private var header: some View {
@@ -61,38 +61,6 @@ struct OnboardingScreen<Content: View>: View {
           .accessibilityHidden(true)
       }
     }
-  }
-}
-
-// 온보딩 화면 전체의 바탕. 어두운 모드는 검은색에 가깝다
-struct OnboardingBackground: View {
-  var body: some View {
-    LinearGradient(
-      colors: [TechPalette.pageTop, TechPalette.pageBottom], startPoint: .top, endPoint: .bottom
-    )
-    .overlay { DotGrid() }
-    .ignoresSafeArea()
-  }
-}
-
-struct OnboardingButtonStyle: ButtonStyle {
-  @Environment(\.isEnabled) private var isEnabled
-
-  func makeBody(configuration: Configuration) -> some View {
-    configuration.label
-      .font(.headline)
-      .foregroundStyle(.white)
-      .frame(maxWidth: .infinity, minHeight: 50)
-      // 밝은/어두운 모드 모두 앱 아이콘의 파랑. 색 차이가 크지 않게 가운데 색까지만 쓴다
-      .background(
-        Capsule().fill(
-          LinearGradient(
-            colors: [SplashPalette.top, SplashPalette.middle], startPoint: .topLeading,
-            endPoint: .bottomTrailing))
-      )
-      .shadow(color: SplashPalette.middle.opacity(isEnabled ? 0.45 : 0), radius: 10)
-      .opacity(isEnabled ? (configuration.isPressed ? 0.8 : 1) : 0.4)
-      .contentShape(Capsule())
   }
 }
 

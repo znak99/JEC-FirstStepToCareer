@@ -26,7 +26,7 @@ struct HistoryView: View {
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .background { OnboardingBackground() }
+      .background { TechPageBackground() }
       .reservesTabBarSpace()
       .navigationTitle("記録")
       .navigationDestination(for: HistoryRoute.self) { route in
@@ -74,7 +74,7 @@ struct HistoryView: View {
       Button("再試行") {
         Task { await model.load() }
       }
-      .buttonStyle(OnboardingButtonStyle())
+      .buttonStyle(PrimaryButtonStyle())
       .frame(maxWidth: 240)
       .padding(.top, 4)
     }
@@ -95,7 +95,7 @@ struct HistoryView: View {
           .foregroundStyle(.secondary)
           .multilineTextAlignment(.center)
         Button("面接を始める", action: onStartInterview)
-          .buttonStyle(OnboardingButtonStyle())
+          .buttonStyle(PrimaryButtonStyle())
           .frame(maxWidth: 240)
           .padding(.top, 6)
       }

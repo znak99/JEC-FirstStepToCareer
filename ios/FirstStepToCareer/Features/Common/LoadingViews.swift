@@ -78,7 +78,7 @@ private struct DotScanLayer: View {
     let progress =
       reduceMotion ? 1 : min(elapsed.truncatingRemainder(dividingBy: Self.cycle) / Self.sweep, 1)
     let isScanning = progress < 1
-    let front = -bandWidth * 0.3 + (span + bandWidth * 1.3) * SplashEase.easeOut(progress)
+    let front = -bandWidth * 0.3 + (span + bandWidth * 1.3) * Easing.easeOut(progress)
     if isScanning {
       let point = CGPoint(x: direction.x * front, y: size.height + direction.y * front)
       let behind = CGPoint(

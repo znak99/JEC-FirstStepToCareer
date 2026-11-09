@@ -21,7 +21,7 @@ struct InterviewSessionView: View {
       }
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .background { OnboardingBackground() }
+    .background { TechPageBackground() }
     .navigationTitle("面接")
     .navigationBarTitleDisplayMode(.inline)
     .navigationBarBackButtonHidden(true)
@@ -170,18 +170,18 @@ struct InterviewSessionView: View {
         Button("回答を終える") {
           Task { await model.finishAnswer() }
         }
-        .buttonStyle(OnboardingButtonStyle())
+        .buttonStyle(PrimaryButtonStyle())
       }
     case .paused:
       Button("再開する") {
         Task { await model.resume() }
       }
-      .buttonStyle(OnboardingButtonStyle())
+      .buttonStyle(PrimaryButtonStyle())
     case .failed:
       Button("再試行") {
         Task { await model.retry() }
       }
-      .buttonStyle(OnboardingButtonStyle())
+      .buttonStyle(PrimaryButtonStyle())
     default:
       EmptyView()
     }

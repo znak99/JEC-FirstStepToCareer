@@ -140,7 +140,7 @@ private struct RefreshIndicator: View {
     let band: CGFloat = 26
     let span = CGFloat(Self.columns - 1) * spacing + CGFloat(Self.rows) * spacing * 0.5
     let phase = elapsed.truncatingRemainder(dividingBy: 1.1) / 1.1
-    let front = -8 + (span + 16 + band) * SplashEase.easeOut(phase)
+    let front = -8 + (span + 16 + band) * Easing.easeOut(phase)
     for column in 0..<Self.columns {
       for row in 0..<Self.rows {
         var alpha = 0.18
@@ -200,7 +200,7 @@ private struct RefreshWave: View {
     let band = size.height * Self.bandRatio
     let farthest = hypot(size.width / 2, size.height)
     // 처음부터 빠르게 퍼지고 끝에서 천천히 사라진다
-    let radius = (farthest + band) * SplashEase.easeOut(progress)
+    let radius = (farthest + band) * Easing.easeOut(progress)
     switch layer {
     case .light:
       context.fill(

@@ -33,7 +33,7 @@ struct MenuView: View {
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .background { OnboardingBackground() }
+      .background { TechPageBackground() }
       .reservesTabBarSpace()
       .navigationTitle("メニュー")
       .onAppear { nickname = ProfileStore().profile?.nickname }
@@ -231,7 +231,7 @@ private struct MenuRow<Value: View>: View {
         .background(
           RoundedRectangle(cornerRadius: 9, style: .continuous).fill(
             LinearGradient(
-              colors: [SplashPalette.top, SplashPalette.middle], startPoint: .topLeading,
+              colors: [BrandPalette.top, BrandPalette.middle], startPoint: .topLeading,
               endPoint: .bottomTrailing))
         )
         .accessibilityHidden(true)

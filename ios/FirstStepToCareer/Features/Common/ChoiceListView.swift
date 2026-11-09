@@ -33,7 +33,7 @@ struct ChoiceListView: View {
       .padding(.bottom, 24)
     }
     .scrollDismissesKeyboard(.interactively)
-    .background { OnboardingBackground() }
+    .background { TechPageBackground() }
     .reservesTabBarSpace()
     .navigationTitle(title)
     .navigationBarTitleDisplayMode(.inline)

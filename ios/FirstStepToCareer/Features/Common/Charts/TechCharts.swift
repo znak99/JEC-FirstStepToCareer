@@ -1,40 +1,7 @@
 import Charts
 import SwiftUI
 
-// 기록·분석 그래프 공통 디자인. 기기의 밝은/어두운 모드를 따르되 남색 바탕과 형광색 선으로 맞춘다
-enum TechPalette {
-  // 어두운 모드는 앱 아이콘의 밝은 파랑을 쓴다
-  static let accent = adaptive(light: 0x0A7CD8, dark: 0x2392FF)
-  static let accentSoft = adaptive(light: 0x6C5CE7, dark: 0x4D7CFF)
-  static let positive = adaptive(light: 0x009E7A, dark: 0x2EF2B5)
-  static let negative = adaptive(light: 0xE0445F, dark: 0xFF6B8A)
-  static let cardTop = adaptive(light: 0xFFFFFF, dark: 0x10213F)
-  static let cardBottom = adaptive(light: 0xE9F1FF, dark: 0x070F22)
-  // 시작·온보딩 화면 전체에 까는 바탕. 어두운 모드는 다른 화면처럼 검은색에 가깝게 한다
-  static let pageTop = adaptive(light: 0xFFFFFF, dark: 0x0A0E17)
-  static let pageBottom = adaptive(light: 0xE9F1FF, dark: 0x000000)
-  // 눈금·격자용. 투명도를 낮춰 쓴다
-  static let ink = adaptive(light: 0x0B2A55, dark: 0xFFFFFF)
-
-  static var areaFill: LinearGradient {
-    LinearGradient(
-      colors: [accent.opacity(0.35), accent.opacity(0)], startPoint: .top, endPoint: .bottom)
-  }
-
-  static var barFill: LinearGradient {
-    LinearGradient(colors: [accentSoft, accent], startPoint: .leading, endPoint: .trailing)
-  }
-
-  private static func adaptive(light: UInt32, dark: UInt32) -> Color {
-    Color(
-      UIColor { traits in
-        let hex = traits.userInterfaceStyle == .dark ? dark : light
-        return UIColor(
-          red: CGFloat((hex >> 16) & 0xFF) / 255, green: CGFloat((hex >> 8) & 0xFF) / 255,
-          blue: CGFloat(hex & 0xFF) / 255, alpha: 1)
-      })
-  }
-}
+// 점수 그래프 부품. 기록·분석·면접 결과 화면이 함께 쓴다
 
 extension Animation {
   static let chartReveal = Animation.spring(duration: 1.1, bounce: 0.15)
@@ -65,68 +32,6 @@ struct RevealProgress<Key: Equatable>: ViewModifier {
 extension View {
   func reveal<Key: Equatable>(_ progress: Binding<Double>, key: Key) -> some View {
     modifier(RevealProgress(key: key, progress: progress))
-  }
-}
-
-struct TechCard<Content: View>: View {
-  var title: LocalizedStringKey?
-  @ViewBuilder var content: Content
-
-  var body: some View {
-    VStack(alignment: .leading, spacing: 14) {
-      if let title {
-        HStack(spacing: 8) {
-          Capsule().fill(TechPalette.accent).frame(width: 3, height: 14)
-            .shadow(color: TechPalette.accent.opacity(0.8), radius: 3)
-          Text(title).font(.subheadline.weight(.semibold))
-        }
-      }
-      content
-    }
-    .padding(16)
-    .frame(maxWidth: .infinity, alignment: .leading)
-    .background(TechCardBackground())
-  }
-}
-
-struct TechCardBackground: View {
-  // 온보딩 동의 카드처럼 테두리 없이 쓸 때 false
-  var showsBorder = true
-
-  var body: some View {
-    let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
-    shape
-      .fill(
-        LinearGradient(
-          colors: [TechPalette.cardTop, TechPalette.cardBottom], startPoint: .topLeading,
-          endPoint: .bottomTrailing)
-      )
-      .overlay { DotGrid().clipShape(shape) }
-      .overlay {
-        if showsBorder {
-          shape.strokeBorder(
-            LinearGradient(
-              colors: [TechPalette.accent.opacity(0.55), TechPalette.accent.opacity(0.05)],
-              startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 1)
-        }
-      }
-  }
-}
-
-// 앱 아이콘과 같은 도트 무늬
-struct DotGrid: View {
-  var body: some View {
-    Canvas { context, size in
-      let spacing: CGFloat = 14
-      var path = Path()
-      for x in stride(from: spacing / 2, to: size.width, by: spacing) {
-        for y in stride(from: spacing / 2, to: size.height, by: spacing) {
-          path.addEllipse(in: CGRect(x: x - 0.75, y: y - 0.75, width: 1.5, height: 1.5))
-        }
-      }
-      context.fill(path, with: .color(TechPalette.ink.opacity(0.07)))
-    }
-    .allowsHitTesting(false)
   }
 }
 

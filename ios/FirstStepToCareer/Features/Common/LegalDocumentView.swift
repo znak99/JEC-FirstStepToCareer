@@ -42,7 +42,7 @@ struct LegalDocumentView: View {
             Link(destination: Self.supportMail) {
               Label("メールで問い合わせる", systemImage: "envelope.fill")
             }
-            .buttonStyle(OnboardingButtonStyle())
+            .buttonStyle(PrimaryButtonStyle())
             .padding(.top, 4)
           }
         }
@@ -52,7 +52,7 @@ struct LegalDocumentView: View {
         .padding(.bottom, 24)
       }
     }
-    .background { OnboardingBackground() }
+    .background { TechPageBackground() }
     .reservesTabBarSpace()
     .navigationTitle(document.title)
     .navigationBarTitleDisplayMode(.inline)

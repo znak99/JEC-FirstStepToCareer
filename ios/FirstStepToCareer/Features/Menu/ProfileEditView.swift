@@ -20,10 +20,10 @@ struct ProfileEditView: View {
     }
     .scrollDisabled(!isLoaded)
     .scrollDismissesKeyboard(.interactively)
-    .background { OnboardingBackground() }
+    .background { TechPageBackground() }
     .safeAreaInset(edge: .bottom) {
       Button("保存") { save() }
-        .buttonStyle(OnboardingButtonStyle())
+        .buttonStyle(PrimaryButtonStyle())
         .disabled(!isLoaded || draft.profile == nil || model?.isSaving == true)
         .padding(.horizontal, 24)
         .padding(.bottom, 12)

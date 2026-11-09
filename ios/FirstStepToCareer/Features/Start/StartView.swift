@@ -109,7 +109,7 @@ struct StartView: View {
         .clipShape(Capsule())
       }
       Button("ログインなしで始める") { onStarted() }
-        .buttonStyle(OnboardingButtonStyle())
+        .buttonStyle(PrimaryButtonStyle())
       Button("プライバシーポリシー") { showsPrivacy = true }
         .font(.footnote)
         .padding(.top, 4)

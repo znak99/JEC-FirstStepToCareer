@@ -196,7 +196,7 @@ struct PreparationView: View {
         Text("面接を始める")
       }
     }
-    .buttonStyle(OnboardingButtonStyle())
+    .buttonStyle(PrimaryButtonStyle())
     .disabled(!model.canStart)
   }
 }

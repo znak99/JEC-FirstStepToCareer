@@ -20,7 +20,7 @@ struct TechTabBar: View {
 
   // 선택한 아이콘을 채우는 그라데이션. 앱 아이콘의 파랑에서 보라로 넘어간다
   static let selectedFill = LinearGradient(
-    colors: [SplashPalette.top, TechPalette.accentSoft], startPoint: .topLeading,
+    colors: [BrandPalette.top, TechPalette.accentSoft], startPoint: .topLeading,
     endPoint: .bottomTrailing)
 
   var body: some View {
@@ -180,5 +180,5 @@ private struct TabIconShape: Shape {
     Spacer()
     TechTabBar(selection: $selection)
   }
-  .background { OnboardingBackground() }
+  .background { TechPageBackground() }
 }

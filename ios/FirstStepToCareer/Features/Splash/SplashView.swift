@@ -18,16 +18,6 @@ enum SplashTimeline {
   static let complete = 10.0
 }
 
-enum SplashEase {
-  static func progress(_ t: Double, _ start: Double, _ duration: Double) -> Double {
-    min(max((t - start) / duration, 0), 1)
-  }
-  static func easeOut(_ x: Double) -> Double { 1 - pow(1 - x, 3) }
-  static func easeInOut(_ x: Double) -> Double {
-    x < 0.5 ? 4 * x * x * x : 1 - pow(-2 * x + 2, 3) / 2
-  }
-}
-
 // 확인용 실행 인자. 개발(Debug) 빌드에서만 읽는다
 enum SplashDebug {
   #if DEBUG
@@ -57,7 +47,7 @@ struct SplashView: View {
         SplashFrame(
           t: reduceMotion ? SplashTimeline.complete : elapsed,
           elapsed: elapsed,
-          contentOpacity: reduceMotion ? SplashEase.progress(elapsed, 0, 0.4) : 1,
+          contentOpacity: reduceMotion ? Easing.progress(elapsed, 0, 0.4) : 1,
           size: proxy.size,
           message: message,
           showsLoading: model?.showsLoading == true)
@@ -98,12 +88,12 @@ private struct SplashFrame: View {
       width: logo.width, height: logo.height)
     ZStack {
       // 실행 화면의 한 가지 색에서 그라데이션으로 부드럽게 바꾼다
-      SplashPalette.middle
+      BrandPalette.middle
       LinearGradient(
-        colors: [SplashPalette.top, SplashPalette.middle, SplashPalette.bottom],
+        colors: [BrandPalette.top, BrandPalette.middle, BrandPalette.bottom],
         startPoint: .topLeading, endPoint: .bottomTrailing
       )
-      .opacity(SplashEase.progress(elapsed, 0, SplashTimeline.backgroundFade))
+      .opacity(Easing.progress(elapsed, 0, SplashTimeline.backgroundFade))
       Group {
         SplashScanLayer(t: t)
         SplashLogoLayer(t: t, rect: logoRect)
@@ -142,9 +132,9 @@ private struct SplashScanLayer: View {
       let direction = CGPoint(x: sin(Self.tilt), y: -cos(Self.tilt))
       // 왼쪽 아래 모서리(0)부터 오른쪽 위 모서리까지의 거리
       let span = size.width * direction.x - size.height * direction.y
-      let scan = SplashEase.progress(t, SplashTimeline.scanStart, SplashTimeline.scanDuration)
+      let scan = Easing.progress(t, SplashTimeline.scanStart, SplashTimeline.scanDuration)
       // 끝나면 모든 도트가 띠를 벗어나 원래 밝기가 된다
-      let front = -80 + (span + 80 + Self.bandWidth) * SplashEase.easeOut(scan)
+      let front = -80 + (span + 80 + Self.bandWidth) * Easing.easeOut(scan)
       for x in stride(from: Self.spacing / 2, to: size.width, by: Self.spacing) {
         for y in stride(from: Self.spacing / 2, to: size.height, by: Self.spacing) {
           let along = x * direction.x + (y - size.height) * direction.y
@@ -180,7 +170,7 @@ private struct SplashScanLayer: View {
         with: .linearGradient(
           Gradient(stops: [
             .init(color: .clear, location: 0),
-            .init(color: SplashPalette.glow.opacity(0.06), location: frontLocation - 0.04),
+            .init(color: BrandPalette.glow.opacity(0.06), location: frontLocation - 0.04),
             .init(color: .white.opacity(0.1), location: frontLocation),
             .init(color: .clear, location: 1),
           ]), startPoint: behind, endPoint: ahead))
@@ -198,20 +188,20 @@ private struct SplashLogoLayer: View {
     Canvas { context, _ in
       let parts = SplashLogo.parts(in: rect)
       var line = context
-      line.addFilter(.shadow(color: SplashPalette.glow, radius: 6))
+      line.addFilter(.shadow(color: BrandPalette.glow, radius: 6))
       for (index, part) in parts.enumerated() {
-        let drawn = SplashEase.easeInOut(
-          SplashEase.progress(
+        let drawn = Easing.easeInOut(
+          Easing.progress(
             t, Double(index) * SplashTimeline.drawStagger, SplashTimeline.drawDuration))
         guard drawn > 0 else { continue }
         line.stroke(
           part.trimmedPath(from: 0, to: drawn), with: .color(.white),
           style: StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
       }
-      let filled = SplashEase.progress(t, SplashTimeline.fillStart, SplashTimeline.fillDuration)
+      let filled = Easing.progress(t, SplashTimeline.fillStart, SplashTimeline.fillDuration)
       guard filled > 0 else { return }
       var fill = context
-      fill.addFilter(.shadow(color: SplashPalette.glow.opacity(0.7), radius: 12))
+      fill.addFilter(.shadow(color: BrandPalette.glow.opacity(0.7), radius: 12))
       fill.opacity = filled
       for part in parts { fill.fill(part, with: .color(.white)) }
     }
@@ -237,7 +227,7 @@ private struct SplashName: View {
           .overlay(alignment: .trailing) {
             if cursorOn && (visible == index + 1 || (visible == 0 && index == 0)) {
               Rectangle()
-                .fill(SplashPalette.glow)
+                .fill(BrandPalette.glow)
                 .frame(width: 3, height: 34)
                 .offset(x: visible == 0 ? -40 : 6)
             }
@@ -246,7 +236,7 @@ private struct SplashName: View {
     }
     .font(.system(size: 34, weight: .bold))
     .foregroundStyle(.white)
-    .shadow(color: SplashPalette.glow.opacity(0.6), radius: 8)
+    .shadow(color: BrandPalette.glow.opacity(0.6), radius: 8)
   }
 }
 
@@ -263,7 +253,7 @@ private struct SplashLoadingBar: View {
       Capsule()
         .fill(.white)
         .frame(width: segment, height: 3)
-        .shadow(color: SplashPalette.glow, radius: 4)
+        .shadow(color: BrandPalette.glow, radius: 4)
         .offset(x: (width - segment) / 2 * phase)
     }
   }

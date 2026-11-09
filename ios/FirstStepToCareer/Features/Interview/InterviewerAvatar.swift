@@ -16,11 +16,11 @@ struct InterviewerAvatar: View {
         Circle()
           .fill(
             LinearGradient(
-              colors: [SplashPalette.top, SplashPalette.bottom], startPoint: .topLeading,
+              colors: [BrandPalette.top, BrandPalette.bottom], startPoint: .topLeading,
               endPoint: .bottomTrailing)
           )
           .frame(width: size, height: size)
-          .shadow(color: SplashPalette.middle.opacity(0.35), radius: 13)
+          .shadow(color: BrandPalette.middle.opacity(0.35), radius: 13)
         Image(systemName: "person.fill")
           .font(.system(size: size * 0.45))
           .foregroundStyle(.white)

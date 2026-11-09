@@ -27,7 +27,7 @@ struct InterviewResultView: View {
       }
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .background { OnboardingBackground() }
+    .background { TechPageBackground() }
     .reservesTabBarSpace()
     .navigationTitle("面接結果")
     .navigationBarTitleDisplayMode(.inline)
@@ -62,7 +62,7 @@ struct InterviewResultView: View {
       Button("再試行") {
         Task { await model?.load() }
       }
-      .buttonStyle(OnboardingButtonStyle())
+      .buttonStyle(PrimaryButtonStyle())
       .frame(maxWidth: 240)
       .padding(.top, 4)
     }
@@ -317,7 +317,7 @@ private struct QuestionTab: View {
             isSelected
               ? AnyShapeStyle(
                 LinearGradient(
-                  colors: [SplashPalette.top, SplashPalette.middle], startPoint: .topLeading,
+                  colors: [BrandPalette.top, BrandPalette.middle], startPoint: .topLeading,
                   endPoint: .bottomTrailing))
               : AnyShapeStyle(TechPalette.cardTop))
         )

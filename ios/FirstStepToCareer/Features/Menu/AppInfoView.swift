@@ -12,7 +12,7 @@ struct AppInfoView: View {
         .scaledToFit()
         .frame(width: 112, height: 112)
         .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
-        .shadow(color: SplashPalette.middle.opacity(0.45), radius: 24)
+        .shadow(color: BrandPalette.middle.opacity(0.45), radius: 24)
         .accessibilityHidden(true)
       Text("就活一歩")
         .font(.title.weight(.bold))
@@ -38,12 +38,12 @@ struct AppInfoView: View {
             .accessibilityHidden(true)
         }
       }
-      .buttonStyle(OnboardingButtonStyle())
+      .buttonStyle(PrimaryButtonStyle())
     }
     .padding(.horizontal, 24)
     .padding(.bottom, 24)
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .background { OnboardingBackground() }
+    .background { TechPageBackground() }
     .reservesTabBarSpace()
     .navigationTitle("アプリ情報")
     .navigationBarTitleDisplayMode(.inline)
