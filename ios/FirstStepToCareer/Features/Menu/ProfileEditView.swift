@@ -33,16 +33,8 @@ struct ProfileEditView: View {
     .navigationTitle("プロフィール")
     .navigationBarTitleDisplayMode(.inline)
     .profileChoiceDestinations($draft)
-    .alert("保存できませんでした", isPresented: saveFailed) {
-      Button("OK", role: .cancel) {}
-    } message: {
-      Text("しばらくしてから、もう一度お試しください。")
-    }
+    .saveFailedAlert(for: model)
     .task { await load() }
-  }
-
-  private var saveFailed: Binding<Bool> {
-    Binding(get: { model?.saveFailed ?? false }, set: { model?.saveFailed = $0 })
   }
 
   private func load() async {

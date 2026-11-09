@@ -23,14 +23,7 @@ final class HistoryModel {
     isLoading = true
     defer { isLoading = false }
     do {
-      var items: [InterviewSummary] = []
-      var cursor: String?
-      repeat {
-        let page = try await api.interviews(cursor: cursor)
-        items += page.items
-        cursor = page.nextCursor
-      } while cursor != nil
-      interviews = CompletedInterview.list(from: items)
+      interviews = CompletedInterview.list(from: try await api.allInterviews())
       loadFailed = false
       hasLoaded = true
     } catch {

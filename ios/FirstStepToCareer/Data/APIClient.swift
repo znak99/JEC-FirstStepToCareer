@@ -51,6 +51,18 @@ struct APIClient: Sendable {
     return try await send("GET", path)
   }
 
+  // 마지막 페이지까지 차례로 받아 이어 붙인다
+  func allInterviews() async throws -> [InterviewSummary] {
+    var items: [InterviewSummary] = []
+    var cursor: String?
+    repeat {
+      let page = try await interviews(cursor: cursor)
+      items += page.items
+      cursor = page.nextCursor
+    } while cursor != nil
+    return items
+  }
+
   func deleteInterview(id: String) async throws {
     try await sendWithoutResponse("DELETE", "/v1/interviews/\(id)")
   }

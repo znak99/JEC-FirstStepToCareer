@@ -9,13 +9,8 @@ struct PrimaryButtonStyle: ButtonStyle {
       .font(.headline)
       .foregroundStyle(.white)
       .frame(maxWidth: .infinity, minHeight: 50)
-      // 밝은/어두운 모드 모두 앱 아이콘의 파랑. 색 차이가 크지 않게 가운데 색까지만 쓴다
-      .background(
-        Capsule().fill(
-          LinearGradient(
-            colors: [BrandPalette.top, BrandPalette.middle], startPoint: .topLeading,
-            endPoint: .bottomTrailing))
-      )
+      // 밝은/어두운 모드 모두 앱 아이콘의 파랑
+      .background(Capsule().fill(BrandPalette.fill))
       .shadow(color: BrandPalette.middle.opacity(isEnabled ? 0.45 : 0), radius: 10)
       .opacity(isEnabled ? (configuration.isPressed ? 0.8 : 1) : 0.4)
       .contentShape(Capsule())

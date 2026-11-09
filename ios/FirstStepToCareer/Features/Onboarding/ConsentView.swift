@@ -38,11 +38,7 @@ struct ConsentView: View {
       .background(TechCardBackground(showsBorder: false))
     }
     .loadingOverlay(model?.isSaving == true, message: "保存しています…")
-    .alert("保存できませんでした", isPresented: saveFailed) {
-      Button("OK", role: .cancel) {}
-    } message: {
-      Text("しばらくしてから、もう一度お試しください。")
-    }
+    .saveFailedAlert(for: model)
     .sheet(item: $reading) { document in
       NavigationStack {
         LegalDocumentView(document: document)
@@ -53,10 +49,6 @@ struct ConsentView: View {
           }
       }
     }
-  }
-
-  private var saveFailed: Binding<Bool> {
-    Binding(get: { model?.saveFailed ?? false }, set: { model?.saveFailed = $0 })
   }
 
   // 버튼은 늘 누를 수 있다. 두 항목이 체크되는 것을 보여 준 뒤 0.2초 후에 넘어간다.

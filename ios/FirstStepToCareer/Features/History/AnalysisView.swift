@@ -224,11 +224,7 @@ private struct PillPicker<Item: Hashable>: View {
             .background(
               Capsule().fill(
                 isOn
-                  ? AnyShapeStyle(
-                    LinearGradient(
-                      colors: [BrandPalette.top, BrandPalette.middle], startPoint: .topLeading,
-                      endPoint: .bottomTrailing))
-                  : AnyShapeStyle(TechPalette.cardTop))
+                  ? AnyShapeStyle(BrandPalette.fill) : AnyShapeStyle(TechPalette.cardTop))
             )
             .overlay {
               Capsule().strokeBorder(TechPalette.accent.opacity(isOn ? 0 : 0.35), lineWidth: 1)
@@ -275,23 +271,6 @@ private struct StatCard: View {
     .padding(14)
     .frame(maxWidth: .infinity, alignment: .leading)
     .background(TechCardBackground(showsBorder: false))
-    .accessibilityElement(children: .combine)
-  }
-}
-
-private struct StrengthTile: View {
-  let title: LocalizedStringKey
-  let value: String
-  let tint: Color
-
-  var body: some View {
-    VStack(alignment: .leading, spacing: 4) {
-      Text(title).font(.caption).foregroundStyle(.secondary)
-      Text(verbatim: value).font(.subheadline.weight(.semibold)).foregroundStyle(tint)
-    }
-    .padding(12)
-    .frame(maxWidth: .infinity, alignment: .leading)
-    .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(tint.opacity(0.1)))
     .accessibilityElement(children: .combine)
   }
 }

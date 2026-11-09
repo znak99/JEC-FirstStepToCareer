@@ -106,6 +106,43 @@ struct APIClientTests {
     #expect(try client.tokenStore.currentToken() == first)
   }
 
+  @Test func allInterviewsFollowsCursorsToLastPage() async throws {
+    let recorder = stubRoutes { _, path in
+      switch path {
+      case "/v1/interviews":
+        (
+          200,
+          #"{"items":["# + Self.summary(id: "a", status: "completed") + #"],"nextCursor":"c1"}"#
+        )
+      case "/v1/interviews?cursor=c1":
+        (200, #"{"items":[],"nextCursor":"c2"}"#)
+      default:
+        (
+          200,
+          #"{"items":["# + Self.summary(id: "b", status: "completed") + ","
+            + Self.summary(id: "c", status: "in_progress") + #"],"nextCursor":null}"#
+        )
+      }
+    }
+    let items = try await client.allInterviews()
+    #expect(items.map(\.id) == ["a", "b", "c"])
+    #expect(
+      recorder.items == [
+        "GET /v1/interviews", "GET /v1/interviews?cursor=c1", "GET /v1/interviews?cursor=c2",
+      ])
+  }
+
+  @Test func allInterviewsFailsWhenAnyPageFails() async {
+    _ = stubRoutes { _, path in
+      path == "/v1/interviews"
+        ? (200, #"{"items":[],"nextCursor":"c1"}"#)
+        : (500, #"{"error":{"code":"INTERNAL_ERROR","message":"x"}}"#)
+    }
+    await #expect(throws: APIError.server(status: 500, code: "INTERNAL_ERROR")) {
+      try await client.allInterviews()
+    }
+  }
+
   @Test func reportsNetworkFailure() async {
     StubURLProtocol.handler = nil
     let configuration = URLSessionConfiguration.ephemeral

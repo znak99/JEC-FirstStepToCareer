@@ -264,23 +264,6 @@ private struct ScoreSummaryCard: View {
   }
 }
 
-private struct StrengthTile: View {
-  let title: LocalizedStringKey
-  let value: String
-  let tint: Color
-
-  var body: some View {
-    VStack(alignment: .leading, spacing: 4) {
-      Text(title).font(.caption).foregroundStyle(.secondary)
-      Text(value).font(.subheadline.weight(.semibold)).foregroundStyle(tint)
-    }
-    .padding(12)
-    .frame(maxWidth: .infinity, alignment: .leading)
-    .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(tint.opacity(0.1)))
-    .accessibilityElement(children: .combine)
-  }
-}
-
 // 「Q1」부터 질문 수만큼 버튼을 두고, 고른 질문의 점수·질문·답변을 보여 준다
 private struct QuestionResults: View {
   let questions: [Question]
@@ -315,11 +298,7 @@ private struct QuestionTab: View {
         .background(
           Capsule().fill(
             isSelected
-              ? AnyShapeStyle(
-                LinearGradient(
-                  colors: [BrandPalette.top, BrandPalette.middle], startPoint: .topLeading,
-                  endPoint: .bottomTrailing))
-              : AnyShapeStyle(TechPalette.cardTop))
+              ? AnyShapeStyle(BrandPalette.fill) : AnyShapeStyle(TechPalette.cardTop))
         )
         .overlay {
           Capsule().strokeBorder(TechPalette.accent.opacity(isSelected ? 0 : 0.4), lineWidth: 1)

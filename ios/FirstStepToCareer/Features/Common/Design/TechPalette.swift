@@ -42,4 +42,9 @@ enum BrandPalette {
   static let middle = Color(red: 0x17 / 255, green: 0x6D / 255, blue: 0xDC / 255)
   static let bottom = Color(red: 0x07 / 255, green: 0x45 / 255, blue: 0xB6 / 255)
   static let glow = Color(red: 0.55, green: 0.9, blue: 1)
+
+  // 큰 버튼·고른 칸·메뉴 아이콘 바탕. 색 차이가 크지 않게 가운데 색까지만 쓴다
+  static var fill: LinearGradient {
+    LinearGradient(colors: [top, middle], startPoint: .topLeading, endPoint: .bottomTrailing)
+  }
 }

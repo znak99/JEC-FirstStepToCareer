@@ -1,26 +1,5 @@
 import SwiftUI
 
-struct TechCard<Content: View>: View {
-  var title: LocalizedStringKey?
-  @ViewBuilder var content: Content
-
-  var body: some View {
-    VStack(alignment: .leading, spacing: 14) {
-      if let title {
-        HStack(spacing: 8) {
-          Capsule().fill(TechPalette.accent).frame(width: 3, height: 14)
-            .shadow(color: TechPalette.accent.opacity(0.8), radius: 3)
-          Text(title).font(.subheadline.weight(.semibold))
-        }
-      }
-      content
-    }
-    .padding(16)
-    .frame(maxWidth: .infinity, alignment: .leading)
-    .background(TechCardBackground())
-  }
-}
-
 struct TechCardBackground: View {
   // 온보딩 동의 카드처럼 테두리 없이 쓸 때 false
   var showsBorder = true

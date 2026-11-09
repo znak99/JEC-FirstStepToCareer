@@ -23,17 +23,9 @@ struct ProfileSetupView: View {
       .toolbar(.hidden, for: .navigationBar)
       .profileChoiceDestinations($draft)
       .loadingOverlay(model?.isSaving == true, message: "保存しています…")
-      .alert("保存できませんでした", isPresented: saveFailed) {
-        Button("OK", role: .cancel) {}
-      } message: {
-        Text("しばらくしてから、もう一度お試しください。")
-      }
+      .saveFailedAlert(for: model)
     }
     .task { await prepare() }
-  }
-
-  private var saveFailed: Binding<Bool> {
-    Binding(get: { model?.saveFailed ?? false }, set: { model?.saveFailed = $0 })
   }
 
   // 같은 Apple 계정으로 다른 iPhone에서 입력해 둔 값이 있으면 미리 채운다

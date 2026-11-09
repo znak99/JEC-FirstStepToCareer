@@ -229,10 +229,7 @@ private struct MenuRow<Value: View>: View {
         .foregroundStyle(.white)
         .frame(width: 32, height: 32)
         .background(
-          RoundedRectangle(cornerRadius: 9, style: .continuous).fill(
-            LinearGradient(
-              colors: [BrandPalette.top, BrandPalette.middle], startPoint: .topLeading,
-              endPoint: .bottomTrailing))
+          RoundedRectangle(cornerRadius: 9, style: .continuous).fill(BrandPalette.fill)
         )
         .accessibilityHidden(true)
       Text(title)

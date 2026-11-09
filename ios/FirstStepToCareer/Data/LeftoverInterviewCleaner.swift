@@ -27,13 +27,8 @@ struct LeftoverInterviewCleaner: Sendable {
   func evaluatePending() async {
     do {
       guard try await api.status().aiEnabled else { return }
-      var pending: [String] = []
-      var cursor: String?
-      repeat {
-        let page = try await api.interviews(cursor: cursor)
-        pending += page.items.filter { $0.status == .awaitingEvaluation }.map(\.id)
-        cursor = page.nextCursor
-      } while cursor != nil
+      let pending = try await api.allInterviews()
+        .filter { $0.status == .awaitingEvaluation }.map(\.id)
       for id in pending {
         _ = try? await api.evaluate(interviewId: id)
       }
