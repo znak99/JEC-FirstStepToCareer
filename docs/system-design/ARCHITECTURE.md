@@ -81,7 +81,7 @@ MVVM + Clean 아키텍처를 따른다. 화면은 그리기만 하고(View), 화
 | Domain | Entities(형식. JSON을 모른다), Rules(계산·판단 규칙), 저장소·기기 약속(프로토콜), 저장소 오류 중 구분할 종류(`RepositoryError`: 거절·AI 꺼짐·연결 실패), UseCase(서버·저장값을 쓰는 한 가지 일) | 없음 |
 | Data | Network(서버 호출, 서버 JSON 그대로의 형식인 DTO와 Domain 형식으로의 변환, Keychain의 기기 토큰), Local(이 iPhone 저장값), Sensors(카메라 추적 ARKit, 앞쪽 카메라 AVFoundation, STT와 마이크 소리 크기, TTS). Domain 약속의 실제 구현 | Domain |
 
-- 화면은 App이 넣어 준 UseCase 모음(`UseCases`), 앱 정보(`AppInfo`), 기기 부품(`InterviewDevices`)을 받아 ViewModel을 만든다. 첫 화면을 바로 그려야 하는 앱 시작 흐름·탭 화면·면접 홈은 생성자로 받고, 나머지 화면은 SwiftUI 환경값으로 받는다.
+- 화면은 App이 넣어 준 UseCase 모음(`UseCases`), 앱 정보(`AppInfo`), 기기 부품(`InterviewDevices`)을 받아 ViewModel을 만든다. 첫 화면을 바로 그려야 하는 앱 시작 흐름(`AppRootView`)만 생성자로 받고, 나머지 화면은 SwiftUI 환경값으로 받는다. UseCase 모음과 기기 부품 환경값이 빠지면 앱이 바로 멈춘다(조용히 아무것도 하지 않는 화면을 막는다). ViewModel은 화면이 처음 나타날 때 한 번만 만든다. Xcode 미리보기에는 실제 서버에 닿지 않는 미리보기용 모음(`UseCases.preview`, 개발 빌드에만 있음)을 넣는다.
 - ViewModel은 서버·이 iPhone 저장값을 UseCase로만 쓰고, 음성 듣기·읽기와 카메라 켜기 같은 기기 조작은 Domain의 기기 약속을 바로 쓴다.
 - 테스트는 가짜 저장소·가짜 기기 부품(테스트 대상의 `Fakes.swift`)으로 UseCase와 ViewModel을 확인하고, 실제 저장소는 가짜 서버 응답(`StubServer.swift`)으로 확인한다. 실제 서버와 AI는 부르지 않는다.
 

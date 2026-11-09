@@ -57,10 +57,6 @@ struct SplashView: View {
     .accessibilityElement(children: .ignore)
     .accessibilityLabel(Text("就活一歩"))
     .task {
-      guard let useCases else {
-        onFinished()
-        return
-      }
       let model = SplashViewModel(
         checkServiceStatus: useCases.checkServiceStatus,
         deleteUnfinishedInterview: useCases.deleteUnfinishedInterview, hasStarted: hasStarted,
@@ -268,4 +264,5 @@ private struct SplashLoadingBar: View {
 
 #Preview {
   SplashView(hasStarted: true)
+    .useCases(.preview)
 }

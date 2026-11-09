@@ -2,13 +2,26 @@ import SwiftUI
 
 // 면접 탭의 첫 화면. 응모처와 면접 조건을 입력하고 바로 면접 준비로 간다 (SITE_MAP S-01)
 struct InterviewHomeView: View {
+  @Environment(\.useCases) private var useCases
+  @State private var model: InterviewHomeViewModel?
+
+  var body: some View {
+    // 탭 화면을 다시 그릴 때마다 새로 만들지 않게, 처음 나타날 때 한 번만 화면 상태를 만든다
+    if let model {
+      InterviewHomeContent(model: model)
+    } else {
+      Color.clear
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background { TechPageBackground() }
+        .onAppear { model = InterviewHomeViewModel(useCases) }
+    }
+  }
+}
+
+private struct InterviewHomeContent: View {
+  @Bindable var model: InterviewHomeViewModel
   @Environment(\.tabRootRequest) private var tabRootRequest
   @State private var path: [InterviewRoute] = []
-  @State private var model: InterviewHomeViewModel
-
-  init(useCases: UseCases) {
-    _model = State(initialValue: InterviewHomeViewModel(useCases))
-  }
 
   var body: some View {
     NavigationStack(path: $path) {

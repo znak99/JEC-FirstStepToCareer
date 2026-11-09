@@ -22,7 +22,7 @@ struct PreparationView: View {
     .toolbarColorScheme(.dark, for: .navigationBar)
     .hidesTabBar()
     .task {
-      if model == nil, let useCases, let devices {
+      if model == nil {
         let created = PreparationViewModel(draft: draft, useCases: useCases, devices: devices)
         model = created
         await created.runChecks()

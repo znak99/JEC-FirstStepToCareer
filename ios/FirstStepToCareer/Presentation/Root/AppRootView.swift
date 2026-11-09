@@ -31,7 +31,7 @@ struct AppRootView: View {
             .transition(.opacity)
         case .tabs:
           // 로그아웃·데이터 삭제 뒤에는 탭 화면을 버리고 다시 만들어 이전 계정의 화면 상태를 지운다
-          RootTabView(useCases: useCases) { model.reset() }
+          RootTabView { model.reset() }
             .transition(.opacity)
             .sheet(isPresented: asksAgreement) {
               // 동의해야만 닫힌다. 동의 기록은 이 모달에서 바로 서버에 남긴다

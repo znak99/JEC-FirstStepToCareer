@@ -13,7 +13,7 @@ struct AppleSignInButton: View {
 
   var body: some View {
     SignInWithAppleButton(.signIn) { request in
-      guard let challenge = useCases?.makeSignInChallenge.execute() else { return }
+      let challenge = useCases.makeSignInChallenge.execute()
       nonce = challenge.nonce
       request.requestedScopes = []
       request.nonce = challenge.hashedNonce

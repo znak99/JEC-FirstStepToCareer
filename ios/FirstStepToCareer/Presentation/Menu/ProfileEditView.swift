@@ -38,7 +38,7 @@ struct ProfileEditView: View {
   }
 
   private func load() async {
-    guard model == nil, let useCases else { return }
+    guard model == nil else { return }
     let model = ProfileViewModel(useCases)
     self.model = model
     if let profile = await model.load() { draft = ProfileDraft(profile) }
@@ -84,4 +84,5 @@ private struct ProfileFormSkeleton: View {
 
 #Preview {
   NavigationStack { ProfileEditView() }
+    .useCases(.preview)
 }

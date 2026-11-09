@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct RootTabView: View {
-  let useCases: UseCases
   // 로그아웃·데이터 삭제가 끝났을 때 부른다. 온보딩부터 다시 한다
   var onReset: () -> Void = {}
 
+  @Environment(\.useCases) private var useCases
   @Environment(\.accessibilityReduceMotion) private var reduceMotion
   @State private var selectedTab = AppTab.interview
   @State private var tabBarVisibility = TabBarVisibility()
@@ -50,7 +50,7 @@ struct RootTabView: View {
   @ViewBuilder
   private func screen(for tab: AppTab) -> some View {
     switch tab {
-    case .interview: InterviewHomeView(useCases: useCases)
+    case .interview: InterviewHomeView()
     case .history: HistoryView { selectedTab = .interview }
     case .menu: MenuView(onReset: onReset)
     }

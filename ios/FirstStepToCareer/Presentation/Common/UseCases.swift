@@ -74,7 +74,20 @@ struct UseCases: Sendable {
 }
 
 extension EnvironmentValues {
-  // App이 앱을 시작할 때 넣는다
-  @Entry var useCases: UseCases?
+  // 빠지면 화면이 조용히 아무것도 하지 않게 되므로 바로 멈춘다
+  var useCases: UseCases {
+    guard let providedUseCases else { preconditionFailure("App이 useCases(_:)로 넣지 않았다") }
+    return providedUseCases
+  }
+
+  // SwiftUI는 값을 넣기 전에 지금 값을 한 번 읽으므로, 넣는 쪽은 비어 있어도 되는 값으로 둔다
+  @Entry fileprivate var providedUseCases: UseCases?
   @Entry var appInfo = AppInfo(version: "-", appleSignInEnabled: false)
+}
+
+extension View {
+  // App이 앱을 시작할 때 넣는다
+  func useCases(_ useCases: UseCases) -> some View {
+    environment(\.providedUseCases, useCases)
+  }
 }

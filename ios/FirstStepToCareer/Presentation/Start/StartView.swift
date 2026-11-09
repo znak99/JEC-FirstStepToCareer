@@ -18,7 +18,7 @@ struct StartView: View {
     }
     .loadingOverlay(model?.isSigningIn == true, message: "ログインしています…")
     .task {
-      if model == nil, let useCases {
+      if model == nil {
         model = StartViewModel(signInWithApple: useCases.signInWithApple)
       }
     }
@@ -124,4 +124,5 @@ struct StartView: View {
 
 #Preview {
   StartView()
+    .useCases(.preview)
 }

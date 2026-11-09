@@ -32,7 +32,7 @@ struct InterviewResultView: View {
     .navigationTitle("面接結果")
     .navigationBarTitleDisplayMode(.inline)
     .task {
-      if model == nil, let useCases {
+      if model == nil {
         let created = InterviewResultViewModel(interviewId: interviewId, useCases: useCases)
         model = created
         await created.load()

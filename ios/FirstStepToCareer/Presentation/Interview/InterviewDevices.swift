@@ -30,6 +30,21 @@ protocol InterviewDevices {
 }
 
 extension EnvironmentValues {
+  // 빠지면 면접 화면이 조용히 아무것도 하지 않게 되므로 바로 멈춘다
+  var interviewDevices: any InterviewDevices {
+    guard let providedInterviewDevices else {
+      preconditionFailure("App이 interviewDevices(_:)로 넣지 않았다")
+    }
+    return providedInterviewDevices
+  }
+
+  // 넣기 전에 한 번 읽히므로 비어 있어도 되는 값으로 둔다 (UseCases.swift의 providedUseCases와 같음)
+  @Entry fileprivate var providedInterviewDevices: (any InterviewDevices)?
+}
+
+extension View {
   // App이 앱을 시작할 때 넣는다
-  @Entry var interviewDevices: (any InterviewDevices)?
+  func interviewDevices(_ devices: any InterviewDevices) -> some View {
+    environment(\.providedInterviewDevices, devices)
+  }
 }

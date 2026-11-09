@@ -10,3 +10,11 @@ enum AppContainer {
       activeInterview: ActiveInterviewStore(), nonces: SystemSignInNonce())
   }
 }
+
+#if DEBUG
+  extension UseCases {
+    // Xcode 미리보기용. 아무것도 받지 않는 주소(localhost:9)를 불러 실제 서버에 닿지 않는다
+    static let preview = AppContainer.makeUseCases(
+      api: APIClient(baseURL: URL(string: "http://localhost:9")!))
+  }
+#endif

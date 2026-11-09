@@ -60,10 +60,6 @@ struct ConsentView: View {
     Task {
       try? await Task.sleep(for: .milliseconds(200))
       if recordsOnServer {
-        guard let useCases else {
-          isContinuing = false
-          return
-        }
         let model = model ?? ProfileViewModel(useCases)
         self.model = model
         guard await model.agree(to: LegalDocument.allCases) else {
@@ -127,4 +123,5 @@ extension LegalDocument {
 
 #Preview {
   ConsentView()
+    .useCases(.preview)
 }

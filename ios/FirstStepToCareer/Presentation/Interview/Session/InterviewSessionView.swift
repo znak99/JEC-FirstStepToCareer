@@ -50,7 +50,6 @@ struct InterviewSessionView: View {
     }
     .task {
       if model == nil {
-        guard let useCases, let devices else { return }
         let created = InterviewSessionViewModel(
           context: context, useCases: useCases, devices: devices)
         model = created

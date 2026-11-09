@@ -40,7 +40,6 @@ struct HistoryView: View {
       .onChange(of: tabRootRequest) { path = [] }
       // 탭을 열 때와 결과 화면에서 돌아올 때마다 다시 불러온다
       .task {
-        guard let useCases else { return }
         let current =
           model ?? HistoryViewModel(loadCompletedInterviews: useCases.loadCompletedInterviews)
         model = current
@@ -317,4 +316,5 @@ private struct LabelChip: View {
 
 #Preview {
   HistoryView()
+    .useCases(.preview)
 }

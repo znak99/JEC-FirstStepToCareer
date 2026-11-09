@@ -47,7 +47,6 @@ struct MenuView: View {
         }
       }
       .task {
-        guard let useCases else { return }
         let current = model ?? MenuViewModel(useCases)
         model = current
         await current.loadAccount()
@@ -280,4 +279,5 @@ private struct OutlineButton: View {
 
 #Preview {
   MenuView()
+    .useCases(.preview)
 }

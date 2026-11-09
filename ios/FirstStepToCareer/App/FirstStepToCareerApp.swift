@@ -7,9 +7,9 @@ struct FirstStepToCareerApp: App {
   var body: some Scene {
     WindowGroup {
       AppRootView(useCases: useCases)
-        .environment(\.useCases, useCases)
+        .useCases(useCases)
         .environment(\.appInfo, BuildConfig.appInfo)
-        .environment(\.interviewDevices, SystemInterviewDevices())
+        .interviewDevices(SystemInterviewDevices())
     }
   }
 }
