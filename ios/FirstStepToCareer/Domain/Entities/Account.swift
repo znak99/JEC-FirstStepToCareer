@@ -1,16 +1,16 @@
 import CryptoKit
 import Foundation
 
-enum AccountType: String, Codable, Sendable {
+enum AccountType: String, Sendable {
   case guest
   case apple
 }
 
-struct AccountStatus: Codable, Sendable {
+struct AccountStatus: Sendable {
   let accountType: AccountType
 }
 
-struct AppleSignInRequest: Encodable, Sendable {
+struct AppleSignInRequest: Sendable {
   let identityToken: String
   let nonce: String
 }

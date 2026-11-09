@@ -11,11 +11,13 @@ struct ProfileStore: @unchecked Sendable {
   }
 
   var profile: Profile? {
-    defaults.data(forKey: Self.key).flatMap { try? JSONDecoder().decode(Profile.self, from: $0) }
+    defaults.data(forKey: Self.key).flatMap {
+      try? JSONDecoder().decode(ProfileDTO.self, from: $0).domain
+    }
   }
 
   func save(_ profile: Profile) {
-    defaults.set(try? JSONEncoder().encode(profile), forKey: Self.key)
+    defaults.set(try? JSONEncoder().encode(ProfileDTO(profile)), forKey: Self.key)
   }
 
   func clear() {

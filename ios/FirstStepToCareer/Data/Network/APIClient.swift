@@ -37,18 +37,22 @@ struct APIClient: Sendable {
   }
 
   func status() async throws -> ServiceStatus {
-    try await send("GET", "/v1/status")
+    let dto: ServiceStatusDTO = try await send("GET", "/v1/status")
+    return dto.domain
   }
 
   func createInterview(_ body: NewInterview) async throws -> InterviewDetail {
-    try await send("POST", "/v1/interviews", body: body)
+    let dto: InterviewDetailDTO = try await send(
+      "POST", "/v1/interviews", body: NewInterviewDTO(body))
+    return dto.domain
   }
 
   func interview(id: String) async throws -> InterviewDetail {
-    try await send("GET", "/v1/interviews/\(id)")
+    let dto: InterviewDetailDTO = try await send("GET", "/v1/interviews/\(id)")
+    return dto.domain
   }
 
-  func interviews(cursor: String? = nil) async throws -> InterviewPage {
+  func interviews(cursor: String? = nil) async throws -> InterviewPageDTO {
     var path = "/v1/interviews"
     if let cursor { path += "?cursor=\(cursor)" }
     return try await send("GET", path)
@@ -60,7 +64,7 @@ struct APIClient: Sendable {
     var cursor: String?
     repeat {
       let page = try await interviews(cursor: cursor)
-      items += page.items
+      items += page.items.map(\.domain)
       cursor = page.nextCursor
     } while cursor != nil
     return items
@@ -73,20 +77,27 @@ struct APIClient: Sendable {
   func submitAnswer(interviewId: String, questionId: String, _ body: AnswerSubmission) async throws
     -> AnswerResult
   {
-    try await send(
-      "PUT", "/v1/interviews/\(interviewId)/questions/\(questionId)/answer", body: body)
+    let dto: AnswerResultDTO = try await send(
+      "PUT", "/v1/interviews/\(interviewId)/questions/\(questionId)/answer",
+      body: AnswerSubmissionDTO(body))
+    return dto.domain
   }
 
   func evaluate(interviewId: String) async throws -> InterviewDetail {
-    try await send("POST", "/v1/interviews/\(interviewId)/evaluation")
+    let dto: InterviewDetailDTO = try await send(
+      "POST", "/v1/interviews/\(interviewId)/evaluation")
+    return dto.domain
   }
 
   func me() async throws -> AccountStatus {
-    try await send("GET", "/v1/me")
+    let dto: AccountStatusDTO = try await send("GET", "/v1/me")
+    return dto.domain
   }
 
   func signInWithApple(_ body: AppleSignInRequest) async throws -> AccountStatus {
-    try await send("POST", "/v1/auth/apple", body: body)
+    let dto: AccountStatusDTO = try await send(
+      "POST", "/v1/auth/apple", body: AppleSignInRequestDTO(body))
+    return dto.domain
   }
 
   // 서버가 지금 토큰을 지우므로 성공하면 새 기기 토큰으로 바꾼다
@@ -102,21 +113,19 @@ struct APIClient: Sendable {
 
   // 저장한 적이 없으면 nil
   func profile() async throws -> Profile? {
-    let response: ProfileResponse = try await send("GET", "/v1/me/profile")
-    return response.profile
+    let response: ProfileResponseDTO = try await send("GET", "/v1/me/profile")
+    return response.profile?.domain
   }
 
   func saveProfile(_ profile: Profile) async throws -> Profile? {
-    let response: ProfileResponse = try await send("PUT", "/v1/me/profile", body: profile)
-    return response.profile
+    let response: ProfileResponseDTO = try await send(
+      "PUT", "/v1/me/profile", body: ProfileDTO(profile))
+    return response.profile?.domain
   }
 
   // 지금 앱에 들어 있는 문서 버전에 동의했다고 기록한다
   func recordConsents(_ documents: [LegalDocument]) async throws {
-    _ = try await perform(
-      "POST", "/v1/me/consents",
-      body: ConsentsRequest(
-        consents: documents.map { ConsentRecord(document: $0.rawValue, version: $0.version) }))
+    _ = try await perform("POST", "/v1/me/consents", body: ConsentsRequestDTO(documents))
   }
 
   private struct Empty: Encodable {}

@@ -143,6 +143,12 @@ struct APIClientTests {
     }
   }
 
+  // 앱이 모르는 값이 오면 잘못된 응답으로 본다
+  @Test func unknownValueIsInvalidResponse() async {
+    StubURLProtocol.handler = { _ in (200, Data(#"{"accountType":"admin"}"#.utf8)) }
+    await #expect(throws: APIError.invalidResponse) { try await client.me() }
+  }
+
   @Test func reportsNetworkFailure() async {
     StubURLProtocol.handler = nil
     let configuration = URLSessionConfiguration.ephemeral

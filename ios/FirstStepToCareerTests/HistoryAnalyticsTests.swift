@@ -172,13 +172,14 @@ struct HistoryAnalyticsTests {
 extension APIClientTests {
   @MainActor
   @Test func historyModelLoadsAllPages() async throws {
-    let first = InterviewPage(
-      items: [HistoryAnalyticsTests.summary("a", daysAgo: 1)], nextCursor: "next")
-    let second = InterviewPage(
+    let first = InterviewPageDTO(
+      items: [HistoryAnalyticsTests.summary("a", daysAgo: 1)].map(InterviewSummaryDTO.init),
+      nextCursor: "next")
+    let second = InterviewPageDTO(
       items: [
         HistoryAnalyticsTests.summary("b", daysAgo: 2),
         HistoryAnalyticsTests.summary("c", daysAgo: 0, status: .inProgress),
-      ], nextCursor: nil)
+      ].map(InterviewSummaryDTO.init), nextCursor: nil)
     let firstData = try JSONEncoder().encode(first)
     let secondData = try JSONEncoder().encode(second)
     StubURLProtocol.handler = { request in
@@ -193,8 +194,9 @@ extension APIClientTests {
 
   @MainActor
   @Test func historyModelKeepsDataWhenReloadFails() async throws {
-    let page = InterviewPage(
-      items: [HistoryAnalyticsTests.summary("a", daysAgo: 1)], nextCursor: nil)
+    let page = InterviewPageDTO(
+      items: [HistoryAnalyticsTests.summary("a", daysAgo: 1)].map(InterviewSummaryDTO.init),
+      nextCursor: nil)
     let data = try JSONEncoder().encode(page)
     StubURLProtocol.handler = { _ in (200, data) }
     let model = HistoryViewModel(api: client)
