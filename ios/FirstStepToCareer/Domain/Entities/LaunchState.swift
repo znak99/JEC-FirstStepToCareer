@@ -21,9 +21,3 @@ struct LaunchState: Equatable, Sendable {
       hasAgreed: hasAgreed, hasStarted: hasStarted, hasProfile: hasProfile)
   }
 }
-
-// Apple 로그인 한 번에 쓰는 일회용 값. Apple에는 해시를, 서버에는 원문을 보낸다
-struct SignInChallenge: Equatable, Sendable {
-  let nonce: String
-  let hashedNonce: String
-}

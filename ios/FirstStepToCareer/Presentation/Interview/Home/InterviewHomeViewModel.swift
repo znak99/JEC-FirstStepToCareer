@@ -12,8 +12,6 @@ final class InterviewHomeViewModel {
     case failed
   }
 
-  static let questionCountRange = InterviewDraft.questionCountRange
-
   private(set) var availability = Availability.loading
   var form: InterviewForm
 

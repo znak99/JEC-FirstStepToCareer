@@ -217,7 +217,7 @@ struct InterviewHomeView: View {
   }
 
   private var questionCountRow: some View {
-    let range = InterviewHomeViewModel.questionCountRange
+    let range = InterviewDraft.questionCountRange
     return HStack(spacing: 12) {
       Text("質問数")
       Spacer()

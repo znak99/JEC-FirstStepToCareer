@@ -161,7 +161,6 @@ final class InterviewSessionViewModel {
       if let next = result.nextQuestion {
         await ask(next)
       } else {
-        // 마지막 답변이 저장되면 평가 대기가 되어, UseCase가 다음 실행 때 지우지 않게 ID를 지웠다
         phase = .closing
         await synthesizer.speak(result.closingMessage ?? "")
         finish()

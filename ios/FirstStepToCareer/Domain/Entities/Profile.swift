@@ -10,7 +10,6 @@ struct Profile: Hashable, Sendable {
   var industry: String?
   var jobTitle: String?
 
-  // 앞뒤 공백을 지우고 만든다. 닉네임이 비었거나 어느 항목이든 글자 수를 넘으면 만들지 않는다
   // 서버나 이 iPhone에 이미 저장된 값을 그대로 옮길 때 쓴다. 다시 검사하지 않는다
   init(saved nickname: String, hiringType: HiringType?, industry: String?, jobTitle: String?) {
     self.nickname = nickname
@@ -19,6 +18,7 @@ struct Profile: Hashable, Sendable {
     self.jobTitle = jobTitle
   }
 
+  // 앞뒤 공백을 지우고 만든다. 닉네임이 비었거나 어느 항목이든 글자 수를 넘으면 만들지 않는다
   init?(nickname: String, hiringType: HiringType?, industry: String, jobTitle: String) {
     guard let nickname = Self.trimmed(nickname),
       Self.fits(nickname, limit: Self.nicknameLimit),
