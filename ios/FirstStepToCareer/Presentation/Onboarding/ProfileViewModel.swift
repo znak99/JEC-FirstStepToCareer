@@ -8,19 +8,22 @@ final class ProfileViewModel {
   private(set) var isSaving = false
   var saveFailed = false
 
-  private let api: APIClient
-  private let store: ProfileStore
+  private let loadProfile: LoadProfileUseCase
+  private let saveProfile: SaveProfileUseCase
+  private let recordConsents: RecordConsentsUseCase
 
-  init(api: APIClient, store: ProfileStore = ProfileStore()) {
-    self.api = api
-    self.store = store
+  init(
+    loadProfile: LoadProfileUseCase, saveProfile: SaveProfileUseCase,
+    recordConsents: RecordConsentsUseCase
+  ) {
+    self.loadProfile = loadProfile
+    self.saveProfile = saveProfile
+    self.recordConsents = recordConsents
   }
 
   // 서버에 저장된 프로필. 서버에 없거나 받지 못하면 이 iPhone에 남은 값을 쓴다
   func load() async -> Profile? {
-    guard let profile = try? await api.profile() else { return store.profile }
-    store.save(profile)
-    return profile
+    await loadProfile.execute()
   }
 
   // 약관 버전이 바뀌어 동의만 다시 받을 때 쓴다. 성공하면 true
@@ -28,7 +31,7 @@ final class ProfileViewModel {
     isSaving = true
     defer { isSaving = false }
     do {
-      try await api.recordConsents(documents)
+      try await recordConsents.execute(documents)
       return true
     } catch {
       saveFailed = true
@@ -41,12 +44,19 @@ final class ProfileViewModel {
     isSaving = true
     defer { isSaving = false }
     do {
-      if !documents.isEmpty { try await api.recordConsents(documents) }
-      store.save(try await api.saveProfile(profile) ?? profile)
+      try await saveProfile.execute(profile, agreeingTo: documents)
       return true
     } catch {
       saveFailed = true
       return false
     }
+  }
+}
+
+extension ProfileViewModel {
+  convenience init(_ useCases: UseCases) {
+    self.init(
+      loadProfile: useCases.loadProfile, saveProfile: useCases.saveProfile,
+      recordConsents: useCases.recordConsents)
   }
 }

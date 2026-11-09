@@ -5,7 +5,7 @@ import SwiftUI
 struct ProfileSetupView: View {
   var onFinished: () -> Void = {}
 
-  @Environment(\.apiClient) private var api
+  @Environment(\.useCases) private var useCases
   @State private var draft = ProfileDraft()
   @State private var model: ProfileViewModel?
 
@@ -30,8 +30,8 @@ struct ProfileSetupView: View {
 
   // 같은 Apple 계정으로 다른 iPhone에서 입력해 둔 값이 있으면 미리 채운다
   private func prepare() async {
-    guard model == nil else { return }
-    let model = ProfileViewModel(api: api)
+    guard model == nil, let useCases else { return }
+    let model = ProfileViewModel(useCases)
     self.model = model
     if let profile = await model.load(), draft == ProfileDraft() {
       draft = ProfileDraft(profile)

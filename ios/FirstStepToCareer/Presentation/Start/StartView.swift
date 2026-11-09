@@ -4,7 +4,8 @@ import SwiftUI
 struct StartView: View {
   var onStarted: () -> Void = {}
 
-  @Environment(\.apiClient) private var api
+  @Environment(\.useCases) private var useCases
+  @Environment(\.appInfo) private var appInfo
   @State private var model: StartViewModel?
   @State private var showsPrivacy = false
 
@@ -16,7 +17,11 @@ struct StartView: View {
       }
     }
     .loadingOverlay(model?.isSigningIn == true, message: "ログインしています…")
-    .task { if model == nil { model = StartViewModel(api: api) } }
+    .task {
+      if model == nil, let useCases {
+        model = StartViewModel(signInWithApple: useCases.signInWithApple)
+      }
+    }
     .sheet(isPresented: $showsPrivacy) {
       NavigationStack {
         LegalDocumentView(document: .privacy)
@@ -99,7 +104,7 @@ struct StartView: View {
 
   private func actions(_ model: StartViewModel) -> some View {
     VStack(spacing: 12) {
-      if BuildConfig.appleSignInEnabled {
+      if appInfo.appleSignInEnabled {
         // 아래 온보딩 버튼과 높이를 맞춘다
         AppleSignInButton(height: 50) { request in
           Task { if await model.signIn(request) { onStarted() } }

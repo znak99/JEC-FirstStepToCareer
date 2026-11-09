@@ -67,9 +67,9 @@ extension APIClientTests {
         )
         : (204, "")
     }
-    let store = ProfileStore(
-      defaults: try #require(UserDefaults(suiteName: "test.\(UUID().uuidString)")))
-    let model = ProfileViewModel(api: client, store: store)
+    let defaults = try #require(UserDefaults(suiteName: "test.\(UUID().uuidString)"))
+    let store = ProfileStore(defaults: defaults)
+    let model = ProfileViewModel(try useCases(defaults: defaults))
     let profile = try #require(
       Profile(nickname: "たろう", hiringType: nil, industry: "", jobTitle: ""))
 
@@ -83,9 +83,9 @@ extension APIClientTests {
     let (requests, _) = routed { method, _ in
       method == "PUT" ? (500, #"{"error":{"code":"INTERNAL_ERROR","message":"x"}}"#) : (204, "")
     }
-    let store = ProfileStore(
-      defaults: try #require(UserDefaults(suiteName: "test.\(UUID().uuidString)")))
-    let model = ProfileViewModel(api: client, store: store)
+    let defaults = try #require(UserDefaults(suiteName: "test.\(UUID().uuidString)"))
+    let store = ProfileStore(defaults: defaults)
+    let model = ProfileViewModel(try useCases(defaults: defaults))
     let profile = try #require(
       Profile(nickname: "たろう", hiringType: nil, industry: "", jobTitle: ""))
 
@@ -97,7 +97,7 @@ extension APIClientTests {
 
   @MainActor @Test func agreeingAgainRecordsOnlyConsents() async throws {
     let (requests, _) = routed { _, _ in (204, "") }
-    let model = ProfileViewModel(api: client)
+    let model = ProfileViewModel(try useCases())
     #expect(await model.agree(to: LegalDocument.allCases))
     #expect(requests.items == ["POST /v1/me/consents"])
     #expect(!model.saveFailed)
@@ -105,16 +105,16 @@ extension APIClientTests {
 
   @MainActor @Test func failedAgreementReportsFailure() async throws {
     _ = routed { _, _ in (0, "") }
-    let model = ProfileViewModel(api: client)
+    let model = ProfileViewModel(try useCases())
     #expect(await model.agree(to: LegalDocument.allCases) == false)
     #expect(model.saveFailed)
     #expect(!model.isSaving)
   }
 
   @MainActor @Test func loadKeepsServerProfileAndFallsBackToStore() async throws {
-    let store = ProfileStore(
-      defaults: try #require(UserDefaults(suiteName: "test.\(UUID().uuidString)")))
-    let model = ProfileViewModel(api: client, store: store)
+    let defaults = try #require(UserDefaults(suiteName: "test.\(UUID().uuidString)"))
+    let store = ProfileStore(defaults: defaults)
+    let model = ProfileViewModel(try useCases(defaults: defaults))
 
     _ = routed { _, _ in
       (

@@ -2,7 +2,7 @@ import SwiftUI
 
 // 메뉴 > プロフィール. 온보딩에서 입력한 이름과 희망 조건을 고친다 (SITE_MAP S-17)
 struct ProfileEditView: View {
-  @Environment(\.apiClient) private var api
+  @Environment(\.useCases) private var useCases
   @Environment(\.dismiss) private var dismiss
   @State private var draft = ProfileDraft()
   @State private var model: ProfileViewModel?
@@ -38,8 +38,8 @@ struct ProfileEditView: View {
   }
 
   private func load() async {
-    guard model == nil else { return }
-    let model = ProfileViewModel(api: api)
+    guard model == nil, let useCases else { return }
+    let model = ProfileViewModel(useCases)
     self.model = model
     if let profile = await model.load() { draft = ProfileDraft(profile) }
     isLoaded = true

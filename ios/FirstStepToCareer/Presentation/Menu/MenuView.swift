@@ -12,13 +12,12 @@ struct MenuView: View {
   // 로그아웃·데이터 삭제가 끝났을 때 부른다. 온보딩부터 다시 한다
   var onReset: () -> Void = {}
 
-  @Environment(\.apiClient) private var api
+  @Environment(\.useCases) private var useCases
+  @Environment(\.appInfo) private var appInfo
   @Environment(\.tabRootRequest) private var tabRootRequest
   @State private var model: MenuViewModel?
   @State private var confirmsDelete = false
   @State private var confirmsSignOut = false
-  // 프로필 줄에 보여 줄 이름. 프로필 화면에서 돌아오면 다시 읽는다
-  @State private var nickname = ProfileStore().profile?.nickname
   // 프로필 화면에서 업계·직종 목록으로 더 들어가므로 여러 종류의 경로를 담는다
   @State private var path = NavigationPath()
 
@@ -36,7 +35,8 @@ struct MenuView: View {
       .background { TechPageBackground() }
       .reservesTabBarSpace()
       .navigationTitle("メニュー")
-      .onAppear { nickname = ProfileStore().profile?.nickname }
+      // 프로필 화면에서 돌아오면 이름을 다시 읽는다
+      .onAppear { model?.refreshNickname() }
       .onChange(of: tabRootRequest) { path = NavigationPath() }
       .navigationDestination(for: MenuRoute.self) { route in
         switch route {
@@ -47,7 +47,8 @@ struct MenuView: View {
         }
       }
       .task {
-        let current = model ?? MenuViewModel(api: api)
+        guard let useCases else { return }
+        let current = model ?? MenuViewModel(useCases)
         model = current
         await current.loadAccount()
       }
@@ -60,7 +61,7 @@ struct MenuView: View {
         section(1, "プロフィール") {
           NavigationLink(value: MenuRoute.profile) {
             MenuRow(icon: "person.fill", title: "お名前（ニックネーム）") {
-              if let nickname { Text(nickname) } else { Text("未設定") }
+              if let nickname = model.nickname { Text(nickname) } else { Text("未設定") }
             }
           }
           .buttonStyle(.plain)
@@ -166,7 +167,7 @@ struct MenuView: View {
           Task { await model.loadAccount() }
         }
       case .loaded(.guest):
-        if BuildConfig.appleSignInEnabled {
+        if appInfo.appleSignInEnabled {
           AppleSignInButton(height: 46) { request in
             Task { await model.signIn(request) }
           } onFailed: {
@@ -189,7 +190,7 @@ struct MenuView: View {
   private func accountHasControls(_ model: MenuViewModel) -> Bool {
     switch model.account {
     case .loading: false
-    case .loaded(.guest): BuildConfig.appleSignInEnabled
+    case .loaded(.guest): appInfo.appleSignInEnabled
     default: true
     }
   }

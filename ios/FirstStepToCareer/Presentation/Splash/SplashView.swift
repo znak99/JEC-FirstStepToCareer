@@ -35,7 +35,7 @@ struct SplashView: View {
   let hasStarted: Bool
   var onFinished: () -> Void = {}
 
-  @Environment(\.apiClient) private var api
+  @Environment(\.useCases) private var useCases
   @Environment(\.accessibilityReduceMotion) private var reduceMotion
   @State private var start = Date()
   @State private var model: SplashViewModel?
@@ -57,7 +57,14 @@ struct SplashView: View {
     .accessibilityElement(children: .ignore)
     .accessibilityLabel(Text("就活一歩"))
     .task {
-      let model = SplashViewModel(api: api, hasStarted: hasStarted, extraDelay: SplashDebug.delay)
+      guard let useCases else {
+        onFinished()
+        return
+      }
+      let model = SplashViewModel(
+        checkServiceStatus: useCases.checkServiceStatus,
+        deleteUnfinishedInterview: useCases.deleteUnfinishedInterview, hasStarted: hasStarted,
+        extraDelay: SplashDebug.delay)
       self.model = model
       await model.run()
       onFinished()

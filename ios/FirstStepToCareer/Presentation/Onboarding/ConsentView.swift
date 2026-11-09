@@ -10,7 +10,7 @@ struct ConsentView: View {
   var recordsOnServer = false
   var onAgreed: () -> Void = {}
 
-  @Environment(\.apiClient) private var api
+  @Environment(\.useCases) private var useCases
   @State private var agreed: Set<LegalDocument> = []
   @State private var reading: LegalDocument?
   @State private var isContinuing = false
@@ -60,7 +60,11 @@ struct ConsentView: View {
     Task {
       try? await Task.sleep(for: .milliseconds(200))
       if recordsOnServer {
-        let model = model ?? ProfileViewModel(api: api)
+        guard let useCases else {
+          isContinuing = false
+          return
+        }
+        let model = model ?? ProfileViewModel(useCases)
         self.model = model
         guard await model.agree(to: LegalDocument.allCases) else {
           isContinuing = false

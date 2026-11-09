@@ -15,7 +15,11 @@ extension APIClientTests {
     let store = try activeStore(storedId: storedId)
     let recorder = stubRoutes(routes)
     let model = SplashViewModel(
-      api: client, hasStarted: hasStarted, store: store,
+      checkServiceStatus: CheckServiceStatusUseCase(
+        status: APIServiceStatusRepository(api: client)),
+      deleteUnfinishedInterview: DeleteUnfinishedInterviewUseCase(
+        interviews: APIInterviewRepository(api: client), activeInterview: store),
+      hasStarted: hasStarted,
       timing: SplashViewModel.Timing(animation: animation, loadingLimit: limit),
       extraDelay: extraDelay)
     return (model, store, recorder)

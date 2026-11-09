@@ -13,4 +13,8 @@ enum BuildConfig {
     let build = info?["CFBundleVersion"] as? String ?? "-"
     return "\(version) (\(build))"
   }
+
+  static var appInfo: AppInfo {
+    AppInfo(version: appVersion, appleSignInEnabled: appleSignInEnabled)
+  }
 }

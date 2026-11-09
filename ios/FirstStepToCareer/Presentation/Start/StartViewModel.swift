@@ -7,10 +7,10 @@ final class StartViewModel {
   private(set) var isSigningIn = false
   var signInFailed = false
 
-  private let api: APIClient
+  private let signInWithApple: SignInWithAppleUseCase
 
-  init(api: APIClient) {
-    self.api = api
+  init(signInWithApple: SignInWithAppleUseCase) {
+    self.signInWithApple = signInWithApple
   }
 
   // 성공하면 true. 실패하면 안내를 띄우고 시작 화면에 남는다
@@ -19,7 +19,7 @@ final class StartViewModel {
     isSigningIn = true
     defer { isSigningIn = false }
     do {
-      _ = try await api.signInWithApple(request)
+      _ = try await signInWithApple.execute(request)
       return true
     } catch {
       signInFailed = true

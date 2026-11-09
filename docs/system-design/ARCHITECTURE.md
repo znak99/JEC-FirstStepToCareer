@@ -49,7 +49,7 @@ flowchart LR
 ios/
   FirstStepToCareer.xcodeproj  Xcode 프로젝트
   FirstStepToCareer/           앱 소스. MVVM + Clean 아키텍처 (5절)
-    App/                       앱 시작과 부품 조립
+    App/                       앱 시작과 부품 조립(AppContainer: 실제 저장소로 UseCase 모음을 만든다)
     Presentation/              화면(View)과 화면 상태(ViewModel). 기능별 폴더
       Root/                    앱 시작 흐름(스플래시·온보딩·탭 전환)과 하단 탭바
       Common/                  여러 화면이 함께 쓰는 부품. Design: 색·바탕·큰 버튼·움직임 곡선, Charts: 점수 그래프
@@ -81,7 +81,9 @@ MVVM + Clean 아키텍처를 따른다. 화면은 그리기만 하고(View), 화
 | Domain | Entities(형식. JSON을 모른다), Rules(계산·판단 규칙), 저장소·기기 약속(프로토콜), 저장소 오류 중 구분할 종류(`RepositoryError`: 거절·AI 꺼짐·연결 실패), UseCase(서버·저장값을 쓰는 한 가지 일) | 없음 |
 | Data | Network(서버 호출, 서버 JSON 그대로의 형식인 DTO와 Domain 형식으로의 변환, Keychain의 기기 토큰), Local(이 iPhone 저장값), Sensors(카메라 추적 ARKit, 앞쪽 카메라 AVFoundation, STT와 마이크 소리 크기, TTS). Domain 약속의 실제 구현 | Domain |
 
-전환 중 (2026-11-09~, TASK.md): 위 구조로 옮기는 동안 Presentation이 Data의 서버 호출(`APIClient`)·저장값·센서를 직접 쓰는 곳이 남아 있다. 약속과 UseCase를 만든 뒤 모두 없앤다.
+화면은 App이 넣어 준 UseCase 모음(`UseCases`), 앱 정보(`AppInfo`), 기기 부품(`InterviewDevices`)을 SwiftUI 환경값으로 받아 ViewModel을 만든다.
+
+전환 중 (2026-11-09~, TASK.md): 면접 홈·준비·진행·결과, 기록, 탭 화면은 아직 Data의 서버 호출(`APIClient`)·저장값을 직접 쓴다. 다음 단계에서 UseCase로 바꾼다.
 
 ### 서버 (`api/`)
 | 레이어·모듈 | 책임 | 의존 가능 대상 |

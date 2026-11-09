@@ -8,13 +8,15 @@ struct AppleSignInButton: View {
   let onFailed: () -> Void
 
   @Environment(\.colorScheme) private var colorScheme
+  @Environment(\.useCases) private var useCases
   @State private var nonce = ""
 
   var body: some View {
     SignInWithAppleButton(.signIn) { request in
-      nonce = SignInNonce.make()
+      guard let challenge = useCases?.makeSignInChallenge.execute() else { return }
+      nonce = challenge.nonce
       request.requestedScopes = []
-      request.nonce = SignInNonce.sha256Hex(nonce)
+      request.nonce = challenge.hashedNonce
     } onCompletion: { result in
       switch result {
       case .success(let authorization):

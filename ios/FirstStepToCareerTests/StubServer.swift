@@ -50,6 +50,17 @@ final class Recorder: @unchecked Sendable {
 
 // 남은 면접 정리·스플래시 테스트가 함께 쓰는 도우미
 extension APIClientTests {
+  // 실제 저장소를 가짜 서버와 테스트마다 새 UserDefaults로 묶은 UseCase 모음
+  func useCases(defaults: UserDefaults? = nil) throws -> UseCases {
+    let defaults = try defaults ?? #require(UserDefaults(suiteName: "test.\(UUID().uuidString)"))
+    return UseCases(
+      interviews: APIInterviewRepository(api: client), accounts: APIAccountRepository(api: client),
+      profiles: APIProfileRepository(api: client), status: APIServiceStatusRepository(api: client),
+      settings: LocalAppSettingsRepository(defaults: defaults),
+      profileCache: ProfileStore(defaults: defaults),
+      activeInterview: ActiveInterviewStore(defaults: defaults), nonces: SystemSignInNonce())
+  }
+
   // 진행 중 면접 ID를 테스트마다 새 저장소에 담아 둔다
   func activeStore(storedId: String?) throws -> ActiveInterviewStore {
     let defaults = try #require(UserDefaults(suiteName: "test.\(UUID().uuidString)"))

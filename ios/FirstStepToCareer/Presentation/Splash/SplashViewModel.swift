@@ -22,20 +22,21 @@ final class SplashViewModel {
   private(set) var showsLoading = false
   private(set) var isFinished = false
 
-  private let api: APIClient
+  private let checkServiceStatus: CheckServiceStatusUseCase
+  private let deleteUnfinishedInterview: DeleteUnfinishedInterviewUseCase
   private let hasStarted: Bool
-  private let store: ActiveInterviewStore
   private let timing: Timing
   // 준비가 늦은 상황을 확인하려고 일부러 늦춘다. 평소에는 0
   private let extraDelay: Duration
 
   init(
-    api: APIClient, hasStarted: Bool, store: ActiveInterviewStore = ActiveInterviewStore(),
+    checkServiceStatus: CheckServiceStatusUseCase,
+    deleteUnfinishedInterview: DeleteUnfinishedInterviewUseCase, hasStarted: Bool,
     timing: Timing = Timing(), extraDelay: Duration = .zero
   ) {
-    self.api = api
+    self.checkServiceStatus = checkServiceStatus
+    self.deleteUnfinishedInterview = deleteUnfinishedInterview
     self.hasStarted = hasStarted
-    self.store = store
     self.timing = timing
     self.extraDelay = extraDelay
   }
@@ -57,11 +58,11 @@ final class SplashViewModel {
   // 실패해도 준비가 끝난 것으로 본다. 연결 문제는 다음 화면이 안내한다
   private func prepare() async {
     step = .connecting
-    _ = try? await api.status()
+    _ = try? await checkServiceStatus.execute()
     if extraDelay > .zero { try? await Task.sleep(for: extraDelay) }
-    if hasStarted && store.interviewId != nil {
+    if hasStarted && deleteUnfinishedInterview.hasUnfinishedInterview {
       step = .checkingInterview
-      await LeftoverInterviewCleaner(api: api, store: store).deleteUnfinished()
+      await deleteUnfinishedInterview.execute()
     }
     // step은 비우지 않는다. 사라지는 동안 안내 문구가 다른 문구로 바뀌어 보이지 않게 한다
     isReady = true

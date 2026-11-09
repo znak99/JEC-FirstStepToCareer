@@ -21,34 +21,53 @@ final class MenuViewModel {
   // 진행 중인 작업. 처리 중 덮개의 문구를 고른다
   private(set) var working: Action?
   var failure: Action?
+  // 프로필 줄에 보여 줄 이름. 프로필 화면에서 돌아오면 다시 읽는다
+  private(set) var nickname: String?
 
   var isWorking: Bool { working != nil }
 
-  private let api: APIClient
+  private let getAccountType: GetAccountTypeUseCase
+  private let signInWithApple: SignInWithAppleUseCase
+  private let signOutUseCase: SignOutUseCase
+  private let deleteAllDataUseCase: DeleteAllDataUseCase
+  private let getCachedProfile: GetCachedProfileUseCase
 
-  init(api: APIClient) {
-    self.api = api
+  init(
+    getAccountType: GetAccountTypeUseCase, signInWithApple: SignInWithAppleUseCase,
+    signOut: SignOutUseCase, deleteAllData: DeleteAllDataUseCase,
+    getCachedProfile: GetCachedProfileUseCase
+  ) {
+    self.getAccountType = getAccountType
+    self.signInWithApple = signInWithApple
+    signOutUseCase = signOut
+    deleteAllDataUseCase = deleteAllData
+    self.getCachedProfile = getCachedProfile
+    nickname = getCachedProfile.execute()?.nickname
+  }
+
+  func refreshNickname() {
+    nickname = getCachedProfile.execute()?.nickname
   }
 
   func loadAccount() async {
     do {
-      account = .loaded(try await api.me().accountType)
+      account = .loaded(try await getAccountType.execute())
     } catch {
       if !Task.isCancelled { account = .failed }
     }
   }
 
   func signIn(_ request: AppleSignInRequest) async {
-    await run(.signIn) { account = .loaded(try await api.signInWithApple(request).accountType) }
+    await run(.signIn) { account = .loaded(try await signInWithApple.execute(request)) }
   }
 
   // 성공하면 true. 화면은 온보딩부터 다시 한다
   func signOut() async -> Bool {
-    await run(.signOut) { try await api.signOut() }
+    await run(.signOut) { try await signOutUseCase.execute() }
   }
 
   func deleteAllData() async -> Bool {
-    await run(.delete) { try await api.deleteAllData() }
+    await run(.delete) { try await deleteAllDataUseCase.execute() }
   }
 
   func reportSignInFailure() {
@@ -67,5 +86,14 @@ final class MenuViewModel {
       failure = kind
       return false
     }
+  }
+}
+
+extension MenuViewModel {
+  convenience init(_ useCases: UseCases) {
+    self.init(
+      getAccountType: useCases.getAccountType, signInWithApple: useCases.signInWithApple,
+      signOut: useCases.signOut, deleteAllData: useCases.deleteAllData,
+      getCachedProfile: useCases.getCachedProfile)
   }
 }

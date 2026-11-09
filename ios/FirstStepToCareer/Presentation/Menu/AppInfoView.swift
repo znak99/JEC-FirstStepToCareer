@@ -4,6 +4,8 @@ import SwiftUI
 struct AppInfoView: View {
   private static let repositoryURL = URL(string: "https://github.com/znak99/JEC-FirstStepToCareer")!
 
+  @Environment(\.appInfo) private var appInfo
+
   var body: some View {
     VStack(spacing: 14) {
       Spacer()
@@ -17,7 +19,7 @@ struct AppInfoView: View {
       Text("就活一歩")
         .font(.title.weight(.bold))
         .accessibilityAddTraits(.isHeader)
-      Text("バージョン \(BuildConfig.appVersion)")
+      Text("バージョン \(appInfo.version)")
         .font(.caption.monospacedDigit().weight(.semibold))
         .foregroundStyle(TechPalette.accent)
         .padding(.horizontal, 10)
